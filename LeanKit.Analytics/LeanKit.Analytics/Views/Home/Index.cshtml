@@ -1,0 +1,112 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+
+    <link href="~/Assets/css/site.css" rel="stylesheet" />
+</head>
+    <body>
+        <h1>LateRooms.com Product Team LeanKit Stats</h1>
+        
+        <div id="main-graph-container">
+            <div id="main-graph">
+                <div id="main-graph-holder"></div>
+                <div class="main-graph-waste main-graph-legend">
+                    <h2>Waste</h2>
+                    <ul>
+                        <li class="blocked"><div class="legend-block"></div>Blocked - 35%</li>
+                        <li class="waiting"><div class="legend-block"></div>Waiting - 20%</li>
+                    </ul>
+                </div>
+                <div class="main-graph-blue-light main-graph-legend">
+                    <h2>Blue Light</h2>
+                    <ul>
+                        <li class="developing"><div class="legend-block"></div>Developing - 30%</li>
+                        <li class="testing"><div class="legend-block"></div>Testing - 15%</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    
+        <script src="~/Assets/js/lib/d3.min.js"></script>
+        <script src="~/Assets/js/lib/jquery-2.0.0.min.js"></script>
+
+        <script type="text/javascript">
+            (function (data) {
+                var width = 400,
+                    height = 400,
+                    radius = Math.min(width, height) / 2;
+
+                var arc = d3.svg.arc()
+                    .outerRadius(radius - 10)
+                    .innerRadius(radius - 70);
+
+                var pie = d3.layout.pie()
+                    .sort(null)
+                    .value(function (d) { return d.percent; });
+
+                var svg = d3.select("#main-graph-holder").append("svg")
+                    .attr("width", width)
+                    .attr("height", height)
+                  .append("g")
+                    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+                var colors = {
+                    Developing: {
+                        color: '#7FC9FF',
+                        legendClass: 'developing'
+                    },
+                    Testing: {
+                        color: '#0094FF',
+                        legendClass: 'testing'
+                    },
+                    Waiting: {
+                        color: '#303030',
+                        legendClass: 'waiting'
+                    },
+                    Blocked: {
+                        color: '#C40000',
+                        legendClass: 'blocked'
+                    }
+                };
+                
+                for (activity in colors) {
+                    if(!colors.hasOwnProperty(activity)) {
+                        continue;
+                    }
+
+                    $('.' + colors[activity].legendClass + ' .legend-block', '#main-graph').css('background-color', colors[activity].color);
+                }
+
+                var g = svg.selectAll(".arc")
+                          .data(pie(data))
+                        .enter().append("g")
+                          .attr("class", "arc");
+
+                g.append("path")
+                    .attr("d", arc)
+                    .style("fill", function (d) { return colors[d.data.activity].color; });
+            })([{
+                activity: "Developing",
+                percent: 30
+            }, {
+                activity: "Testing",
+                percent: 15
+            }, {
+                activity: "Waiting",
+                percent: 20
+            }, {
+                activity: "Blocked",
+                percent: 35
+            }]);
+
+
+        </script>
+    </body>
+</html>

@@ -1,0 +1,44 @@
+﻿body { font-family: arial;padding: 0;margin: 0 }
+
+#main-graph-container { margin: 20px 0; background-color: #ccc; }
+
+#main-graph { width: 400px;margin: 0 auto;position: relative; }
+
+.main-graph-legend { position: absolute; top: 0 }
+
+.main-graph-legend h2 { background-repeat: no-repeat; padding: 10px 0 0 64px; height: 54px; }
+
+.main-graph-legend ul { margin: 0;padding: 0;list-style: none; }
+
+.main-graph-legend li {padding: 6px 0;font-size: 1.2em;position: relative; }
+
+.main-graph-waste { left: -162px;  }
+
+.main-graph-waste h2 { background-image: url(../images/exclamation_red.png); background-position: right; padding: 10px 64px 0 0;text-align: right; }
+
+.main-graph-waste ul { margin-right: 90px;text-align: right; }
+
+.main-graph-blue-light { right: -190px; }
+
+.main-graph-blue-light h2 { background-image: url(../images/light-bulb_blue.png); }
+
+.main-graph-blue-light ul { margin-left: 100px; }
+
+.legend-block { width: 30px;height: 30px;position: absolute;top: 0px;background-color: #000 }
+
+.main-graph-blue-light .legend-block { left: -34px; }
+
+.main-graph-waste .legend-block { right: -34px; }
+
+@media (max-width: 800px)
+{
+    .main-graph-legend { position: static; }
+
+    .main-graph-blue-light ul { margin-left: 50px; }
+
+    .main-graph-waste h2 { padding: 10px 0 0 64px;text-align: left;background-position: left; }
+    
+    .main-graph-waste ul { margin-left: 50px;text-align: left; }
+
+    .main-graph-waste .legend-block { left: -34px; }
+}
