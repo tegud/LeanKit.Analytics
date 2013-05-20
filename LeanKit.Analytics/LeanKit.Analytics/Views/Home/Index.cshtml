@@ -1,6 +1,7 @@
 ﻿@{
     Layout = null;
 }
+@model LeanKit.Analytics.Models.ViewModels.HomeViewModel
 
 <!DOCTYPE html>
 
@@ -17,18 +18,22 @@
         <div id="main-graph-container">
             <div id="main-graph">
                 <div id="main-graph-holder"></div>
-                <div class="main-graph-waste main-graph-legend">
-                    <h2>Waste</h2>
-                    <ul>
-                        <li class="blocked"><div class="legend-block"></div>Blocked - 35%</li>
-                        <li class="waiting"><div class="legend-block"></div>Waiting - 20%</li>
-                    </ul>
-                </div>
                 <div class="main-graph-blue-light main-graph-legend">
                     <h2>Blue Light</h2>
                     <ul>
-                        <li class="developing"><div class="legend-block"></div>Developing - 30%</li>
-                        <li class="testing"><div class="legend-block"></div>Testing - 15%</li>
+                        @foreach(var activity in Model.MainWasteGraph.Activities.Where(a => !a.IsWaste))
+                        {
+                            <li class="waste-graph-activity @activity.ClassName" data-activity-class="@activity.ClassName"><div class="legend-block"></div><span class="activity-name">@activity.Activity</span> - <span class="percent">@activity.Percent</span>%</li>
+                        }
+                    </ul>
+                </div>
+                <div class="main-graph-waste main-graph-legend">
+                    <h2>Waste</h2>
+                    <ul>
+                        @foreach(var activity in Model.MainWasteGraph.Activities.Where(a => a.IsWaste))
+                        {
+                            <li class="waste-graph-activity @activity.ClassName" data-activity-class="@activity.ClassName"><div class="legend-block"></div><span class="activity-name">@activity.Activity</span> - <span class="percent">@activity.Percent</span>%</li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -38,10 +43,36 @@
         <script src="~/Assets/js/lib/jquery-2.0.0.min.js"></script>
 
         <script type="text/javascript">
-            (function (data) {
+            (function WasteGraph(element) {
                 var width = 400,
                     height = 400,
-                    radius = Math.min(width, height) / 2;
+                    radius = Math.min(width, height) / 2,
+                    data = $.map($('.waste-graph-activity', element), function (item) {
+                        var activityElement = $(item);
+
+                        return {
+                            className: activityElement.data('activityClass'),
+                            activity: $('.activity-name', activityElement).text(),
+                            percent: $('.percent', activityElement).text()
+                        };
+                    }),
+                    colors = {
+                        Developing: {
+                            color: '#7FC9FF'
+                        },
+                        Testing: {
+                            color: '#0094FF'
+                        },
+                        WaitingtoTest: {
+                            color: '#FFC700'
+                        },
+                        WaitingtoRelease: {
+                            color: '#C45200'
+                        },
+                        Blocked: {
+                            color: '#C40000'
+                        }
+                    };
 
                 var arc = d3.svg.arc()
                     .outerRadius(radius - 10)
@@ -57,32 +88,9 @@
                   .append("g")
                     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
-                var colors = {
-                    Developing: {
-                        color: '#7FC9FF',
-                        legendClass: 'developing'
-                    },
-                    Testing: {
-                        color: '#0094FF',
-                        legendClass: 'testing'
-                    },
-                    Waiting: {
-                        color: '#303030',
-                        legendClass: 'waiting'
-                    },
-                    Blocked: {
-                        color: '#C40000',
-                        legendClass: 'blocked'
-                    }
-                };
-                
-                for (activity in colors) {
-                    if(!colors.hasOwnProperty(activity)) {
-                        continue;
-                    }
-
-                    $('.' + colors[activity].legendClass + ' .legend-block', '#main-graph').css('background-color', colors[activity].color);
-                }
+                $('.legend-block', element).css('background-color', function() {
+                    return colors[$(this).parent().data('activityClass')].color;
+                });
 
                 var g = svg.selectAll(".arc")
                           .data(pie(data))
@@ -91,22 +99,10 @@
 
                 g.append("path")
                     .attr("d", arc)
-                    .style("fill", function (d) { return colors[d.data.activity].color; });
-            })([{
-                activity: "Developing",
-                percent: 30
-            }, {
-                activity: "Testing",
-                percent: 15
-            }, {
-                activity: "Waiting",
-                percent: 20
-            }, {
-                activity: "Blocked",
-                percent: 35
-            }]);
-
-
+                    .style("fill", function (d) {
+                        return colors[d.data.className].color;
+                    });
+            })($('#main-graph-container'));
         </script>
     </body>
 </html>

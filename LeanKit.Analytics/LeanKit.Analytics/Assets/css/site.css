@@ -12,7 +12,7 @@
 
 .main-graph-legend li {padding: 6px 0;font-size: 1.2em;position: relative; }
 
-.main-graph-waste { left: -162px;  }
+.main-graph-waste { left: -252px;  }
 
 .main-graph-waste h2 { background-image: url(../images/exclamation_red.png); background-position: right; padding: 10px 64px 0 0;text-align: right; }
 
@@ -30,7 +30,7 @@
 
 .main-graph-waste .legend-block { right: -34px; }
 
-@media (max-width: 800px)
+@media (max-width: 900px)
 {
     .main-graph-legend { position: static; }
 
