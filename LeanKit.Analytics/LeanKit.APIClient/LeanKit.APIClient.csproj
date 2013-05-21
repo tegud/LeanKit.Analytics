@@ -45,6 +45,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\ApiCaller.cs" />
+    <Compile Include="API\ApiCredentials.cs" />
+    <Compile Include="API\ApiRequest.cs" />
+    <Compile Include="API\ApiResponse.cs" />
+    <Compile Include="API\LeankitBoard.cs" />
+    <Compile Include="API\LeankitBoardCard.cs" />
+    <Compile Include="API\LeankitBoardLane.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
