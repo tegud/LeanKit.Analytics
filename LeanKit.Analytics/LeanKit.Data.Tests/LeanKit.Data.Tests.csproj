@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E259085C-BCD0-44ED-8E53-B88500C0EE50}</ProjectGuid>
+    <ProjectGuid>{0DE557F6-32AE-4E28-936C-1C4C482CA07E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LeanKit.APIClient</RootNamespace>
-    <AssemblyName>LeanKit.APIClient</AssemblyName>
+    <RootNamespace>LeanKit.Data.Tests</RootNamespace>
+    <AssemblyName>LeanKit.Data.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -45,18 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\ApiCaller.cs" />
-    <Compile Include="API\ApiCredentials.cs" />
-    <Compile Include="API\ApiRequest.cs" />
-    <Compile Include="API\ApiResponse.cs" />
-    <Compile Include="API\LeankitBoard.cs" />
-    <Compile Include="API\LeankitBoardCard.cs" />
-    <Compile Include="API\LeankitBoardLane.cs" />
-    <Compile Include="API\LeanKitCardHistory.cs" />
+    <Compile Include="AllTicketsForBoardFactoryTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <ProjectReference Include="..\LeanKit.APIClient\LeanKit.APIClient.csproj">
+      <Project>{E259085C-BCD0-44ED-8E53-B88500C0EE50}</Project>
+      <Name>LeanKit.APIClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LeanKit.Data\LeanKit.Data.csproj">
+      <Project>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</Project>
+      <Name>LeanKit.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

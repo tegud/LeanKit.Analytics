@@ -1,4 +1,5 @@
-﻿using LeanKit.APIClient.API;
+﻿using System.Linq;
+using LeanKit.APIClient.API;
 using NUnit.Framework;
 
 namespace LeanKit.APIClient.Tests
@@ -12,22 +13,41 @@ namespace LeanKit.APIClient.Tests
         private const string BOARD_ID = "";
 
         [Test]
-        public void SetsBoardId ()
+        public void SetsBoardId()
         {
             var apiCaller = new ApiCaller
+            {
+                Account = ACCOUNT,
+                BoardId = BOARD_ID,
+                Credentials = new ApiCredentials
                 {
-                    Account = ACCOUNT,
-                    BoardId = BOARD_ID,
-                    Credentials = new ApiCredentials
-                    {
-                        Username = USERNAME,
-                        Password = PASSWORD
-                    }
-                };
+                    Username = USERNAME,
+                    Password = PASSWORD
+                }
+            };
 
-            var leankitBoard = apiCaller.GetBoardResponse<LeankitBoard>("Boards");
+            var leankitBoard = apiCaller.GetBoard();
 
-            Assert.That(leankitBoard.Id, Is.EqualTo(32482312));
+            Assert.That(leankitBoard.Id, Is.Not.EqualTo(0));
+        }
+
+        [Test]
+        public void GetArchive()
+        {
+            var apiCaller = new ApiCaller
+            {
+                Account = ACCOUNT,
+                BoardId = BOARD_ID,
+                Credentials = new ApiCredentials
+                {
+                    Username = USERNAME,
+                    Password = PASSWORD
+                }
+            };
+
+            var archiveLanes = apiCaller.GetBoardArchive();
+
+            Assert.That(archiveLanes, Is.Not.EqualTo(0));
         }
 
         [Test]
@@ -44,9 +64,9 @@ namespace LeanKit.APIClient.Tests
                 }
             };
 
-            var leankitBoard = apiCaller.GetHistoryResponse<LeankitBoard>(40816485);
+            var leankitBoard = apiCaller.GetCardHistory(40816485);
 
-            Assert.That(leankitBoard, Is.EqualTo(32482312));
+            Assert.That(leankitBoard.First().CardId, Is.Not.EqualTo(0));
         }
     }
 }

@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.APIClient.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Analytics.Tests", "LeanKit.Analytics.Tests\LeanKit.Analytics.Tests.csproj", "{F175E3F6-C8E4-4BC4-B1EE-E3351311599A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Data", "LeanKit.Data\LeanKit.Data.csproj", "{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Data.Tests", "LeanKit.Data.Tests\LeanKit.Data.Tests.csproj", "{0DE557F6-32AE-4E28-936C-1C4C482CA07E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{F175E3F6-C8E4-4BC4-B1EE-E3351311599A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F175E3F6-C8E4-4BC4-B1EE-E3351311599A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F175E3F6-C8E4-4BC4-B1EE-E3351311599A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0DE557F6-32AE-4E28-936C-1C4C482CA07E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DE557F6-32AE-4E28-936C-1C4C482CA07E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DE557F6-32AE-4E28-936C-1C4C482CA07E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DE557F6-32AE-4E28-936C-1C4C482CA07E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -40,5 +52,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1A63FB3E-1001-4B7A-8175-19BDD1A4D818} = {3B62102F-DB35-49C1-BCCE-961665D88153}
 		{F175E3F6-C8E4-4BC4-B1EE-E3351311599A} = {3B62102F-DB35-49C1-BCCE-961665D88153}
+		{0DE557F6-32AE-4E28-936C-1C4C482CA07E} = {3B62102F-DB35-49C1-BCCE-961665D88153}
 	EndGlobalSection
 EndGlobal
