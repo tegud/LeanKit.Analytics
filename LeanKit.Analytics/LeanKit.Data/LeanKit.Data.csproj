@@ -42,7 +42,6 @@
     <Compile Include="AllTicketsForBoard.cs" />
     <Compile Include="AllTicketsForBoardFactory.cs" />
     <Compile Include="Class1.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ticket.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +49,9 @@
       <Project>{E259085C-BCD0-44ED-8E53-B88500C0EE50}</Project>
       <Name>LeanKit.APIClient</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -47,15 +47,24 @@ namespace LeanKit.APIClient.API
             return apiResponse.ReplyData.First();
         }
 
-        public IEnumerable<LeankitBoardLane> GetBoardArchive()
+        public IEnumerable<LeankitBoardLaneWrapper> GetBoardArchive()
         {
             var address = string.Format("{0}Board/{1}/Archive", BaseApiUrl(), BoardId);
 
             var output = new ApiRequest(Credentials, address).GetResponse();
 
-            var apiResponse = JsonConvert.DeserializeObject<ApiResponse<IEnumerable<LeankitBoardLane>>>(output);
+            var apiResponse = JsonConvert.DeserializeObject<ApiResponse<IEnumerable<LeankitBoardLaneWrapper>>>(output);
 
             return apiResponse.ReplyData.First();
         }
+
+        
+    }
+
+    public class LeankitBoardLaneWrapper
+    {
+        public LeankitBoardLane Lane { get; set; }
+
+        public LeankitBoardLaneWrapper[] ChildLanes { get; set; }
     }
 }
