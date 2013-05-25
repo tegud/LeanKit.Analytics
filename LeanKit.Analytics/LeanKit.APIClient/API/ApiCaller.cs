@@ -9,6 +9,7 @@ namespace LeanKit.APIClient.API
     {
         LeankitBoard GetBoard();
         IEnumerable<LeanKitCardHistory> GetCardHistory(int cardId);
+        LeankitBoardLaneWrapper GetBoardArchive();
     }
 
     public class ApiCaller : IApiCaller
@@ -47,7 +48,7 @@ namespace LeanKit.APIClient.API
             return apiResponse.ReplyData.First();
         }
 
-        public IEnumerable<LeankitBoardLaneWrapper> GetBoardArchive()
+        public LeankitBoardLaneWrapper GetBoardArchive()
         {
             var address = string.Format("{0}Board/{1}/Archive", BaseApiUrl(), BoardId);
 
@@ -55,7 +56,7 @@ namespace LeanKit.APIClient.API
 
             var apiResponse = JsonConvert.DeserializeObject<ApiResponse<IEnumerable<LeankitBoardLaneWrapper>>>(output);
 
-            return apiResponse.ReplyData.First();
+            return apiResponse.ReplyData.First().First();
         }
 
         

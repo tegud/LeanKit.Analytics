@@ -23,12 +23,53 @@ namespace LeanKit.Data.Tests
                         }
                 };
 
+        private LeankitBoardLaneWrapper _boardArchive = new LeankitBoardLaneWrapper
+            {
+                Lane = new LeankitBoardLane(),
+                ChildLanes = new LeankitBoardLaneWrapper[] {}
+            };
+
         [Test]
         public void SetsTicketId()
         {
             _expectedId = 1234;
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller).Build().Tickets.First().Id, Is.EqualTo(_expectedId));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Id, Is.EqualTo(_expectedId));
+        }
+
+        [Test]
+        public void SetsTicketIdFromArchiveTicket()
+        {
+            _boardArchive = new LeankitBoardLaneWrapper
+                {
+                    Lane = new LeankitBoardLane
+                        {
+                            Title = "Archive"
+                        },
+                    ChildLanes = new[]
+                        {
+                            new LeankitBoardLaneWrapper
+                                {
+                                    Lane = new LeankitBoardLane
+                                        {
+                                            Title = "Live",
+                                            Cards = new[]
+                                                {
+                                                    new LeankitBoardCard
+                                                        {
+                                                            Id = 123456
+                                                        }
+                                                }
+
+                                        }
+                                }
+
+                        }
+                };
+                
+            
+            var apiCaller = this;
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.ElementAt(1).Id, Is.EqualTo(123456));
         }
 
         [Test]
@@ -36,7 +77,7 @@ namespace LeanKit.Data.Tests
         {
             _expectedTitle = "Test Ticket";
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller).Build().Tickets.First().Title, Is.EqualTo(_expectedTitle));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Title, Is.EqualTo(_expectedTitle));
         }
 
         [Test]
@@ -53,7 +94,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller).Build().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
         }
 
         [Test]
@@ -76,7 +117,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller).Build().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
         }
 
         [Test]
@@ -93,7 +134,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller).Build().Tickets.First().Activities.First().Title, Is.EqualTo("Ready for DEV"));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Activities.First().Title, Is.EqualTo("Ready for DEV"));
         }
 
         [Test]
@@ -110,7 +151,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller).Build().Tickets.First().Activities.First().Started, Is.EqualTo(new DateTime(2013, 02, 14, 14, 23, 11)));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Activities.First().Started, Is.EqualTo(new DateTime(2013, 02, 14, 14, 23, 11)));
         }
 
         [Test]
@@ -127,7 +168,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller).Build().Tickets.First().Activities.First().Finished, Is.EqualTo(DateTime.MinValue));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Activities.First().Finished, Is.EqualTo(DateTime.MinValue));
         }
 
         [Test]
@@ -150,7 +191,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller).Build().Tickets.First().Activities.First().Finished, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Activities.First().Finished, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
         }
 
         public LeankitBoard GetBoard()
@@ -177,6 +218,11 @@ namespace LeanKit.Data.Tests
         public IEnumerable<LeanKitCardHistory> GetCardHistory(int cardId)
         {
             return _cardHistory;
+        }
+
+        public LeankitBoardLaneWrapper GetBoardArchive()
+        {
+            return _boardArchive;
         }
     }
 }

@@ -7,10 +7,10 @@ namespace LeanKit.APIClient.Tests
     [TestFixture]
     class IntegrationTests
     {
-        private const string USERNAME = "steve.elliot@laterooms.com";
-        private const string PASSWORD = "kanban";
-        private const string ACCOUNT = "lrtest";
-        private const string BOARD_ID = "32482312";
+        private const string USERNAME = "";
+        private const string PASSWORD = "";
+        private const string ACCOUNT = "";
+        private const string BOARD_ID = "";
 
         [Test]
         public void SetsBoardId()
