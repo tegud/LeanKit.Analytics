@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Data", "LeanKit.Dat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Data.Tests", "LeanKit.Data.Tests\LeanKit.Data.Tests.csproj", "{0DE557F6-32AE-4E28-936C-1C4C482CA07E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Utilities", "LeanKit.Utilities\LeanKit.Utilities.csproj", "{46346393-ECC7-4499-8BD7-594EFB47094A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Utilities.Tests", "LeanKit.Utilities.Tests\LeanKit.Utilities.Tests.csproj", "{4A6FB728-F049-4FD3-B11C-665FDC51C293}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{0DE557F6-32AE-4E28-936C-1C4C482CA07E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DE557F6-32AE-4E28-936C-1C4C482CA07E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DE557F6-32AE-4E28-936C-1C4C482CA07E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46346393-ECC7-4499-8BD7-594EFB47094A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46346393-ECC7-4499-8BD7-594EFB47094A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46346393-ECC7-4499-8BD7-594EFB47094A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46346393-ECC7-4499-8BD7-594EFB47094A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A6FB728-F049-4FD3-B11C-665FDC51C293}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A6FB728-F049-4FD3-B11C-665FDC51C293}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A6FB728-F049-4FD3-B11C-665FDC51C293}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A6FB728-F049-4FD3-B11C-665FDC51C293}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,5 +65,6 @@ Global
 		{1A63FB3E-1001-4B7A-8175-19BDD1A4D818} = {3B62102F-DB35-49C1-BCCE-961665D88153}
 		{F175E3F6-C8E4-4BC4-B1EE-E3351311599A} = {3B62102F-DB35-49C1-BCCE-961665D88153}
 		{0DE557F6-32AE-4E28-936C-1C4C482CA07E} = {3B62102F-DB35-49C1-BCCE-961665D88153}
+		{4A6FB728-F049-4FD3-B11C-665FDC51C293} = {3B62102F-DB35-49C1-BCCE-961665D88153}
 	EndGlobalSection
 EndGlobal

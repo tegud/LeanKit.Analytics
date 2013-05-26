@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using LeanKit.Data.Activities;
 
 namespace LeanKit.Data
 {
@@ -12,14 +13,5 @@ namespace LeanKit.Data
         public DateTime Started { get; set; }
 
         public IEnumerable<TicketActivity> Activities { get; set; }
-    }
-
-    public class TicketActivity
-    {
-        public string Title { get; set; }
-
-        public DateTime Started { get; set; }
-
-        public DateTime Finished { get; set; }
     }
 }

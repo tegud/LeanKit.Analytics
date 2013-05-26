@@ -2,36 +2,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LeanKit.APIClient.API;
+using LeanKit.Data.Activities;
+using LeanKit.Utilities.Collections;
 
 namespace LeanKit.Data
 {
-    public static class EnumerableExtensions
-    {
-        public static IEnumerable<T> FlattenHierarchy<T>(this T node, Func<T, IEnumerable<T>> getChildEnumerator)
-        {
-            yield return node;
-            if (getChildEnumerator(node) != null)
-            {
-                foreach (var child in getChildEnumerator(node))
-                {
-                    foreach (var childOrDescendant in child.FlattenHierarchy(getChildEnumerator))
-                    {
-                        yield return childOrDescendant;
-                    }
-                }
-            }
-        }
-    }
-
     public class AllTicketsForBoardFactory
     {
         private readonly IApiCaller _apiCaller;
-        private readonly ActivityIsInProgressSpecification _activityIsInProgressSpecification;
+        private readonly IActivitySpecification _activityIsInProgressSpecification;
+        private readonly ITicketActivityFactory _ticketActivityFactory;
 
-        public AllTicketsForBoardFactory(IApiCaller apiCaller, ActivityIsInProgressSpecification activityIsInProgressSpecification)
+        public AllTicketsForBoardFactory(IApiCaller apiCaller, 
+            IActivitySpecification activityIsInProgressSpecification,
+            ITicketActivityFactory ticketActivityFactory)
         {
             _activityIsInProgressSpecification = activityIsInProgressSpecification;
             _apiCaller = apiCaller;
+            _ticketActivityFactory = ticketActivityFactory;
         }
 
         public AllTicketsForBoard Build()
@@ -48,11 +36,6 @@ namespace LeanKit.Data
                 {
                     Tickets = allTicketsFromBoard.Select(BuildTicket)
                 };
-        }
-
-        private static DateTime ParseLeanKitHistoryDateTime(string rawDateTime)
-        {
-            return DateTime.Parse(rawDateTime.Replace(" at", string.Empty));
         }
 
         private IEnumerable<LeankitBoardCard> GetArchiveCards()
@@ -83,46 +66,15 @@ namespace LeanKit.Data
         private IEnumerable<TicketActivity> BuildTicketActivities(LeankitBoardCard c)
         {
             var cardHistory = _apiCaller.GetCardHistory(c.Id).ToArray();
-            var count = cardHistory.Count();
-            var cardMoveEvents = cardHistory.Where(h => h.Type == "CardCreationEventDTO" || h.Type == "CardMoveEventDTO");
 
-            var ticketActivities = cardMoveEvents.Select((h, i) =>
-                {
-                    var isCurrent = count - 1 == i;
-                    var finished = DateTime.MinValue;
+            var cardMoveEvents = cardHistory.Where(HistoryTypeIsReleventToCardActivity);
 
-                    if (!isCurrent)
-                    {
-                        finished = ParseLeanKitHistoryDateTime(cardHistory.ElementAt(i + 1).DateTime);
-                    }
-
-                    return new TicketActivity
-                        {
-                            Title = h.ToLaneTitle,
-                            Started = ParseLeanKitHistoryDateTime(h.DateTime),
-                            Finished = finished
-                        };
-                });
-
-            return ticketActivities;
+            return cardMoveEvents.SelectWithNext(_ticketActivityFactory.Build);
         }
-    }
 
-    public class ActivityIsInProgressSpecification : IActivitySpecification
-    {
-        private readonly IEnumerable<string> _inProgressActivities = new List<string>
-            {
-                "DEV WIP", "DEV DONE", "READY TO TEST", "TEST WIP", "READY TO RELEASE"
-            };
-
-        public bool IsSatisfiedBy(TicketActivity activity)
+        private static bool HistoryTypeIsReleventToCardActivity(LeanKitCardHistory historyItem)
         {
-            return _inProgressActivities.Contains(activity.Title.ToUpper());
+            return historyItem.Type == "CardCreationEventDTO" || historyItem.Type == "CardMoveEventDTO";
         }
-    }
-
-    public interface IActivitySpecification
-    {
-        bool IsSatisfiedBy(TicketActivity activity);
     }
 }

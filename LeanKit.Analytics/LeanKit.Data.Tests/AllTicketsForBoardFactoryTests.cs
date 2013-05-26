@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LeanKit.APIClient.API;
+using LeanKit.Data.Activities;
 using NUnit.Framework;
 
 namespace LeanKit.Data.Tests
@@ -34,7 +35,7 @@ namespace LeanKit.Data.Tests
         {
             _expectedId = 1234;
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Id, Is.EqualTo(_expectedId));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification(), new TicketActivityFactory()).Build().Tickets.First().Id, Is.EqualTo(_expectedId));
         }
 
         [Test]
@@ -69,7 +70,7 @@ namespace LeanKit.Data.Tests
                 
             
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.ElementAt(1).Id, Is.EqualTo(123456));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification(), new TicketActivityFactory()).Build().Tickets.ElementAt(1).Id, Is.EqualTo(123456));
         }
 
         [Test]
@@ -77,7 +78,7 @@ namespace LeanKit.Data.Tests
         {
             _expectedTitle = "Test Ticket";
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Title, Is.EqualTo(_expectedTitle));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification(), new TicketActivityFactory()).Build().Tickets.First().Title, Is.EqualTo(_expectedTitle));
         }
 
         [Test]
@@ -94,7 +95,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification(), new TicketActivityFactory()).Build().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
         }
 
         [Test]
@@ -117,7 +118,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification(), new TicketActivityFactory()).Build().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
         }
 
         [Test]
@@ -134,7 +135,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Activities.First().Title, Is.EqualTo("Ready for DEV"));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification(), new TicketActivityFactory()).Build().Tickets.First().Activities.First().Title, Is.EqualTo("Ready for DEV"));
         }
 
         [Test]
@@ -151,7 +152,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Activities.First().Started, Is.EqualTo(new DateTime(2013, 02, 14, 14, 23, 11)));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification(), new TicketActivityFactory()).Build().Tickets.First().Activities.First().Started, Is.EqualTo(new DateTime(2013, 02, 14, 14, 23, 11)));
         }
 
         [Test]
@@ -168,7 +169,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Activities.First().Finished, Is.EqualTo(DateTime.MinValue));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification(), new TicketActivityFactory()).Build().Tickets.First().Activities.First().Finished, Is.EqualTo(DateTime.MinValue));
         }
 
         [Test]
@@ -191,7 +192,7 @@ namespace LeanKit.Data.Tests
                 };
 
             var apiCaller = this;
-            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification()).Build().Tickets.First().Activities.First().Finished, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
+            Assert.That(new AllTicketsForBoardFactory(apiCaller, new ActivityIsInProgressSpecification(), new TicketActivityFactory()).Build().Tickets.First().Activities.First().Finished, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
         }
 
         public LeankitBoard GetBoard()
