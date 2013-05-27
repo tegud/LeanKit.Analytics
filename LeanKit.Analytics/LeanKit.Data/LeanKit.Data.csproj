@@ -51,8 +51,8 @@
     <Compile Include="Activities\TicketActivityFactory.cs" />
     <Compile Include="Activities\TicketFactory.cs" />
     <Compile Include="AllTicketsForBoard.cs" />
-    <Compile Include="BoardTicketsFromApiRepository.cs" />
-    <Compile Include="IAllBoardTicketsRepository.cs" />
+    <Compile Include="Repositories\BoardTicketsFromApiRepository.cs" />
+    <Compile Include="Repositories\IAllBoardTicketsRepository.cs" />
     <Compile Include="Ticket.cs" />
     <Compile Include="WorkDuration.cs" />
     <Compile Include="WorkDurationFactory.cs" />

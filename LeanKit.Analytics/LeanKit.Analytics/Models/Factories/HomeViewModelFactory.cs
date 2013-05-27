@@ -6,6 +6,7 @@ using LeanKit.Analytics.Controllers;
 using LeanKit.Analytics.Models.ViewModels;
 using LeanKit.Data;
 using LeanKit.Data.Activities;
+using LeanKit.Data.Repositories;
 
 namespace LeanKit.Analytics.Models.Factories
 {
@@ -31,7 +32,8 @@ namespace LeanKit.Analytics.Models.Factories
 
             var workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition
                 {
-                    Start = 9, End = 17
+                    Start = 9, 
+                    End = 17
                 });
             var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, new TicketActivityFactory(workDurationFactory));
             var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
@@ -44,7 +46,7 @@ namespace LeanKit.Analytics.Models.Factories
                     a.Duration, 
                     Title = MapActivityTitle(a.Title)
                 }))
-                .Where(x => !string.IsNullOrWhiteSpace(x.Title) && x.Duration.Hours > 0).Take(50).ToArray();
+                .Where(x => !string.IsNullOrWhiteSpace(x.Title) && x.Duration.Hours > 0).ToArray();
 
             var totalActivityHours = (double)allTicketActivityDurations.Sum(t => t.Duration.Hours);
 

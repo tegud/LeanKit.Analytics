@@ -4,7 +4,7 @@ using LeanKit.APIClient.API;
 using LeanKit.Data.Activities;
 using LeanKit.Utilities.Collections;
 
-namespace LeanKit.Data
+namespace LeanKit.Data.Repositories
 {
     public class AllBoardTicketsFromApi : IAllBoardTicketsRepository
     {
