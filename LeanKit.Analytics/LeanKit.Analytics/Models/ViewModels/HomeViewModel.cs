@@ -23,7 +23,9 @@ namespace LeanKit.Analytics.Models.ViewModels
     {
         public string Activity { get; set; }
 
-        public int Percent { get; set; }
+        public double Percent { get; set; }
+
+        public string FormattedPercent { get { return Percent.ToString("0.00"); } }
 
         public bool IsWaste { get; set; }
 

@@ -23,7 +23,7 @@
                     <ul>
                         @foreach(var activity in Model.MainWasteGraph.Activities.Where(a => !a.IsWaste))
                         {
-                            <li class="waste-graph-activity @activity.ClassName" data-activity-class="@activity.ClassName"><div class="legend-block"></div><span class="activity-name">@activity.Activity</span> - <span class="percent">@activity.Percent</span>%</li>
+                            <li class="waste-graph-activity @activity.ClassName" data-activity-class="@activity.ClassName"><div class="legend-block"></div><span class="activity-name">@activity.Activity</span> - <span class="percent">@activity.FormattedPercent</span>%</li>
                         }
                     </ul>
                 </div>
@@ -32,7 +32,7 @@
                     <ul>
                         @foreach(var activity in Model.MainWasteGraph.Activities.Where(a => a.IsWaste))
                         {
-                            <li class="waste-graph-activity @activity.ClassName" data-activity-class="@activity.ClassName"><div class="legend-block"></div><span class="activity-name">@activity.Activity</span> - <span class="percent">@activity.Percent</span>%</li>
+                            <li class="waste-graph-activity @activity.ClassName" data-activity-class="@activity.ClassName"><div class="legend-block"></div><span class="activity-name">@activity.Activity</span> - <span class="percent">@activity.FormattedPercent</span>%</li>
                         }
                     </ul>
                 </div>

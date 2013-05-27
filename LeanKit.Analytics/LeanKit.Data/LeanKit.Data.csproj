@@ -41,12 +41,21 @@
   <ItemGroup>
     <Compile Include="Activities\ActivityIsInProgressSpecification.cs" />
     <Compile Include="Activities\IActivitySpecification.cs" />
+    <Compile Include="Activities\IHistoryTypeSpecification.cs" />
+    <Compile Include="Activities\ITicketActivitiesFactory.cs" />
     <Compile Include="Activities\ITicketActivityFactory.cs" />
+    <Compile Include="Activities\ITicketFactory.cs" />
+    <Compile Include="Activities\ReleventHistoryTypeSpecification.cs" />
+    <Compile Include="Activities\TicketActivitiesFactory.cs" />
     <Compile Include="Activities\TicketActivity.cs" />
     <Compile Include="Activities\TicketActivityFactory.cs" />
+    <Compile Include="Activities\TicketFactory.cs" />
     <Compile Include="AllTicketsForBoard.cs" />
-    <Compile Include="AllTicketsForBoardFactory.cs" />
+    <Compile Include="BoardTicketsFromApiRepository.cs" />
+    <Compile Include="IAllBoardTicketsRepository.cs" />
     <Compile Include="Ticket.cs" />
+    <Compile Include="WorkDuration.cs" />
+    <Compile Include="WorkDurationFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LeanKit.APIClient\LeanKit.APIClient.csproj">

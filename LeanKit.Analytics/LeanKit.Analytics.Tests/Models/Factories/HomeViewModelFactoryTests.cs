@@ -9,6 +9,7 @@ using NUnit.Framework;
 namespace LeanKit.Analytics.Tests.Models.Factories
 {
     [TestFixture]
+    [Ignore]
     public class HomeViewModelFactoryTests
     {
         [TestCase("Developing", 0)]

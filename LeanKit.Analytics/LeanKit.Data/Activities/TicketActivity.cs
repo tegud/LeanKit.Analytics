@@ -9,5 +9,7 @@ namespace LeanKit.Data.Activities
         public DateTime Started { get; set; }
 
         public DateTime Finished { get; set; }
+
+        public WorkDuration Duration { get; set; }
     }
 }

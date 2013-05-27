@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0DE557F6-32AE-4E28-936C-1C4C482CA07E}</ProjectGuid>
+    <ProjectGuid>{D12F3124-D6E2-469E-B581-8151A3887171}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LeanKit.Data.Tests</RootNamespace>
-    <AssemblyName>LeanKit.Data.Tests</AssemblyName>
+    <RootNamespace>LeanKit.Utilities.Test</RootNamespace>
+    <AssemblyName>LeanKit.Utilities.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,9 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,21 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AllTicketsForBoardFactoryTests.cs" />
-    <Compile Include="WorkDurationTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LeanKit.APIClient\LeanKit.APIClient.csproj">
-      <Project>{E259085C-BCD0-44ED-8E53-B88500C0EE50}</Project>
-      <Name>LeanKit.APIClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LeanKit.Data\LeanKit.Data.csproj">
-      <Project>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</Project>
-      <Name>LeanKit.Data</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

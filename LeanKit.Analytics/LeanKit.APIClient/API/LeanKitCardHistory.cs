@@ -25,5 +25,7 @@ namespace LeanKit.APIClient.API
         public string TimeDifference { get; set; }
 
         public Int64 LastDate { get; set; }
+
+        public bool IsBlocked { get; set; }
     }
 }

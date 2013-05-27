@@ -13,5 +13,9 @@ namespace LeanKit.Data
         public DateTime Started { get; set; }
 
         public IEnumerable<TicketActivity> Activities { get; set; }
+
+        public WorkDuration CycleTime { get; set; }
+
+        public DateTime Finished { get; set; }
     }
 }

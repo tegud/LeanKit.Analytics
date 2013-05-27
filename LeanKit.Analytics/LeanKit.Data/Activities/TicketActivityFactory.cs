@@ -5,9 +5,18 @@ namespace LeanKit.Data.Activities
 {
     public class TicketActivityFactory : ITicketActivityFactory
     {
+        private readonly IWorkDurationFactory _workDurationFactory;
+
+        public TicketActivityFactory(IWorkDurationFactory workDurationFactory)
+        {
+            _workDurationFactory = workDurationFactory;
+        }
+
         public TicketActivity Build(LeanKitCardHistory historyItem, LeanKitCardHistory nextItem)
         {
+            var started = ParseLeanKitHistoryDateTime(historyItem.DateTime);
             var finished = DateTime.MinValue;
+
             if (nextItem != null)
             {
                 finished = ParseLeanKitHistoryDateTime(nextItem.DateTime);
@@ -15,9 +24,10 @@ namespace LeanKit.Data.Activities
 
             return new TicketActivity
                 {
-                    Title = historyItem.ToLaneTitle,
-                    Started = ParseLeanKitHistoryDateTime(historyItem.DateTime),
-                    Finished = finished
+                    Title = (historyItem.IsBlocked ? "Blocked: " : "") + historyItem.ToLaneTitle,
+                    Started = started,
+                    Finished = finished,
+                    Duration = _workDurationFactory.Build(started, finished == DateTime.MinValue ? DateTime.Now : finished)
                 };
         }
 
