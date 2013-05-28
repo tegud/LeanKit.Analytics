@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Utilities", "LeanKi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Utilities.Tests", "LeanKit.Utilities.Tests\LeanKit.Utilities.Tests.csproj", "{4A6FB728-F049-4FD3-B11C-665FDC51C293}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.SyncToDatabase", "LeanKit.SyncToDatabase\LeanKit.SyncToDatabase.csproj", "{85C1E500-FE5A-4AEF-90CD-C71297B2312E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{4A6FB728-F049-4FD3-B11C-665FDC51C293}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A6FB728-F049-4FD3-B11C-665FDC51C293}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A6FB728-F049-4FD3-B11C-665FDC51C293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85C1E500-FE5A-4AEF-90CD-C71297B2312E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85C1E500-FE5A-4AEF-90CD-C71297B2312E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85C1E500-FE5A-4AEF-90CD-C71297B2312E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85C1E500-FE5A-4AEF-90CD-C71297B2312E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

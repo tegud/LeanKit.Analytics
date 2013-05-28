@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{85C1E500-FE5A-4AEF-90CD-C71297B2312E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LeanKit.Data</RootNamespace>
-    <AssemblyName>LeanKit.Data</AssemblyName>
+    <RootNamespace>LeanKit.SyncToDatabase</RootNamespace>
+    <AssemblyName>LeanKit.SyncToDatabase</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper">
-      <HintPath>..\packages\Dapper.1.13\lib\net45\Dapper.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -42,41 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\ActivityIsInProgressSpecification.cs" />
-    <Compile Include="Activities\IActivitySpecification.cs" />
-    <Compile Include="Activities\IHistoryTypeSpecification.cs" />
-    <Compile Include="Activities\ITicketActivitiesFactory.cs" />
-    <Compile Include="Activities\ITicketActivityFactory.cs" />
-    <Compile Include="Activities\ITicketFactory.cs" />
-    <Compile Include="Activities\ReleventHistoryTypeSpecification.cs" />
-    <Compile Include="Activities\TicketActivitiesFactory.cs" />
-    <Compile Include="Activities\TicketActivity.cs" />
-    <Compile Include="Activities\TicketActivityFactory.cs" />
-    <Compile Include="Activities\TicketFactory.cs" />
-    <Compile Include="AllTicketsForBoard.cs" />
-    <Compile Include="Repositories\BoardTicketsFromApiRepository.cs" />
-    <Compile Include="Repositories\IAllBoardTicketsRepository.cs" />
-    <Compile Include="Repositories\ITicketRepository.cs" />
-    <Compile Include="Repositories\TicketsRepository.cs" />
-    <Compile Include="Ticket.cs" />
-    <Compile Include="WorkDuration.cs" />
-    <Compile Include="WorkDurationFactory.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LeanKit.APIClient\LeanKit.APIClient.csproj">
       <Project>{E259085C-BCD0-44ED-8E53-B88500C0EE50}</Project>
       <Name>LeanKit.APIClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\LeanKit.Utilities\LeanKit.Utilities.csproj">
-      <Project>{46346393-ECC7-4499-8BD7-594EFB47094A}</Project>
-      <Name>LeanKit.Utilities</Name>
+    <ProjectReference Include="..\LeanKit.Data\LeanKit.Data.csproj">
+      <Project>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</Project>
+      <Name>LeanKit.Data</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
