@@ -3,7 +3,7 @@ using System.Linq;
 using LeanKit.APIClient.API;
 using LeanKit.Utilities.Collections;
 
-namespace LeanKit.Data.Activities
+namespace LeanKit.Data.API
 {
     public class TicketActivitiesFactory : ITicketActivitiesFactory
     {

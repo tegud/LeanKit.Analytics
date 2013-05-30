@@ -1,4 +1,4 @@
-namespace LeanKit.Data.Repositories
+namespace LeanKit.Data
 {
     public interface IAllBoardTicketsRepository
     {

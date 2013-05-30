@@ -1,6 +1,6 @@
 using System;
 
-namespace LeanKit.Data.Activities
+namespace LeanKit.Data
 {
     public class TicketActivity
     {

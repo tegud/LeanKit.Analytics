@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Utilities.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.SyncToDatabase", "LeanKit.SyncToDatabase\LeanKit.SyncToDatabase.csproj", "{85C1E500-FE5A-4AEF-90CD-C71297B2312E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Data.SQL", "LeanKit.Data.SQL\LeanKit.Data.SQL.csproj", "{8838D1D0-FB0C-4093-B27B-12317183624E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Data.API", "LeanKit.Data.API\LeanKit.Data.API.csproj", "{4390A29B-91D4-4112-A96F-3F49BDFF47DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +67,14 @@ Global
 		{85C1E500-FE5A-4AEF-90CD-C71297B2312E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85C1E500-FE5A-4AEF-90CD-C71297B2312E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85C1E500-FE5A-4AEF-90CD-C71297B2312E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8838D1D0-FB0C-4093-B27B-12317183624E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8838D1D0-FB0C-4093-B27B-12317183624E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8838D1D0-FB0C-4093-B27B-12317183624E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8838D1D0-FB0C-4093-B27B-12317183624E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4390A29B-91D4-4112-A96F-3F49BDFF47DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4390A29B-91D4-4112-A96F-3F49BDFF47DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4390A29B-91D4-4112-A96F-3F49BDFF47DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4390A29B-91D4-4112-A96F-3F49BDFF47DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

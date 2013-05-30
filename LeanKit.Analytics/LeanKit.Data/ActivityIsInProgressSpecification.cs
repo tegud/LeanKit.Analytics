@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LeanKit.Data.Activities
+namespace LeanKit.Data
 {
     public class ActivityIsInProgressSpecification : IActivitySpecification
     {

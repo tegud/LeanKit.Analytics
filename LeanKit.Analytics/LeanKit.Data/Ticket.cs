@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using LeanKit.Data.Activities;
 
 namespace LeanKit.Data
 {

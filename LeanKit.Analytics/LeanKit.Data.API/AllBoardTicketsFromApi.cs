@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using LeanKit.APIClient.API;
-using LeanKit.Data.Activities;
 using LeanKit.Utilities.Collections;
 
-namespace LeanKit.Data.Repositories
+namespace LeanKit.Data.API
 {
     public class AllBoardTicketsFromApi : IAllBoardTicketsRepository
     {

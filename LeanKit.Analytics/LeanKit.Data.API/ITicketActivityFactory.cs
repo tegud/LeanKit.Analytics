@@ -1,6 +1,6 @@
 using LeanKit.APIClient.API;
 
-namespace LeanKit.Data.Activities
+namespace LeanKit.Data.API
 {
     public interface ITicketActivityFactory
     {

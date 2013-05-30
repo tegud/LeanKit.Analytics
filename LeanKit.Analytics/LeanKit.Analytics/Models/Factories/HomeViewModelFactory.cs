@@ -5,8 +5,7 @@ using LeanKit.APIClient.API;
 using LeanKit.Analytics.Controllers;
 using LeanKit.Analytics.Models.ViewModels;
 using LeanKit.Data;
-using LeanKit.Data.Activities;
-using LeanKit.Data.Repositories;
+using LeanKit.Data.API;
 
 namespace LeanKit.Analytics.Models.Factories
 {

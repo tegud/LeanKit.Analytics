@@ -42,23 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\ActivityIsInProgressSpecification.cs" />
-    <Compile Include="Activities\IActivitySpecification.cs" />
-    <Compile Include="Activities\IHistoryTypeSpecification.cs" />
-    <Compile Include="Activities\ITicketActivitiesFactory.cs" />
-    <Compile Include="Activities\ITicketActivityFactory.cs" />
-    <Compile Include="Activities\ITicketFactory.cs" />
-    <Compile Include="Activities\ReleventHistoryTypeSpecification.cs" />
-    <Compile Include="Activities\TicketActivitiesFactory.cs" />
-    <Compile Include="Activities\TicketActivity.cs" />
-    <Compile Include="Activities\TicketActivityFactory.cs" />
-    <Compile Include="Activities\TicketFactory.cs" />
+    <Compile Include="ActivityIsInProgressSpecification.cs" />
     <Compile Include="AllTicketsForBoard.cs" />
-    <Compile Include="Repositories\BoardTicketsFromApiRepository.cs" />
-    <Compile Include="Repositories\IAllBoardTicketsRepository.cs" />
-    <Compile Include="Repositories\ITicketRepository.cs" />
-    <Compile Include="Repositories\TicketsRepository.cs" />
+    <Compile Include="IActivitySpecification.cs" />
+    <Compile Include="IAllBoardTicketsRepository.cs" />
     <Compile Include="Ticket.cs" />
+    <Compile Include="TicketActivity.cs" />
     <Compile Include="WorkDuration.cs" />
     <Compile Include="WorkDurationFactory.cs" />
   </ItemGroup>

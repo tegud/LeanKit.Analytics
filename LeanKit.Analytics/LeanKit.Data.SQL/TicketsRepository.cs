@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
-using LeanKit.APIClient.API;
-using LeanKit.Data.Activities;
 
-namespace LeanKit.Data.Repositories
+namespace LeanKit.Data.SQL
 {
     public class TicketsRepository : ITicketRepository
     {
@@ -19,26 +17,17 @@ namespace LeanKit.Data.Repositories
 
         public AllTicketsForBoard GetAll()
         {
-            var tickets = new List<Ticket>();
-            var ticketHistories = new Dictionary<int, List<LeanKitCardHistory>>();
+            var tickets = new List<TicketRecord>();
 
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
 
-                sqlConnection.Query<Ticket, LeanKitCardHistory, Ticket>(@"SELECT * FROM CardActivity CA INNER JOIN Card C ON CA.CardID = C.ID ORDER BY C.ID, CA.ID", (ticket, activity) =>
+                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketRecord>(@"SELECT * FROM CardActivity CA INNER JOIN Card C ON CA.CardID = C.ID ORDER BY C.ID, CA.ID", (ticket, activity) =>
                     {
-                        if(tickets.Any(t => t.Id == ticket.Id))
-                        {
-                            ticketHistories[ticket.Id].Add(activity);
-                        }
-                        else
-                        {
-                            tickets.Add(ticket);
-                            ticketHistories.Add(ticket.Id, new List<LeanKitCardHistory> { activity });
-                        }
+                        var currentTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id) ?? ticket;
 
-
+                        currentTicket.Activities.Add(activity);
 
                         return ticket;
                     });
@@ -46,7 +35,7 @@ namespace LeanKit.Data.Repositories
 
             return new AllTicketsForBoard
                 {
-                    Tickets = tickets
+                    Tickets = null
                 };
         }
 

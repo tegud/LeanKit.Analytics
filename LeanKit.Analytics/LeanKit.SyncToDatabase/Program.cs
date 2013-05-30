@@ -1,8 +1,8 @@
 ﻿using System;
 using LeanKit.APIClient.API;
 using LeanKit.Data;
-using LeanKit.Data.Activities;
-using LeanKit.Data.Repositories;
+using LeanKit.Data.API;
+using LeanKit.Data.SQL;
 
 namespace LeanKit.SyncToDatabase
 {
@@ -16,7 +16,7 @@ namespace LeanKit.SyncToDatabase
             const string boardId = "";
             const string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
 
-            var apiCaller = new ApiCaller()
+            var apiCaller = new ApiCaller
                 {
                     Account = account,
                     BoardId = boardId,

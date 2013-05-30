@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using LeanKit.APIClient.API;
 
-namespace LeanKit.Data.Activities
+namespace LeanKit.Data.API
 {
     public class TicketFactory : ITicketFactory
     {

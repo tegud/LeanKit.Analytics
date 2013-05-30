@@ -50,6 +50,10 @@
       <Project>{E259085C-BCD0-44ED-8E53-B88500C0EE50}</Project>
       <Name>LeanKit.APIClient</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LeanKit.Data.API\LeanKit.Data.API.csproj">
+      <Project>{4390A29B-91D4-4112-A96F-3F49BDFF47DD}</Project>
+      <Name>LeanKit.Data.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LeanKit.Data\LeanKit.Data.csproj">
       <Project>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</Project>
       <Name>LeanKit.Data</Name>

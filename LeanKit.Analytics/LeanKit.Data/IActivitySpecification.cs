@@ -1,4 +1,4 @@
-namespace LeanKit.Data.Activities
+namespace LeanKit.Data
 {
     public interface IActivitySpecification
     {

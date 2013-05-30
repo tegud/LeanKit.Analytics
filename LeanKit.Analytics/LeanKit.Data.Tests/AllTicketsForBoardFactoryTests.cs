@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LeanKit.APIClient.API;
-using LeanKit.Data.Activities;
-using LeanKit.Data.Repositories;
+using LeanKit.Data.API;
 using NUnit.Framework;
 
 namespace LeanKit.Data.Tests
