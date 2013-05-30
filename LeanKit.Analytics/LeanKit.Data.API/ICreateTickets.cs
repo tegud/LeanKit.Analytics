@@ -2,7 +2,7 @@ using LeanKit.APIClient.API;
 
 namespace LeanKit.Data.API
 {
-    public interface ITicketFactory
+    public interface ICreateTickets
     {
         Ticket Build(LeankitBoardCard card);
     }

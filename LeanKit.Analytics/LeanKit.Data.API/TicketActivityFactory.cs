@@ -5,9 +5,9 @@ namespace LeanKit.Data.API
 {
     public class TicketActivityFactory : ITicketActivityFactory
     {
-        private readonly IWorkDurationFactory _workDurationFactory;
+        private readonly ICalculateWorkDuration _workDurationFactory;
 
-        public TicketActivityFactory(IWorkDurationFactory workDurationFactory)
+        public TicketActivityFactory(ICalculateWorkDuration workDurationFactory)
         {
             _workDurationFactory = workDurationFactory;
         }
@@ -27,7 +27,7 @@ namespace LeanKit.Data.API
                     Title = (historyItem.IsBlocked ? "Blocked: " : "") + historyItem.ToLaneTitle,
                     Started = started,
                     Finished = finished,
-                    Duration = _workDurationFactory.Build(started, finished == DateTime.MinValue ? DateTime.Now : finished)
+                    Duration = _workDurationFactory.CalculateDuration(started, finished == DateTime.MinValue ? DateTime.Now : finished)
                 };
         }
 

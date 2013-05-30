@@ -8,10 +8,10 @@ namespace LeanKit.Data.API
     public class AllBoardTicketsFromApi : IAllBoardTicketsRepository
     {
         private readonly IApiCaller _apiCaller;
-        private readonly ITicketFactory _ticketFactory;
+        private readonly ICreateTickets _ticketFactory;
 
         public AllBoardTicketsFromApi(IApiCaller apiCaller, 
-            ITicketFactory ticketFactory)
+            ICreateTickets ticketFactory)
         {
             _apiCaller = apiCaller;
             _ticketFactory = ticketFactory;

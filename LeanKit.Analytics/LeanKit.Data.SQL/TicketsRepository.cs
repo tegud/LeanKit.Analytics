@@ -33,9 +33,11 @@ namespace LeanKit.Data.SQL
                     });
             }
 
+            ICreateTickets ticketFactory = new TicketFactory(new WorkDurationFactory(new DateTime[0], new WorkDayDefinition { Start = 9, End = 17 }));
+
             return new AllTicketsForBoard
                 {
-                    Tickets = null
+                    Tickets = tickets.Select(ticketFactory.Build)
                 };
         }
 

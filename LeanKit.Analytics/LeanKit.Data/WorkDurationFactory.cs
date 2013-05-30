@@ -10,12 +10,12 @@ namespace LeanKit.Data
         public int End { get; set; }
     }
 
-    public interface IWorkDurationFactory
+    public interface ICalculateWorkDuration
     {
-        WorkDuration Build(DateTime start, DateTime end);
+        WorkDuration CalculateDuration(DateTime start, DateTime end);
     }
 
-    public class WorkDurationFactory : IWorkDurationFactory
+    public class WorkDurationFactory : ICalculateWorkDuration
     {
         private readonly DateTime[] _holidays;
         private readonly WorkDayDefinition _workDayDefinition;
@@ -26,7 +26,7 @@ namespace LeanKit.Data
             _workDayDefinition = workDayDefinition;
         }
 
-        public WorkDuration Build(DateTime start, DateTime end)
+        public WorkDuration CalculateDuration(DateTime start, DateTime end)
         {
             var days = CalculateWeekDays(start, end) - CalculateNumberOfHolidayDays(start, end);
             var hours = (days + 1) * 8;

@@ -16,7 +16,7 @@ namespace LeanKit.Data.Tests
             {
                 Start = 9,
                 End = 17
-            }).Build(start, end).Days, Is.EqualTo(1));
+            }).CalculateDuration(start, end).Days, Is.EqualTo(1));
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace LeanKit.Data.Tests
             {
                 Start = 9,
                 End = 17
-            }).Build(start, end).Days, Is.EqualTo(1));
+            }).CalculateDuration(start, end).Days, Is.EqualTo(1));
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace LeanKit.Data.Tests
                 {
                     Start = 9,
                     End = 17
-                }).Build(start, end).Days, Is.EqualTo(1));
+                }).CalculateDuration(start, end).Days, Is.EqualTo(1));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace LeanKit.Data.Tests
                 {
                     Start = 9,
                     End = 17
-                }).Build(start, end).Days, Is.EqualTo(8));
+                }).CalculateDuration(start, end).Days, Is.EqualTo(8));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace LeanKit.Data.Tests
                 {
                     Start = 9,
                     End = 17
-                }).Build(start, end).Days, Is.EqualTo(7));
+                }).CalculateDuration(start, end).Days, Is.EqualTo(7));
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace LeanKit.Data.Tests
                 {
                     Start = 9,
                     End = 17
-                }).Build(start, end).Hours, Is.EqualTo(1));
+                }).CalculateDuration(start, end).Hours, Is.EqualTo(1));
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace LeanKit.Data.Tests
                 {
                     Start = 9,
                     End = 17
-                }).Build(start, end).Hours, Is.EqualTo(21));
+                }).CalculateDuration(start, end).Hours, Is.EqualTo(21));
         }
     }
 }

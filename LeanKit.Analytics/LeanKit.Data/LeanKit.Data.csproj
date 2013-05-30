@@ -48,6 +48,7 @@
     <Compile Include="IAllBoardTicketsRepository.cs" />
     <Compile Include="Ticket.cs" />
     <Compile Include="TicketActivity.cs" />
+    <Compile Include="TicketCycleTimeDurationFactory.cs" />
     <Compile Include="WorkDuration.cs" />
     <Compile Include="WorkDurationFactory.cs" />
   </ItemGroup>
