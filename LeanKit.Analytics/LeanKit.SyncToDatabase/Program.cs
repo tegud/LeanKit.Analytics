@@ -36,7 +36,8 @@ namespace LeanKit.SyncToDatabase
             var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory), new TicketStartDateFactory(activityIsInProgressSpecification), new ActivityIsLiveSpecification());
+            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
             var allTickets = new AllBoardTicketsFromApi(apiCaller, ticketFactory).Get().Tickets;
             var ticketRepository = new TicketsRepository(connectionString);
 

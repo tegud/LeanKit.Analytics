@@ -37,7 +37,8 @@ namespace LeanKit.Data.Tests
             var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory), new TicketStartDateFactory(activityIsInProgressSpecification), new ActivityIsLiveSpecification());
+            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
 
             var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
 
@@ -83,7 +84,8 @@ namespace LeanKit.Data.Tests
             var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new ActivityIsLiveSpecification());
+            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
 
             var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
 
@@ -129,88 +131,12 @@ namespace LeanKit.Data.Tests
             var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new ActivityIsLiveSpecification());
+            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
 
             var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
 
             Assert.That(allTicketsForBoardFactory.Get().Tickets.Count(), Is.EqualTo(1));
-        }
-
-        [Test]
-        public void SetsTicketTitle()
-        {
-            _expectedTitle = "Test Ticket";
-            var apiCaller = this;
-            var workDurationFactory = this;
-            var ticketCycleTimeDurationFactory = this;
-
-            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
-            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new ActivityIsLiveSpecification());
-
-            var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
-            Assert.That(allTicketsForBoardFactory.Get().Tickets.First().Title, Is.EqualTo(_expectedTitle));
-        }
-
-        [Test]
-        public void SetsTicketStarted()
-        {
-            _cardHistory = new[] 
-                {
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardCreationEventDTO",
-                            DateTime = "15/02/2013 at 10:50:35 AM",
-                            ToLaneTitle = "DEV WIP"
-                        }
-                };
-
-            var apiCaller = this;
-            var workDurationFactory = this;
-            var ticketCycleTimeDurationFactory = this;
-
-            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
-            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new ActivityIsLiveSpecification());
-
-            var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
-
-            Assert.That(allTicketsForBoardFactory.Get().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
-        }
-
-        [Test]
-        public void SetsTicketStartedWhenInitialStateIsReadyForDev()
-        {
-            _cardHistory = new[] 
-                {
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardCreationEventDTO",
-                            DateTime = "14/02/2013 at 2:23:11 PM",
-                            ToLaneTitle = "READY FOR DEV"
-                        },
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardMoveEventDTO",
-                            DateTime = "15/02/2013 at 10:50:35 AM",
-                            ToLaneTitle = "DEV WIP"
-                        }
-                };
-
-            var apiCaller = this;
-            var workDurationFactory = this;
-            var ticketCycleTimeDurationFactory = this;
-
-            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
-            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new ActivityIsLiveSpecification());
-
-            var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
-
-            Assert.That(allTicketsForBoardFactory.Get().Tickets.First().Started, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
         }
 
         [Test]
@@ -246,52 +172,15 @@ namespace LeanKit.Data.Tests
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
 
+            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
             var ticketFactory = new TicketFactory(ticketActivitiesFactory, 
-                ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new ActivityIsLiveSpecification());
+                ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
 
             var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
 
             Assert.That(allTicketsForBoardFactory.Get().Tickets.First().CycleTime.Days, Is.EqualTo(2));
         }
 
-        [Test]
-        public void SetsTicketFinished()
-        {
-            _cardHistory = new[] 
-                {
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardCreationEventDTO",
-                            DateTime = "14/02/2013 at 2:23:11 PM",
-                            ToLaneTitle = "READY FOR DEV"
-                        },
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardMoveEventDTO",
-                            DateTime = "15/02/2013 at 10:50:35 AM",
-                            ToLaneTitle = "DEV WIP"
-                        },
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardMoveEventDTO",
-                            DateTime = "17/02/2013 at 3:50:35 PM",
-                            ToLaneTitle = "LIVE"
-                        }
-                };
-
-            var apiCaller = this;
-            var workDurationFactory = this;
-            var ticketCycleTimeDurationFactory = this;
-
-            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
-            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new ActivityIsLiveSpecification());
-
-            var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
-            
-            Assert.That(allTicketsForBoardFactory.Get().Tickets.First().Finished, Is.EqualTo(new DateTime(2013, 02, 17, 15, 50, 35)));
-        }
 
         public LeankitBoard GetBoard()
         {
