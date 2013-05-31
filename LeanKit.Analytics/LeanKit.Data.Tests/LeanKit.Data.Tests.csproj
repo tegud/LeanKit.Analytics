@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AllTicketsForBoardFactoryTests.cs" />
+    <Compile Include="FakeMileStoneFactory.cs" />
     <Compile Include="WorkDurationTests.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TicketActivityFactoryTests.cs" />
+    <Compile Include="TicketFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LeanKit.APIClient\LeanKit.APIClient.csproj">
@@ -53,6 +54,10 @@
     <ProjectReference Include="..\LeanKit.Data.API\LeanKit.Data.API.csproj">
       <Project>{4390A29B-91D4-4112-A96F-3F49BDFF47DD}</Project>
       <Name>LeanKit.Data.API</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LeanKit.Data.Tests\LeanKit.Data.Tests.csproj">
+      <Project>{0DE557F6-32AE-4E28-936C-1C4C482CA07E}</Project>
+      <Name>LeanKit.Data.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\LeanKit.Data\LeanKit.Data.csproj">
       <Project>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</Project>
