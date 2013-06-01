@@ -37,7 +37,7 @@ namespace LeanKit.Analytics.Models.Factories
             var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, new TicketActivityFactory(workDurationFactory));
             var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
             IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-            var allTickets = new AllBoardTicketsFromApi(apiCaller, new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification))).Get();
+            var allTickets = new AllBoardTicketsFromApi(apiCaller, new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification)), new ValidArchiveCardSpecification()).Get();
 
             var allTicketActivityDurations = allTickets.Tickets.SelectMany(t => t.Activities.Select(a => new
                 {

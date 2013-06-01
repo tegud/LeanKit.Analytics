@@ -9,6 +9,8 @@ namespace LeanKit.Data.API.Tests
     [TestFixture]
     public class TicketFactoryTests : ITicketActivitiesFactory, ICalculateWorkDuration
     {
+        private WorkDuration _workDuration;
+
         [Test]
         public void SetsId()
         {
@@ -65,6 +67,23 @@ namespace LeanKit.Data.API.Tests
             Assert.That(ticketFactory.Build(new LeankitBoardCard()).Finished, Is.EqualTo(expectedFinished));
         }
 
+        [Test]
+        public void SetsCycleTime()
+        {
+            var expectedDuration = new WorkDuration();
+
+            _workDuration = expectedDuration;
+
+            ITicketActivitiesFactory ticketActivitiesFactory = this;
+            ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+
+            var fakeMileStoneFactory = new FakeMileStoneFactory();
+
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+
+            Assert.That(ticketFactory.Build(new LeankitBoardCard()).CycleTime, Is.EqualTo(expectedDuration));
+        }
+
         public IEnumerable<TicketActivity> Build(LeankitBoardCard card)
         {
             return new List<TicketActivity>(0);
@@ -72,7 +91,7 @@ namespace LeanKit.Data.API.Tests
 
         public WorkDuration CalculateDuration(DateTime start, DateTime end)
         {
-            return new WorkDuration();
+            return _workDuration;
         }
     }
 }

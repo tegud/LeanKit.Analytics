@@ -44,11 +44,13 @@
     <Compile Include="ITicketActivitiesFactory.cs" />
     <Compile Include="ITicketActivityFactory.cs" />
     <Compile Include="ICreateTickets.cs" />
+    <Compile Include="IValidateLeankitCards.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReleventHistoryTypeSpecification.cs" />
     <Compile Include="TicketActivitiesFactory.cs" />
     <Compile Include="TicketActivityFactory.cs" />
     <Compile Include="TicketFactory.cs" />
+    <Compile Include="ValidArchiveCardSpecification.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LeanKit.APIClient\LeanKit.APIClient.csproj">

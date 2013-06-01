@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LeanKit.APIClient.API;
 using LeanKit.Data.API;
@@ -8,179 +7,60 @@ using NUnit.Framework;
 namespace LeanKit.Data.Tests
 {
     [TestFixture]
-    public class AllTicketsForBoardFactoryTests : IApiCaller, ICalculateWorkDuration
+    public class AllTicketsForBoardFactoryTests : IApiCaller, ICreateTickets, IValidateLeankitCards
     {
-        private int _expectedId;
-        private string _expectedTitle;
-        private LeanKitCardHistory[] _cardHistory = new[] 
-                {
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardCreationEventDTO",
-                            DateTime = "15/02/2013 at 10:50:35 AM",
-                            ToLaneTitle = "DEV WIP"
-                        }
-                };
-
-        private LeankitBoardLaneWrapper _boardArchive = new LeankitBoardLaneWrapper
-            {
-                Lane = new LeankitBoardLane { Cards = new LeankitBoardCard[0] },
-                ChildLanes = new LeankitBoardLaneWrapper[] {}
-            };
+        private LeankitBoardCard _actualLeankitBoardCard;
+        private LeankitBoardCard _expectedLeankitBoardCard;
+        private LeankitBoardCard _expectedArchiveLeankitBoardCard;
+        private bool _meetsSpecification;
 
         [Test]
-        public void SetsTicketId()
+        public void AddsTicketFromBoardColumns()
         {
-            _expectedId = 1234;
-            var apiCaller = this;
-            var workDurationFactory = this;
-            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
-            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
+            IApiCaller apiCaller = this;
+            ICreateTickets ticketFactory = this;
+            IValidateLeankitCards validArchiveCardSpecification = this;
 
-            var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
+            _meetsSpecification = true;
+            _expectedArchiveLeankitBoardCard = null;
+            _expectedLeankitBoardCard = new LeankitBoardCard();
 
-            Assert.That(allTicketsForBoardFactory.Get().Tickets.First().Id, Is.EqualTo(_expectedId));
+            new AllBoardTicketsFromApi(apiCaller, ticketFactory, validArchiveCardSpecification).Get().Tickets.ToArray();
+
+            Assert.That(_actualLeankitBoardCard, Is.EqualTo(_expectedLeankitBoardCard));
         }
 
         [Test]
-        public void SetsTicketIdFromArchiveTicket()
+        public void AddsTicketFromArchiveColumns()
         {
-            _boardArchive = new LeankitBoardLaneWrapper
-            {
-                Lane = new LeankitBoardLane
-                {
-                    Title = "Archive"
-                },
-                ChildLanes = new[]
-                        {
-                            new LeankitBoardLaneWrapper
-                                {
-                                    Lane = new LeankitBoardLane
-                                        {
-                                            Title = "Live",
-                                            Cards = new[]
-                                                {
-                                                    new LeankitBoardCard
-                                                        {
-                                                            Title = "Example Card",
-                                                            Id = 123456
-                                                        }
-                                                }
+            IApiCaller apiCaller = this;
+            ICreateTickets ticketFactory = this;
+            IValidateLeankitCards validArchiveCardSpecification = this;
 
-                                        }
-                                }
+            _meetsSpecification = true;
+            _expectedArchiveLeankitBoardCard = new LeankitBoardCard();
 
-                        }
-            };
+            new AllBoardTicketsFromApi(apiCaller, ticketFactory, validArchiveCardSpecification).Get().Tickets.ToArray();
 
-
-            var apiCaller = this;
-            var workDurationFactory = this;
-            var ticketCycleTimeDurationFactory = this;
-
-            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
-            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
-
-            var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
-
-            Assert.That(allTicketsForBoardFactory.Get().Tickets.ElementAt(1).Id, Is.EqualTo(123456));
+            Assert.That(_actualLeankitBoardCard, Is.EqualTo(_expectedArchiveLeankitBoardCard));
         }
 
         [Test]
-        public void ArchiveTicketsCardsOlderThanAreIgnored()
+        public void IgnoresArchiveTicketsThatDoNotMatchValidSpecification()
         {
-            _boardArchive = new LeankitBoardLaneWrapper
-            {
-                Lane = new LeankitBoardLane
-                {
-                    Title = "Archive"
-                },
-                ChildLanes = new[]
-                        {
-                            new LeankitBoardLaneWrapper
-                                {
-                                    Lane = new LeankitBoardLane
-                                        {
-                                            Title = "Live",
-                                            Cards = new[]
-                                                {
-                                                    new LeankitBoardCard
-                                                        {
-                                                            Id = 123456,
-                                                            Title = "Cards older than"
-                                                        }
-                                                }
+            IApiCaller apiCaller = this;
+            ICreateTickets ticketFactory = this;
+            IValidateLeankitCards validArchiveCardSpecification = this;
 
-                                        }
-                                }
+            _meetsSpecification = false;
+            _actualLeankitBoardCard = null;
+            _expectedLeankitBoardCard = null;
+            _expectedArchiveLeankitBoardCard = new LeankitBoardCard();
 
-                        }
-            };
+            new AllBoardTicketsFromApi(apiCaller, ticketFactory, validArchiveCardSpecification).Get().Tickets.ToArray();
 
-
-            var apiCaller = this;
-            var workDurationFactory = this;
-            var ticketCycleTimeDurationFactory = this;
-
-            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
-            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
-
-            var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
-
-            Assert.That(allTicketsForBoardFactory.Get().Tickets.Count(), Is.EqualTo(1));
+            Assert.That(_actualLeankitBoardCard, Is.Null);
         }
-
-        [Test]
-        public void SetsTicketCycleTime()
-        {
-            _cardHistory = new[] 
-                {
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardCreationEventDTO",
-                            DateTime = "14/02/2013 at 2:23:11 PM",
-                            ToLaneTitle = "READY FOR DEV"
-                        },
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardMoveEventDTO",
-                            DateTime = "15/02/2013 at 10:50:35 AM",
-                            ToLaneTitle = "DEV WIP"
-                        },
-                    new LeanKitCardHistory
-                        {
-                            Type = "CardMoveEventDTO",
-                            DateTime = "17/02/2013 at 3:50:35 PM",
-                            ToLaneTitle = "LIVE"
-                        }
-                };
-
-            var apiCaller = this;
-            var workDurationFactory = this;
-            var ticketCycleTimeDurationFactory = this;
-
-            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
-            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
-
-            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, 
-                ticketCycleTimeDurationFactory, new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
-
-            var allTicketsForBoardFactory = new AllBoardTicketsFromApi(apiCaller, ticketFactory);
-
-            Assert.That(allTicketsForBoardFactory.Get().Tickets.First().CycleTime.Days, Is.EqualTo(2));
-        }
-
 
         public LeankitBoard GetBoard()
         {
@@ -192,11 +72,7 @@ namespace LeanKit.Data.Tests
                                 {
                                     Cards = new[]
                                         {
-                                            new LeankitBoardCard
-                                                {
-                                                    Id = _expectedId,
-                                                    Title = _expectedTitle
-                                                }
+                                            _expectedLeankitBoardCard
                                         }
                                 }
                         }
@@ -205,21 +81,36 @@ namespace LeanKit.Data.Tests
 
         public IEnumerable<LeanKitCardHistory> GetCardHistory(int cardId)
         {
-            return _cardHistory;
+            return null;
         }
 
         public LeankitBoardLaneWrapper GetBoardArchive()
         {
-            return _boardArchive;
+            return new LeankitBoardLaneWrapper
+                {
+                    Lane = new LeankitBoardLane
+                        {
+                            Cards = new[]
+                                {
+                                    _expectedArchiveLeankitBoardCard
+                                }
+                        }
+                };
         }
 
-        public WorkDuration CalculateDuration(DateTime start, DateTime end)
+        public Ticket Build(LeankitBoardCard card)
         {
-            return new WorkDuration
-                {
-                    Days = 2,
-                    Hours = 12
-                };
+            if (card != null)
+            {
+                _actualLeankitBoardCard = card;
+            }
+
+            return null;
+        }
+
+        public bool IsSatisfiedBy(LeankitBoardCard card)
+        {
+            return _meetsSpecification;
         }
     }
 }
