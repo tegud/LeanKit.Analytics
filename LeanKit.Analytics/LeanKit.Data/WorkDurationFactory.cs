@@ -3,18 +3,6 @@ using System.Linq;
 
 namespace LeanKit.Data
 {
-    public class WorkDayDefinition
-    {
-        public int Start { get; set; }
-
-        public int End { get; set; }
-    }
-
-    public interface ICalculateWorkDuration
-    {
-        WorkDuration CalculateDuration(DateTime start, DateTime end);
-    }
-
     public class WorkDurationFactory : ICalculateWorkDuration
     {
         private readonly DateTime[] _holidays;

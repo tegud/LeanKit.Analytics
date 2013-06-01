@@ -6,6 +6,7 @@ using LeanKit.Analytics.Controllers;
 using LeanKit.Analytics.Models.ViewModels;
 using LeanKit.Data;
 using LeanKit.Data.API;
+using LeanKit.Utilities.DateTime;
 
 namespace LeanKit.Analytics.Models.Factories
 {
@@ -37,7 +38,7 @@ namespace LeanKit.Analytics.Models.Factories
             var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, new TicketActivityFactory(workDurationFactory));
             var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
             IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-            var allTickets = new AllBoardTicketsFromApi(apiCaller, new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification)), new ValidArchiveCardSpecification()).Get();
+            var allTickets = new AllBoardTicketsFromApi(apiCaller, new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory, new DateTimeWrapper()), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification)), new ValidArchiveCardSpecification()).Get();
 
             var allTicketActivityDurations = allTickets.Tickets.SelectMany(t => t.Activities.Select(a => new
                 {

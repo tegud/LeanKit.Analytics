@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using LeanKit.Utilities.Collections;
 using NUnit.Framework;
@@ -75,11 +74,11 @@ namespace LeanKit.Utilities.Tests.Collections
                     1, 2
                 };
 
-            var selectedItems = listOfItems.SelectWithNext((current, next) =>
-            {
-                actualNext = next;
-                return 0;
-            }).ToArray();
+            listOfItems.SelectWithNext((current, next) =>
+                {
+                    actualNext = next;
+                    return 0;
+                }).ToArray();
 
             Assert.That(actualNext, Is.EqualTo(0));
         }
@@ -93,18 +92,18 @@ namespace LeanKit.Utilities.Tests.Collections
                     new AClass(), new AClass()
                 };
 
-            var selectedItems = listOfItems.SelectWithNext((current, next) =>
-            {
-                actualNext = next;
-                return 0;
-            }).ToArray();
+            listOfItems.SelectWithNext((current, next) =>
+                {
+                    actualNext = next;
+                    return 0;
+                }).ToArray();
 
             Assert.That(actualNext, Is.Null);
         }
 
         public class AClass
         {
-            public DateTime DT { get; set; }
+            public string DT { get; set; }
         }
     }
 }

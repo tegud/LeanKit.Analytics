@@ -48,11 +48,13 @@
     <Compile Include="IActivitySpecification.cs" />
     <Compile Include="IAllBoardTicketsRepository.cs" />
     <Compile Include="ICalculateTicketMilestone.cs" />
+    <Compile Include="ICalculateWorkDuration.cs" />
     <Compile Include="Ticket.cs" />
     <Compile Include="TicketActivity.cs" />
     <Compile Include="TicketCycleTimeDurationFactory.cs" />
     <Compile Include="TicketFinishDateFactory.cs" />
     <Compile Include="TicketStartDateFactory.cs" />
+    <Compile Include="WorkDayDefinition.cs" />
     <Compile Include="WorkDuration.cs" />
     <Compile Include="WorkDurationFactory.cs" />
   </ItemGroup>

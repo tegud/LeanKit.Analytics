@@ -3,6 +3,7 @@ using LeanKit.APIClient.API;
 using LeanKit.Data;
 using LeanKit.Data.API;
 using LeanKit.Data.SQL;
+using LeanKit.Utilities.DateTime;
 using TicketFactory = LeanKit.Data.API.TicketFactory;
 
 namespace LeanKit.SyncToDatabase
@@ -37,7 +38,7 @@ namespace LeanKit.SyncToDatabase
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, ticketActivityFactory);
             IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory, new DateTimeWrapper()), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
             var allTickets = new AllBoardTicketsFromApi(apiCaller, ticketFactory, new ValidArchiveCardSpecification()).Get().Tickets;
             var ticketRepository = new TicketsRepository(connectionString);
 
