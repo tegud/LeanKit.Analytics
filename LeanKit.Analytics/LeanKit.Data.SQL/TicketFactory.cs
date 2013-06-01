@@ -26,11 +26,13 @@ namespace LeanKit.Data.SQL
         {
             var activities = ticket.Activities.SelectWithNext((current, next) => _ticketActivityFactory.Build(current, next)).ToArray();
 
+            var started = _ticketStartDateFactory.CalculateMilestone(activities);
+
             return new Ticket
                 {
                     Id = ticket.Id,
                     Title = ticket.Title,
-                    Started = _ticketStartDateFactory.CalculateMilestone(activities),
+                    Started = started,
                     Activities = activities
                 };
         }
