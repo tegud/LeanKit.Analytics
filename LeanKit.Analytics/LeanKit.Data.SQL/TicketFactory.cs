@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using LeanKit.Utilities.Collections;
 
 namespace LeanKit.Data.SQL
@@ -6,23 +7,45 @@ namespace LeanKit.Data.SQL
     public class TicketFactory : ICreateTickets
     {
         private readonly ICalculateWorkDuration _workDurationFactory;
+        private readonly ICalculateTicketMilestone _ticketStartDateFactory;
+        private readonly ICreateTicketActivities _ticketActivityFactory;
 
-        public TicketFactory(ICalculateWorkDuration workDurationFactory)
+        public TicketFactory(ICalculateWorkDuration workDurationFactory, ICalculateTicketMilestone ticketStartDateFactory, ICreateTicketActivities ticketActivityFactory)
         {
             _workDurationFactory = workDurationFactory;
+            _ticketStartDateFactory = ticketStartDateFactory;
+            _ticketActivityFactory = ticketActivityFactory;
+        }
+
+        public ICalculateWorkDuration WorkDurationFactory
+        {
+            get { return _workDurationFactory; }
         }
 
         public Ticket Build(TicketRecord ticket)
         {
+            var activities = ticket.Activities.SelectWithNext((current, next) => _ticketActivityFactory.Build(current, next)).ToArray();
+
             return new Ticket
                 {
                     Id = ticket.Id,
                     Title = ticket.Title,
-                    Activities = ticket.Activities.SelectWithNext(BuildActivity)
+                    Started = _ticketStartDateFactory.CalculateMilestone(activities),
+                    Activities = activities
                 };
         }
+    }
 
-        private TicketActivity BuildActivity(TicketActivityRecord current, TicketActivityRecord next)
+    public class TicketActivityFactory : ICreateTicketActivities
+    {
+        private readonly ICalculateWorkDuration _workDurationFactory;
+
+        public TicketActivityFactory(ICalculateWorkDuration workDurationFactory)
+        {
+            _workDurationFactory = workDurationFactory;
+        }
+
+        public TicketActivity Build(TicketActivityRecord current, TicketActivityRecord next)
         {
             var started = current.Date;
             var finished = DateTime.MinValue;
@@ -40,5 +63,10 @@ namespace LeanKit.Data.SQL
                     Duration = _workDurationFactory.CalculateDuration(started, finished)
                 };
         }
+    }
+
+    public interface ICreateTicketActivities
+    {
+        TicketActivity Build(TicketActivityRecord current, TicketActivityRecord next);
     }
 }

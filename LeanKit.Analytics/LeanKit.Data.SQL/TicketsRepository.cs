@@ -33,7 +33,8 @@ namespace LeanKit.Data.SQL
                     });
             }
 
-            ICreateTickets ticketFactory = new TicketFactory(new WorkDurationFactory(new DateTime[0], new WorkDayDefinition { Start = 9, End = 17 }));
+            ICalculateWorkDuration workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition { Start = 9, End = 17 });
+            ICreateTickets ticketFactory = new TicketFactory(workDurationFactory, new TicketStartDateFactory(new ActivityIsInProgressSpecification()), new TicketActivityFactory(workDurationFactory));
 
             return new AllTicketsForBoard
                 {
