@@ -4,7 +4,8 @@ namespace LeanKit.Data
     {
         public bool IsSatisfiedBy(TicketActivity activity)
         {
-            return activity.Title.ToUpper() == "LIVE";
+            var title = activity.Title.ToUpper();
+            return title == "LIVE" || title == "WASTE";
         }
     }
 }

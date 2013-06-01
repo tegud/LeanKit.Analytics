@@ -42,8 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityIsInProgressSpecificationTests.cs" />
+    <Compile Include="ActivityIsLiveSpecificationTests.cs" />
     <Compile Include="AllTicketsForBoardFactoryTests.cs" />
     <Compile Include="FakeMileStoneFactory.cs" />
+    <Compile Include="TicketFinishDateFactoryTests.cs" />
+    <Compile Include="TicketStartDateFactoryTests.cs" />
     <Compile Include="WorkDurationTests.cs" />
   </ItemGroup>
   <ItemGroup>
