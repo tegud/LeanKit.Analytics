@@ -3,7 +3,7 @@ using LeanKit.APIClient.API;
 
 namespace LeanKit.Data.API
 {
-    public class TicketActivityFactory : ITicketActivityFactory
+    public class TicketActivityFactory : ICreateTicketActivities
     {
         private readonly ICalculateWorkDuration _workDurationFactory;
 

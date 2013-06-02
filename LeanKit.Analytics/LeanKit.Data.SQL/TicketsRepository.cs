@@ -9,10 +9,12 @@ namespace LeanKit.Data.SQL
     public class TicketsRepository : ITicketRepository
     {
         private readonly string _connectionString;
+        private readonly ICreateTickets _ticketFactory;
 
-        public TicketsRepository(string connectionString)
+        public TicketsRepository(string connectionString, TicketFactory ticketFactory)
         {
             _connectionString = connectionString;
+            _ticketFactory = ticketFactory;
         }
 
         public AllTicketsForBoard GetAll()
@@ -33,12 +35,9 @@ namespace LeanKit.Data.SQL
                     });
             }
 
-            ICalculateWorkDuration workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition { Start = 9, End = 17 });
-            ICreateTickets ticketFactory = new TicketFactory(workDurationFactory, new TicketStartDateFactory(new ActivityIsInProgressSpecification()), new TicketActivityFactory(workDurationFactory));
-
             return new AllTicketsForBoard
                 {
-                    Tickets = tickets.Select(ticketFactory.Build)
+                    Tickets = tickets.Select(_ticketFactory.Build)
                 };
         }
 

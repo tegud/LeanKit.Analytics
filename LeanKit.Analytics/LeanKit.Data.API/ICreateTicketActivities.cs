@@ -2,7 +2,7 @@ using LeanKit.APIClient.API;
 
 namespace LeanKit.Data.API
 {
-    public interface ITicketActivityFactory
+    public interface ICreateTicketActivities
     {
         TicketActivity Build(LeanKitCardHistory historyItem, LeanKitCardHistory nextItem);
     }

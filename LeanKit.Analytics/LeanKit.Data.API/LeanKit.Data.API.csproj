@@ -42,7 +42,7 @@
     <Compile Include="AllBoardTicketsFromApi.cs" />
     <Compile Include="IHistoryTypeSpecification.cs" />
     <Compile Include="ITicketActivitiesFactory.cs" />
-    <Compile Include="ITicketActivityFactory.cs" />
+    <Compile Include="ICreateTicketActivities.cs" />
     <Compile Include="ICreateTickets.cs" />
     <Compile Include="IValidateLeankitCards.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

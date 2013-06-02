@@ -5,7 +5,6 @@ using LeanKit.Data.API;
 using LeanKit.Data.SQL;
 using LeanKit.Utilities.DateTime;
 using TicketActivityFactory = LeanKit.Data.API.TicketActivityFactory;
-using TicketFactory = LeanKit.Data.API.TicketFactory;
 
 namespace LeanKit.SyncToDatabase
 {
@@ -36,14 +35,23 @@ namespace LeanKit.SyncToDatabase
                     End =  17
                 });
             var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
+            var activityIsLiveSpecification = new ActivityIsLiveSpecification();
+
+            var dateTimeWrapper = new DateTimeWrapper();
+            var ticketCycleTimeDurationFactory = new TicketCycleTimeDurationFactory(workDurationFactory, dateTimeWrapper);
+            var ticketStartDateFactory = new TicketStartDateFactory(activityIsInProgressSpecification);
+            var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
 
             var apiTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, apiTicketActivityFactory);
+            var apiTicketActivitiesFactory = new TicketActivitiesFactory(apiCaller, apiTicketActivityFactory);
+            var apiTicketFactory = new Data.API.TicketFactory(apiTicketActivitiesFactory, ticketCycleTimeDurationFactory, ticketStartDateFactory, ticketFinishDateFactory);
 
-            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory, new DateTimeWrapper()), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification));
-            var allTickets = new AllBoardTicketsFromApi(apiCaller, ticketFactory, new ValidArchiveCardSpecification()).Get().Tickets;
-            var ticketRepository = new TicketsRepository(connectionString);
+            var allTickets = new AllBoardTicketsFromApi(apiCaller, apiTicketFactory, new ValidArchiveCardSpecification()).Get().Tickets;
+
+            var sqlTicketActivityFactory = new Data.SQL.TicketActivityFactory(workDurationFactory);
+
+            var sqlTicketFactory = new Data.SQL.TicketFactory(workDurationFactory, ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory);
+            var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
 
             foreach(var ticket in allTickets)
             {

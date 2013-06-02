@@ -8,10 +8,10 @@ namespace LeanKit.Data.API
     public class TicketActivitiesFactory : ITicketActivitiesFactory
     {
         private readonly IApiCaller _apiCaller;
-        private readonly ITicketActivityFactory _ticketActivityFactory;
+        private readonly ICreateTicketActivities _ticketActivityFactory;
         private readonly ReleventHistoryTypeSpecification _releventHistoryTypeSpecification;
 
-        public TicketActivitiesFactory(IApiCaller apiCaller, ITicketActivityFactory ticketActivityFactory)
+        public TicketActivitiesFactory(IApiCaller apiCaller, ICreateTicketActivities ticketActivityFactory)
         {
             _apiCaller = apiCaller;
             _ticketActivityFactory = ticketActivityFactory;
