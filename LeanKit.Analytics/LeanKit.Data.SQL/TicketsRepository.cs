@@ -25,9 +25,16 @@ namespace LeanKit.Data.SQL
             {
                 sqlConnection.Open();
 
-                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketRecord>(@"SELECT * FROM CardActivity CA INNER JOIN Card C ON CA.CardID = C.ID ORDER BY C.ID, CA.ID", (ticket, activity) =>
+                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketRecord>(@"SELECT C.*, CA.* FROM CardActivity CA INNER JOIN Card C ON CA.CardID = C.ID ORDER BY C.ID, CA.ID", (ticket, activity) =>
                     {
-                        var currentTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id) ?? ticket;
+                        var existingTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id);
+
+                        var currentTicket = existingTicket ?? ticket;
+
+                        if(existingTicket == null)
+                        {
+                            tickets.Add(ticket);
+                        }
 
                         currentTicket.Activities.Add(activity);
 
@@ -37,7 +44,7 @@ namespace LeanKit.Data.SQL
 
             return new AllTicketsForBoard
                 {
-                    Tickets = tickets.Select(_ticketFactory.Build)
+                    Tickets = tickets.Select(_ticketFactory.Build).ToList()
                 };
         }
 

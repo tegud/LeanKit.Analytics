@@ -23,7 +23,7 @@ namespace LeanKit.Data.SQL
 
             return new TicketActivity
                 {
-                    Title = current.Title,
+                    Title = current.Activity,
                     Started = started,
                     Finished = finished,
                     Duration = _workDurationFactory.CalculateDuration(started, finished)

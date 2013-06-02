@@ -13,7 +13,7 @@ namespace LeanKit.Data.SQL.Tests
         {
             const string expectedActivityTitle = "Dev WIP";
 
-            var current = new TicketActivityRecord { Title = expectedActivityTitle };
+            var current = new TicketActivityRecord { Activity = expectedActivityTitle };
 
             Assert.That(new TicketActivityFactory(this).Build(current, null).Title, Is.EqualTo(expectedActivityTitle));
         }

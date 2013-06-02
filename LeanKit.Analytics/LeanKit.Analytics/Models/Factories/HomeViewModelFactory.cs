@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LeanKit.APIClient.API;
 using LeanKit.Analytics.Controllers;
 using LeanKit.Analytics.Models.ViewModels;
 using LeanKit.Data;
-using LeanKit.Data.API;
+using LeanKit.Data.SQL;
 using LeanKit.Utilities.DateTime;
 
 namespace LeanKit.Analytics.Models.Factories
@@ -14,31 +13,24 @@ namespace LeanKit.Analytics.Models.Factories
     {
         public HomeViewModel Build()
         {
-            const string username = "";
-            const string password = "";
-            const string account = "";
-            const string boardID = "";
-
-            var apiCaller = new ApiCaller
-            {
-                Account = account,
-                BoardId = boardID,
-                Credentials = new ApiCredentials
-                {
-                    Username = username,
-                    Password = password
-                }
-            };
+            const string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
 
             var workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition
                 {
                     Start = 9, 
                     End = 17
                 });
-            var ticketActivitiesFactory = new TicketActivitiesFactory(apiCaller, new TicketActivityFactory(workDurationFactory));
             var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
             IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-            var allTickets = new AllBoardTicketsFromApi(apiCaller, new TicketFactory(ticketActivitiesFactory, new TicketCycleTimeDurationFactory(workDurationFactory, new DateTimeWrapper()), new TicketStartDateFactory(activityIsInProgressSpecification), new TicketFinishDateFactory(activityIsLiveSpecification)), new ValidArchiveCardSpecification()).Get();
+
+            var dateTimeWrapper = new DateTimeWrapper();
+            var ticketCycleTimeDurationFactory = new TicketCycleTimeDurationFactory(workDurationFactory, dateTimeWrapper);
+            var ticketStartDateFactory = new TicketStartDateFactory(activityIsInProgressSpecification);
+            var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
+            var sqlTicketActivityFactory = new Data.SQL.TicketActivityFactory(workDurationFactory);
+            var sqlTicketFactory = new Data.SQL.TicketFactory(workDurationFactory, ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory);
+            var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
+            var allTickets = ticketRepository.GetAll();
 
             var allTicketActivityDurations = allTickets.Tickets.SelectMany(t => t.Activities.Select(a => new
                 {
