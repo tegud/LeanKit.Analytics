@@ -27,8 +27,8 @@ namespace LeanKit.Analytics.Models.Factories
             var ticketCycleTimeDurationFactory = new TicketCycleTimeDurationFactory(workDurationFactory, dateTimeWrapper);
             var ticketStartDateFactory = new TicketStartDateFactory(activityIsInProgressSpecification);
             var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
-            var sqlTicketActivityFactory = new Data.SQL.TicketActivityFactory(workDurationFactory);
-            var sqlTicketFactory = new Data.SQL.TicketFactory(workDurationFactory, ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory);
+            var sqlTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
+            var sqlTicketFactory = new TicketFactory(workDurationFactory, ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory);
             var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
             var allTickets = ticketRepository.GetAll();
 
@@ -43,11 +43,11 @@ namespace LeanKit.Analytics.Models.Factories
 
             var wasteGraphList = new List<WasteGraphActivity>
                 {
-                    new WasteGraphActivity {Activity = "Developing"},
-                    new WasteGraphActivity {Activity = "Testing"},
-                    new WasteGraphActivity {Activity = "Waiting to Test",IsWaste = true},
-                    new WasteGraphActivity {Activity = "Waiting to Release", IsWaste = true},
-                    new WasteGraphActivity {Activity = "Blocked", IsWaste = true}
+                    new WasteGraphActivity { Activity = "Developing" },
+                    new WasteGraphActivity { Activity = "Testing" },
+                    new WasteGraphActivity { Activity = "Waiting to Test",IsWaste = true },
+                    new WasteGraphActivity { Activity = "Waiting to Release", IsWaste = true },
+                    new WasteGraphActivity { Activity = "Blocked", IsWaste = true }
                 };
 
             foreach(var ticketActivity in allTicketActivityDurations)

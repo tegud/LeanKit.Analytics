@@ -29,6 +29,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Data.SQL.Tests", "L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.Data.API.Tests", "LeanKit.Data.API.Tests\LeanKit.Data.API.Tests.csproj", "{49917C55-AA05-4CDC-832C-5FA81F90EE52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.ReleaseManager", "LeanKit.ReleaseManager\LeanKit.ReleaseManager.csproj", "{BFE6AAD8-E981-4814-87CF-0616BEE82F28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanKit.ReleaseManager.Tests", "LeanKit.ReleaseManager.Tests\LeanKit.ReleaseManager.Tests.csproj", "{ED0BF870-56FA-4C00-8E46-9124E682F91C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,14 @@ Global
 		{49917C55-AA05-4CDC-832C-5FA81F90EE52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49917C55-AA05-4CDC-832C-5FA81F90EE52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49917C55-AA05-4CDC-832C-5FA81F90EE52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFE6AAD8-E981-4814-87CF-0616BEE82F28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFE6AAD8-E981-4814-87CF-0616BEE82F28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFE6AAD8-E981-4814-87CF-0616BEE82F28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFE6AAD8-E981-4814-87CF-0616BEE82F28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED0BF870-56FA-4C00-8E46-9124E682F91C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED0BF870-56FA-4C00-8E46-9124E682F91C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED0BF870-56FA-4C00-8E46-9124E682F91C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED0BF870-56FA-4C00-8E46-9124E682F91C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -98,5 +110,6 @@ Global
 		{4A6FB728-F049-4FD3-B11C-665FDC51C293} = {3B62102F-DB35-49C1-BCCE-961665D88153}
 		{FB7A483E-9971-46DA-AD92-7672BA120C39} = {3B62102F-DB35-49C1-BCCE-961665D88153}
 		{49917C55-AA05-4CDC-832C-5FA81F90EE52} = {3B62102F-DB35-49C1-BCCE-961665D88153}
+		{ED0BF870-56FA-4C00-8E46-9124E682F91C} = {3B62102F-DB35-49C1-BCCE-961665D88153}
 	EndGlobalSection
 EndGlobal

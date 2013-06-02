@@ -4,6 +4,8 @@ namespace LeanKit.APIClient.API
     {
         public int Id { get; set; }
 
+        public string ExternalCardID { get; set; }
+
         public string Title { get; set; }
 
         public string Description { get; set; }
@@ -19,5 +21,7 @@ namespace LeanKit.APIClient.API
         public string BlockStateChangeDate { get; set; }
 
         public string LastMove { get; set; }
+
+        public string Tags { get; set; }
     }
 }
