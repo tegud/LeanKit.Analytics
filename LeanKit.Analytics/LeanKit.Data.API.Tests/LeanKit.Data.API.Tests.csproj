@@ -42,7 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TicketActivityFactoryTests.cs" />
     <Compile Include="TicketFactoryTests.cs" />
   </ItemGroup>
@@ -63,6 +62,9 @@
       <Project>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</Project>
       <Name>LeanKit.Data</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
