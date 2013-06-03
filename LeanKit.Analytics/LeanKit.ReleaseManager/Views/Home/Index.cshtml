@@ -22,6 +22,11 @@
                         <div class="legend-block" style="background-color: @release.Color"></div> @release.DateFriendlyText, @release.TicketCount ticket@(release.TicketCount != 1 ? "s" : string.Empty)
                     </li>
                 }
+                <li class="release-entry" id="new-release-legend-entry">
+                    <div class="legend-block" style="background-color: @Model.NextReleaseColor"></div> 
+                    <span class="no-create-in-progress">Select tickets to create new release</span>
+                    <span class="create-in-progress"></span>
+                </li>
             </ul>
         }
 
@@ -33,7 +38,7 @@
                 
                     @foreach(var ticket in lane.Tickets)
                     {
-                        <div class="ticket" style="background-color: @ticket.Color">
+                        <div class="ticket" style="background-color: @ticket.Color" data-ticket-id="@ticket.Id">
                             <div class="ticket-id">@ticket.ExternalId</div>
                             @ticket.Title
                             <ul class="ticket-approvals">
@@ -46,33 +51,168 @@
             }
         </ul>
         
+        [<span id="deselect-all-tickets" class="fake-link">Deselect All Tickets</span>]
+        
         <h2>Create New Release</h2>
-        Select ticket(s) to begin
-        <div>
-            <ul id="day-selector">
-                <li>Today</li>
-                <li>Tomorrow</li>
-                <li>Wednesday</li>
-                <li>Thursday</li>
-                <li>Friday</li>
-                <li>Later</li>
-            </ul>
+        <div id="create-release-form-guide">
+            Select ticket(s) to begin
+        </div>
+        <div id="create-release-form" class="hidden">
+            <form method="POST" action="/NewRelease">
+                <input type="hidden" name="selectedTickets" id="selected-tickets" />
+                <input type="hidden" name="plannedDate" id="planned-date" />
+                <input type="hidden" name="plannedTime" id="planned-time" value="10:00" />
+
+                <h3>Date</h3>
+                <ul id="day-selector">
+                    <li data-date="3 June 2013">Today</li>
+                    <li data-date="4 June 2013">Tomorrow</li>
+                    <li data-date="5 June 2013">Wednesday</li>
+                    <li data-date="6 June 2013">Thursday</li>
+                    <li data-date="7 June 2013">Friday</li>
+                    <li>Later</li>
+                </ul>
+                <h3>Time</h3>
+                <label id="planned-time-fields">
+                    Start:
+                    <select>
+                        <option>00</option>
+                        <option>01</option>
+                        <option>02</option>
+                        <option>03</option>
+                        <option>04</option>
+                        <option>05</option>
+                        <option>06</option>
+                        <option>07</option>
+                        <option>08</option>
+                        <option>09</option>
+                        <option selected>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                        <option>16</option>
+                        <option>17</option>
+                        <option>18</option>
+                        <option>19</option>
+                        <option>20</option>
+                        <option>21</option>
+                        <option>22</option>
+                        <option>23</option>
+                    </select>:<select>
+                                  <option>00</option>
+                                  <option>15</option>
+                                  <option>30</option>
+                                  <option>45</option>
+                              </select>
+                </label>
+                <label>
+                    Duration:
+                    <select name="planned-duration">
+                        <option>5 mins</option>
+                        <option>10 mins</option>
+                        <option>15 mins</option>
+                        <option>30 mins</option>
+                        <option>45 mins</option>
+                        <option selected>60 mins</option>
+                        <option>90 mins</option>
+                        <option>120 mins</option>
+                    </select>
+                </label>
+            
+                <div>
+                    <button id="create-release" type="submit" disabled>Create</button>
+                </div>
+            </form>
         </div>
     </div>
     
     <script type="text/javascript" src="~/Assets/js/lib/jquery-2.0.0.min.js"></script>
     <script type="text/javascript">
-        $(function () {
+        (function () {
             var nextColour = '@Model.NextReleaseColor';
 
+            function toggleCreateForm(show) {
+                if(show) {
+                    $('#create-release-form').removeClass('hidden');
+                    $('#create-release-form-guide').addClass('hidden');
+                }
+                else {
+                    $('#create-release-form').addClass('hidden');
+                    $('#create-release-form-guide').removeClass('hidden');
+                }
+            }
+
+            function showCreateForm() {
+                toggleCreateForm(true);
+            }
+
+            function hideCreateForm() {
+                toggleCreateForm(false);
+            }
+            
+            function deselectTicket(ticket) {
+                ticket.removeClass('selected');
+
+                if (ticket.data('originalColor')) {
+                    ticket.css('background-color', ticket.data('originalColor'));
+                }
+            }
+            
+            function selectTicket(ticket) {
+                ticket.addClass('selected');
+
+                ticket.data('originalColor', ticket.css('background-color'));
+
+                ticket.css('background-color', nextColour);
+            }
+
             $('#day-selector').on('click', 'li', function () {
-                $(this).css('background-color', nextColour);
-                $(this).siblings().css('background-color', 'auto');
+                $(this).css('background-color', nextColour).siblings().css('background-color', '');
+                $('#create-release')[0].disabled = false;
+                $('#planned-date').val($(this).data('date'));
             });
-        });
 
+            $('#planned-time-fields').on('change', 'select', function () {
+                var fields = $('#planned-time-fields select');
+                var time = fields[0].value + ':' + fields[1].value;
 
+                $('#planned-time').val(time);
+            });
 
+            $('#lanes').on('click', '.ticket', function () {
+                var ticket = $(this);
+
+                if (ticket.hasClass('selected')) {
+                    deselectTicket(ticket);
+                }
+                else {
+                    selectTicket(ticket);
+                }
+                var selectedTickets = [];
+
+                $('#lanes .ticket.selected').each(function () {
+                    selectedTickets[selectedTickets.length] = $(this).data('ticketId');
+                });
+
+                $('#selected-tickets').val(selectedTickets.join(','));
+
+                if (selectedTickets.length) {
+                    showCreateForm();
+                }
+                else {
+                    hideCreateForm();
+                }
+            });
+
+            $('#deselect-all-tickets').on('click', function () {
+                $('#lanes .ticket.selected').each(function() {
+                    deselectTicket($(this));
+                });
+                hideCreateForm();
+            });
+        })();
     </script>
 </body>
 </html>
