@@ -1,0 +1,23 @@
+﻿body { font-family: arial;padding: 0;margin: 0 }
+
+#lanes, #releases { margin: 0;padding: 0;list-style: none; }
+
+.column-header { font-weight: bold; }
+
+.lane-column { width: 160px;display: inline-block;padding: 5px;vertical-align: top; }
+
+.ticket { margin-top: 5px;border-radius: 5px;background-color: #ddd;padding: 5px;cursor: pointer;font-size: 0.9em; }
+
+.ticket-id { font-weight: bold; }
+
+.ticket-approvals { margin: 0;padding: 0;list-style: none; }
+
+.ticket-approvals > li { display: inline-block;color: red; }
+
+.release-entry { min-height: 25px;margin-bottom: 5px;position: relative;padding: 3px 0 0 30px; }
+
+.legend-block { width: 25px;height: 25px;background-color: #000;position: absolute;top: 0;left: 0px;line-height: 25px; }
+
+#day-selector { margin: 0;padding: 0;list-style: none; }
+
+#day-selector > li { width: 100px;height: 60px;padding-top: 40px;background-color: #ddd;display: inline-block;border-radius: 25px;text-align: center;cursor: pointer; }

@@ -97,7 +97,8 @@ namespace LeanKit.ReleaseManager.Controllers
             var upcomingReleasesViewModel = new UpcomingReleasesViewModel
                 {
                     Releases = releases,
-                    Lanes = laneColumns
+                    Lanes = laneColumns,
+                    NextReleaseColor = colors[(releases.Count() + 1) % colors.Length]
                 };
             return View(upcomingReleasesViewModel);
         }
@@ -108,6 +109,8 @@ namespace LeanKit.ReleaseManager.Controllers
         public IEnumerable<ReleaseViewModel> Releases { get; set; }
 
         public IEnumerable<LaneColumn> Lanes { get; set; }
+
+        public string NextReleaseColor { get; set; }
     }
 
     public class ReleaseViewModel
