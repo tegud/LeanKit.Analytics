@@ -45,18 +45,18 @@ namespace LeanKit.ReleaseManager.Controllers
 
                     if (plannedReleaseDate == todaysDate)
                     {
-                        friendlyText = string.Format("Today at {0:hh:mm}", r.PlannedDate);
+                        friendlyText = string.Format("Today at {0:HH:mm}", r.PlannedDate);
                     }
                     else if (plannedReleaseDate == todaysDate.AddDays(1))
                     {
-                        friendlyText = string.Format("Tomorrow at {0:hh:mm}", r.PlannedDate);
+                        friendlyText = string.Format("Tomorrow at {0:HH:mm}", r.PlannedDate);
                     }
 
                     return new ReleaseViewModel
                         {
                             Id = r.Id,
                             PlannedDate = r.PlannedDate,
-                            DateFriendlyText = friendlyText ?? r.PlannedDate.ToString("dd MMM yyyy hh:mm"),
+                            DateFriendlyText = friendlyText ?? r.PlannedDate.ToString("dd MMM yyyy HH:mm"),
                             Color = colors[i % colors.Length]
                         };
                 });
