@@ -55,6 +55,10 @@
       <Project>{E9F8AF93-CCE9-486D-A92B-A20DA88405A5}</Project>
       <Name>LeanKit.Analytics</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LeanKit.ReleaseManager\LeanKit.ReleaseManager.csproj">
+      <Project>{BFE6AAD8-E981-4814-87CF-0616BEE82F28}</Project>
+      <Name>LeanKit.ReleaseManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
