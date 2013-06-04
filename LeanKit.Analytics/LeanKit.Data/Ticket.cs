@@ -16,5 +16,7 @@ namespace LeanKit.Data
         public WorkDuration CycleTime { get; set; }
 
         public DateTime Finished { get; set; }
+
+        public TicketActivity CurrentActivity { get; set; }
     }
 }

@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\SelectWithNext.cs" />
+    <Compile Include="DateTimeExtensions\DateFriendlyTextTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LeanKit.Utilities\LeanKit.Utilities.csproj">

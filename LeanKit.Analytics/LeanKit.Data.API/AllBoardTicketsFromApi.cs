@@ -32,7 +32,13 @@ namespace LeanKit.Data.API
 
             return new AllTicketsForBoard
                 {
-                    Tickets = allTicketsFromBoard.Select(card => _ticketFactory.Build(card))
+                    Tickets = allTicketsFromBoard.Select(card => _ticketFactory.Build(card)),
+                    Lanes = board.Lanes.Select((l,i) => new Activity
+                        {
+                            Id = l.Id,
+                            Title = l.Title,
+                            Index = i
+                        })
                 };
         }
 

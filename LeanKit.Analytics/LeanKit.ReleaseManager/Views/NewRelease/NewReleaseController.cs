@@ -25,7 +25,7 @@ namespace LeanKit.ReleaseManager.Views.NewRelease
                     IncludedTickets = release.SelectedTickets.Split(',').Select(ticketId => new IncludedTicketRecord
                         {
                             CardId = int.Parse((ticketId))
-                        })
+                        }).ToList()
                 });
 
             return new RedirectResult("/");

@@ -1,5 +1,5 @@
 using System;
-using LeanKit.Utilities.DateTime;
+using LeanKit.Utilities.DateAndTime;
 using NUnit.Framework;
 
 namespace LeanKit.Data.Tests

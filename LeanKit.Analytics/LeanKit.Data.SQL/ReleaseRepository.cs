@@ -21,7 +21,24 @@ namespace LeanKit.Data.SQL
             {
                 sqlConnection.Open();
 
-                return sqlConnection.Query<ReleaseRecord>(@"SELECT * FROM Release R WHERE R.PlannedDate > GETDATE() ORDER BY R.PlannedDate ASC");
+                var releases = new List<ReleaseRecord>();
+
+                sqlConnection.Query<ReleaseRecord, IncludedTicketRecord, ReleaseRecord>(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID WHERE R.PlannedDate > GETDATE() ORDER BY R.PlannedDate ASC", (release, ticket) =>
+                    {
+                        var existingRelease = releases.FirstOrDefault(r => r.Id == release.Id);
+
+                        if(existingRelease == null)
+                        {
+                            existingRelease = release;
+                            releases.Add(release);
+                        }
+
+                        existingRelease.IncludedTickets.Add(ticket);
+
+                        return release;
+                    }, splitOn: "CardID");
+
+                return releases;
             }
         }
 
@@ -62,7 +79,12 @@ namespace LeanKit.Data.SQL
 
         public DateTime PlannedDate { get; set; }
 
-        public IEnumerable<IncludedTicketRecord> IncludedTickets { get; set; }
+        public List<IncludedTicketRecord> IncludedTickets { get; set; }
+
+        public ReleaseRecord()
+        {
+            IncludedTickets = new List<IncludedTicketRecord>();
+        }
     }
 
     public class IncludedTicketRecord

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
-using LeanKit.APIClient.API;
+using LeanKit.Data;
 using LeanKit.Data.SQL;
+using LeanKit.Utilities.DateAndTime;
+using LeanKit.Utilities.Tests.DateTimeExtensions;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
@@ -11,22 +13,28 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         public ViewResult Index()
         {
-            const string username = "";
-            const string password = "";
-            const string account = "";
-            const string boardId = "";
             const string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
 
-            var apiCaller = new ApiCaller
+            var workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition
             {
-                Account = account,
-                BoardId = boardId,
-                Credentials = new ApiCredentials
-                {
-                    Username = username,
-                    Password = password
-                }
-            };
+                Start = 9,
+                End = 17
+            });
+            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
+            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
+
+            var dateTimeWrapper = new DateTimeWrapper();
+            var ticketCycleTimeDurationFactory = new TicketCycleTimeDurationFactory(workDurationFactory, dateTimeWrapper);
+            var ticketStartDateFactory = new TicketStartDateFactory(activityIsInProgressSpecification);
+            var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
+            var sqlTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
+            var sqlTicketCurrentActivityFactory = new CurrentActivityFactory();
+            var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory);
+
+            var releaseRepository = new ReleaseRepository(connectionString);
+            var activityRepository = new ActivityRepository(connectionString);
+            var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
+            var allTickets = ticketRepository.GetAll().Tickets;
 
             var colors = new[]
                 {
@@ -37,58 +45,37 @@ namespace LeanKit.ReleaseManager.Controllers
                     "#FF9999"
                 };
 
-            var releases = new ReleaseRepository(connectionString).GetUpcomingReleases().Select((r, i) =>
+            var lanes = activityRepository.GetLanes().Where(l => l.Title != "Live");
+
+            var releaseRecords = releaseRepository.GetUpcomingReleases();
+            var releases = releaseRecords.Select((r, i) => new ReleaseViewModel
                 {
-                    string friendlyText = null;
-                    var todaysDate = DateTime.Now.Date;
-                    var plannedReleaseDate = r.PlannedDate.Date;
-
-                    if (plannedReleaseDate == todaysDate)
-                    {
-                        friendlyText = string.Format("Today at {0:HH:mm}", r.PlannedDate);
-                    }
-                    else if (plannedReleaseDate == todaysDate.AddDays(1))
-                    {
-                        friendlyText = string.Format("Tomorrow at {0:HH:mm}", r.PlannedDate);
-                    }
-
-                    return new ReleaseViewModel
-                        {
-                            Id = r.Id,
-                            PlannedDate = r.PlannedDate,
-                            DateFriendlyText = friendlyText ?? r.PlannedDate.ToString("dd MMM yyyy HH:mm"),
-                            Color = colors[i % colors.Length]
-                        };
+                    Id = r.Id,
+                    PlannedDate = r.PlannedDate,
+                    DateFriendlyText = r.PlannedDate.ToFriendlyText("dd MMM yyyy", " \"at\" HH:mm"),
+                    Color = colors[i % colors.Length]
                 });
 
-            var board = apiCaller.GetBoard();
-
-            var laneColumns = board.Lanes.Where(l => l.Title != "Live").Select(l => new LaneColumn
+            var laneColumns = lanes.Select(l => new LaneColumn
                 {
                     Title = l.Title,
-                    Tickets = l.Cards.Select(c =>
+                    Tickets = allTickets.Where(t => t.CurrentActivity.Title == l.Title).Select(t =>
                         {
-                            var allMachineTags = c.Tags.Split(',').Where(t => t.StartsWith("#"));
-                            var releaseId = allMachineTags.Where(t => t.StartsWith("#Rel")).Select(t => t.Substring(4)).FirstOrDefault();
-                            int parsedReleaseId;
-                            string color = null;
+                            var matchingReleaseRecord = releaseRecords.FirstOrDefault(rr => rr.IncludedTickets.Select(it => it.CardId).Contains(t.Id));
 
-                            if (!string.IsNullOrWhiteSpace(releaseId) && int.TryParse(releaseId, out parsedReleaseId))
+                            string color = "";
+
+                            if (matchingReleaseRecord != null)
                             {
-                                var matchingRelease = releases.FirstOrDefault(r => r.Id == parsedReleaseId);
-
-                                if(matchingRelease != null)
-                                {
-                                    color = matchingRelease.Color;
-                                    matchingRelease.TicketCount = matchingRelease.TicketCount + 1;
-                                }
+                                var matchingRelease = releases.First(r => r.Id == matchingReleaseRecord.Id);
+                                matchingRelease.TicketCount = matchingRelease.TicketCount + 1;
+                                color = matchingRelease.Color;
                             }
 
                             return new ReleaseTicket
                                 {
-                                    Id = c.Id,
-                                    ExternalId = c.ExternalCardID,
-                                    Title = c.Title,
+                                    Id = t.Id,
+                                    Title = t.Title,
                                     Color = color
                                 };
                         })
@@ -100,6 +87,7 @@ namespace LeanKit.ReleaseManager.Controllers
                     Lanes = laneColumns,
                     NextReleaseColor = colors[(releases.Count()) % colors.Length]
                 };
+
             return View(upcomingReleasesViewModel);
         }
     }

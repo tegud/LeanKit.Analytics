@@ -1,4 +1,4 @@
-namespace LeanKit.Utilities.DateTime
+namespace LeanKit.Utilities.DateAndTime
 {
     public interface IKnowTheCurrentDateAndTime
     {

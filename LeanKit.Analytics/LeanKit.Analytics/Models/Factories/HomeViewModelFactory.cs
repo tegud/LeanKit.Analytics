@@ -5,7 +5,7 @@ using LeanKit.Analytics.Controllers;
 using LeanKit.Analytics.Models.ViewModels;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
-using LeanKit.Utilities.DateTime;
+using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.Analytics.Models.Factories
 {
@@ -28,7 +28,9 @@ namespace LeanKit.Analytics.Models.Factories
             var ticketStartDateFactory = new TicketStartDateFactory(activityIsInProgressSpecification);
             var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
             var sqlTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var sqlTicketFactory = new TicketFactory(workDurationFactory, ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory);
+            var sqlTicketCurrentActivityFactory = new CurrentActivityFactory();
+
+            var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory);
             var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
             var allTickets = ticketRepository.GetAll();
 

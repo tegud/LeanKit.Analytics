@@ -149,6 +149,18 @@
       <Project>{8838D1D0-FB0C-4093-B27B-12317183624E}</Project>
       <Name>LeanKit.Data.SQL</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LeanKit.Data\LeanKit.Data.csproj">
+      <Project>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</Project>
+      <Name>LeanKit.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LeanKit.Utilities.Tests\LeanKit.Utilities.Tests.csproj">
+      <Project>{4A6FB728-F049-4FD3-B11C-665FDC51C293}</Project>
+      <Name>LeanKit.Utilities.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LeanKit.Utilities\LeanKit.Utilities.csproj">
+      <Project>{46346393-ECC7-4499-8BD7-594EFB47094A}</Project>
+      <Name>LeanKit.Utilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

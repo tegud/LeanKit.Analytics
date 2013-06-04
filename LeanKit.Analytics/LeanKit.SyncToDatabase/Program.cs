@@ -3,7 +3,7 @@ using LeanKit.APIClient.API;
 using LeanKit.Data;
 using LeanKit.Data.API;
 using LeanKit.Data.SQL;
-using LeanKit.Utilities.DateTime;
+using LeanKit.Utilities.DateAndTime;
 using TicketActivityFactory = LeanKit.Data.API.TicketActivityFactory;
 
 namespace LeanKit.SyncToDatabase
@@ -46,12 +46,17 @@ namespace LeanKit.SyncToDatabase
             var apiTicketActivitiesFactory = new TicketActivitiesFactory(apiCaller, apiTicketActivityFactory);
             var apiTicketFactory = new Data.API.TicketFactory(apiTicketActivitiesFactory, ticketCycleTimeDurationFactory, ticketStartDateFactory, ticketFinishDateFactory);
 
-            var allTickets = new AllBoardTicketsFromApi(apiCaller, apiTicketFactory, new ValidArchiveCardSpecification()).Get().Tickets;
+            var board = new AllBoardTicketsFromApi(apiCaller, apiTicketFactory, new ValidArchiveCardSpecification()).Get();
+            var allTickets = board.Tickets;
 
             var sqlTicketActivityFactory = new Data.SQL.TicketActivityFactory(workDurationFactory);
+            var ticketCurrentActivityFactory = new CurrentActivityFactory();
 
-            var sqlTicketFactory = new Data.SQL.TicketFactory(workDurationFactory, ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory);
+            var sqlTicketFactory = new Data.SQL.TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
             var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
+            var activityRepository = new ActivityRepository(connectionString);
+
+            activityRepository.SaveActivities(board.Lanes);
 
             foreach(var ticket in allTickets)
             {
