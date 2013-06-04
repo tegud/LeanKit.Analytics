@@ -34,7 +34,9 @@ namespace LeanKit.ReleaseManager.Controllers
             var releaseRepository = new ReleaseRepository(connectionString);
             var activityRepository = new ActivityRepository(connectionString);
             var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
+
             var allTickets = ticketRepository.GetAll().Tickets;
+            var releaseRecords = releaseRepository.GetUpcomingReleases().ToArray();
 
             var colors = new[]
                 {
@@ -47,14 +49,13 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var lanes = activityRepository.GetLanes().Where(l => l.Title != "Live");
 
-            var releaseRecords = releaseRepository.GetUpcomingReleases();
             var releases = releaseRecords.Select((r, i) => new ReleaseViewModel
                 {
                     Id = r.Id,
                     PlannedDate = r.PlannedDate,
                     DateFriendlyText = r.PlannedDate.ToFriendlyText("dd MMM yyyy", " \"at\" HH:mm"),
                     Color = colors[i % colors.Length]
-                });
+                }).ToArray();
 
             var laneColumns = lanes.Select(l => new LaneColumn
                 {
@@ -63,23 +64,22 @@ namespace LeanKit.ReleaseManager.Controllers
                         {
                             var matchingReleaseRecord = releaseRecords.FirstOrDefault(rr => rr.IncludedTickets.Select(it => it.CardId).Contains(t.Id));
 
-                            string color = "";
+                            var releaseTicket = new ReleaseTicket
+                            {
+                                Id = t.Id,
+                                Title = t.Title
+                            };
 
                             if (matchingReleaseRecord != null)
                             {
                                 var matchingRelease = releases.First(r => r.Id == matchingReleaseRecord.Id);
-                                matchingRelease.TicketCount = matchingRelease.TicketCount + 1;
-                                color = matchingRelease.Color;
+                                releaseTicket.Color = matchingRelease.Color;
+                                matchingRelease.Tickets.Add(releaseTicket);
                             }
 
-                            return new ReleaseTicket
-                                {
-                                    Id = t.Id,
-                                    Title = t.Title,
-                                    Color = color
-                                };
-                        })
-                });
+                            return releaseTicket;
+                        }).ToArray()
+                }).ToArray();
 
             var upcomingReleasesViewModel = new UpcomingReleasesViewModel
                 {
@@ -107,13 +107,24 @@ namespace LeanKit.ReleaseManager.Controllers
 
         public DateTime PlannedDate { get; set; }
 
-        public IEnumerable<ReleaseTicket> Tickets { get; set; }
+        public List<ReleaseTicket> Tickets { get; set; }
 
         public string DateFriendlyText { get; set; }
 
-        public int TicketCount { get; set; }
+        public int TicketCount
+        {
+            get
+            {
+                return Tickets.Count();
+            }
+        }
 
         public string Color { get; set; }
+
+        public ReleaseViewModel()
+        {
+            Tickets = new List<ReleaseTicket>();
+        }
     }
 
     public class LaneColumn
