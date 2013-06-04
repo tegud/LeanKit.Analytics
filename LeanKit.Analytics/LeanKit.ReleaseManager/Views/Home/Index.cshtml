@@ -13,22 +13,19 @@
     <div>
         <h1>Upcoming Releases</h1>
         
-        @if (Model.Releases.Any())
-        {
-            <ul id="releases">
-                @foreach (var release in Model.Releases)
-                {
-                    <li class="release-entry">
-                        <div class="legend-block" style="background-color: @release.Color"></div> @release.DateFriendlyText, @release.TicketCount ticket@(release.TicketCount != 1 ? "s" : string.Empty)
-                    </li>
-                }
-                <li class="release-entry" id="new-release-legend-entry">
-                    <div class="legend-block" style="background-color: @Model.NextReleaseColor"></div> 
-                    <span class="no-create-in-progress">Select tickets to create new release</span>
-                    <span class="create-in-progress"></span>
+        <ul id="releases">
+            @foreach (var release in Model.Releases)
+            {
+                <li class="release-entry">
+                    <div class="legend-block" style="background-color: @release.Color"></div> @release.DateFriendlyText, @release.TicketCount ticket@(release.TicketCount != 1 ? "s" : string.Empty)
                 </li>
-            </ul>
-        }
+            }
+            <li class="release-entry" id="new-release-legend-entry">
+                <div class="legend-block" style="background-color: @Model.NextReleaseColor"></div> 
+                <span class="no-create-in-progress">Select tickets to create new release</span>
+                <span class="create-in-progress"></span>
+            </li>
+        </ul>
 
         <ul id="lanes">
             @foreach(var lane in Model.Lanes)

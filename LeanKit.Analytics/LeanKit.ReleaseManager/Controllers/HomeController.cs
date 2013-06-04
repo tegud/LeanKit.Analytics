@@ -98,7 +98,7 @@ namespace LeanKit.ReleaseManager.Controllers
                 {
                     Releases = releases,
                     Lanes = laneColumns,
-                    NextReleaseColor = colors[(releases.Count() + 1) % colors.Length]
+                    NextReleaseColor = colors[(releases.Count()) % colors.Length]
                 };
             return View(upcomingReleasesViewModel);
         }
