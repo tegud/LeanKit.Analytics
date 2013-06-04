@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
+using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities.DateAndTime;
 using LeanKit.Utilities.Tests.DateTimeExtensions;
 
@@ -38,14 +39,14 @@ namespace LeanKit.ReleaseManager.Controllers
             var allTickets = ticketRepository.GetAll().Tickets;
             var releaseRecords = releaseRepository.GetUpcomingReleases().ToArray();
 
-            var colors = new[]
+            var colourPalette = new ColourPalette(new[]
                 {
                     "#D15300",
                     "#83BF00",
                     "#FFF268",
                     "#9682FF",
                     "#FF9999"
-                };
+                });
 
             var lanes = activityRepository.GetLanes().Where(l => l.Title != "Live");
 
@@ -54,7 +55,7 @@ namespace LeanKit.ReleaseManager.Controllers
                     Id = r.Id,
                     PlannedDate = r.PlannedDate,
                     DateFriendlyText = r.PlannedDate.ToFriendlyText("dd MMM yyyy", " \"at\" HH:mm"),
-                    Color = colors[i % colors.Length]
+                    Color = colourPalette .Next()
                 }).ToArray();
 
             var laneColumns = lanes.Select(l => new LaneColumn
@@ -85,7 +86,7 @@ namespace LeanKit.ReleaseManager.Controllers
                 {
                     Releases = releases,
                     Lanes = laneColumns,
-                    NextReleaseColor = colors[(releases.Count()) % colors.Length]
+                    NextReleaseColor = colourPalette.Next()
                 };
 
             return View(upcomingReleasesViewModel);
