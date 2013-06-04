@@ -11,10 +11,10 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         public ViewResult Index()
         {
-            const string username = "steve.elliot@laterooms.com";
-            const string password = "10Four12";
-            const string account = "lrtest";
-            const string boardId = "32482312";
+            const string username = "";
+            const string password = "";
+            const string account = "";
+            const string boardId = "";
             const string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
 
             var apiCaller = new ApiCaller
