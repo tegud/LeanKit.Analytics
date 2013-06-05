@@ -121,9 +121,11 @@
     </Compile>
     <Compile Include="Models\ColourPalette.cs" />
     <Compile Include="Models\CreateReleaseModel.cs" />
+    <Compile Include="Models\DateIsWorkDaySpecification.cs" />
     <Compile Include="Models\DateOption.cs" />
     <Compile Include="Models\DateOptionsFactory.cs" />
     <Compile Include="Models\IColourPalette.cs" />
+    <Compile Include="Models\IIdentifyWorkDays.cs" />
     <Compile Include="Models\IMakeListsOfDateOptions.cs" />
     <Compile Include="Models\LaneColumn.cs" />
     <Compile Include="Models\NewReleaseViewModel.cs" />

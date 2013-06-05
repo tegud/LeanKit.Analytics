@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using LeanKit.ReleaseManager.Controllers;
 using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Models
 {
     public class DateOptionsFactory : IMakeListsOfDateOptions
     {
+        private readonly IIdentifyWorkDays _dayIsWorkDaySpecification;
+
+        public DateOptionsFactory(IIdentifyWorkDays dayIsWorkDaySpecification)
+        {
+            _dayIsWorkDaySpecification = dayIsWorkDaySpecification;
+        }
+
         public IEnumerable<DateOption> BuildDateOptions(int numberOfDaysToDisplay)
         {
             var startDate = DateTime.Now.Date;
@@ -20,7 +26,7 @@ namespace LeanKit.ReleaseManager.Models
 
                 x++;
 
-                if (currentDate.DayOfWeek == DayOfWeek.Saturday || currentDate.DayOfWeek == DayOfWeek.Sunday)
+                if (!_dayIsWorkDaySpecification.IsSatisfiedBy(currentDate))
                 {
                     continue;
                 }

@@ -11,20 +11,21 @@ namespace LeanKit.ReleaseManager.Controllers
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
         private readonly IGetActivitiesFromTheDatabase _activityRepository;
         private readonly ITicketRepository _ticketRepository;
+        private readonly IMakeListsOfDateOptions _dateOptionsFactory;
 
         public HomeController(IGetReleasesFromTheDatabase releaseRepository,
             IGetActivitiesFromTheDatabase activityRepository,
-            ITicketRepository ticketRepository)
+            ITicketRepository ticketRepository, 
+            IMakeListsOfDateOptions dateOptionsFactory)
         {
             _releaseRepository = releaseRepository;
             _activityRepository = activityRepository;
             _ticketRepository = ticketRepository;
+            _dateOptionsFactory = dateOptionsFactory;
         }
 
         public ViewResult Index()
         {
-            var dateOptionsFactory = new DateOptionsFactory();
-
             var allTickets = _ticketRepository.GetAll().Tickets;
             var releaseRecords = _releaseRepository.GetUpcomingReleases().ToArray();
 
@@ -79,7 +80,7 @@ namespace LeanKit.ReleaseManager.Controllers
                     NextReleaseColor = colourPalette.Next(),
                     CreateReleaseModel = new CreateReleaseModel
                         {
-                            DateOptions = dateOptionsFactory.BuildDateOptions(5)
+                            DateOptions = _dateOptionsFactory.BuildDateOptions(5)
                         }
                 };
 

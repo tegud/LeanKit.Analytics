@@ -2,6 +2,7 @@ using System.Web.Mvc;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.IoC;
+using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities;
 using Munq.MVC3;
 
@@ -19,6 +20,9 @@ namespace LeanKit.ReleaseManager.App_Start
 		    var ioc = MunqDependencyResolver.Container;
 
 	        ioc.Register(Module.ConnectionString, i => MvcApplication.ConnectionString);
+
+	        ioc.Register<IIdentifyWorkDays, DateIsWorkDaySpecification>();
+	        ioc.Register<IMakeListsOfDateOptions, DateOptionsFactory>();
 
 		    UtilitiesRegistry.Register(ioc);
             DataRegistry.Register(ioc);
