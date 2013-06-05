@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\EnumerableExtensions.cs" />
+    <Compile Include="Collections\HastableExtensions.cs" />
+    <Compile Include="DateAndTime\DateFriendTextExtensions.cs" />
     <Compile Include="DateAndTime\DateTimeWrapper.cs" />
     <Compile Include="DateAndTime\IKnowTheCurrentDateAndTime.cs" />
   </ItemGroup>

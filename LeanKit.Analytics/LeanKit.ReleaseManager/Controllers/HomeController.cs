@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities.DateAndTime;
-using LeanKit.Utilities.Tests.DateTimeExtensions;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
@@ -14,7 +12,7 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         public ViewResult Index()
         {
-            const string connectionString = @"Data Source=.\Express2008;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
+            var connectionString = MvcApplication.ConnectionString;
 
             var workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition
             {
@@ -98,72 +96,4 @@ namespace LeanKit.ReleaseManager.Controllers
             return View(upcomingReleasesViewModel);
         }
     }
-
-    public class CreateReleaseModel
-    {
-        public IEnumerable<DateOption> DateOptions { get; set; }
-    }
-
-    public class DateOption
-    {
-        public DateTime Date { get; set; }
-
-        public string FriendlyText { get; set; }
-    }
-
-    public class UpcomingReleasesViewModel
-    {
-        public IEnumerable<ReleaseViewModel> Releases { get; set; }
-
-        public IEnumerable<LaneColumn> Lanes { get; set; }
-
-        public string NextReleaseColor { get; set; }
-
-        public CreateReleaseModel CreateReleaseModel { get; set; }
-    }
-
-    public class ReleaseViewModel
-    {
-        public int Id { get; set; }
-
-        public DateTime PlannedDate { get; set; }
-
-        public List<ReleaseTicket> Tickets { get; set; }
-
-        public string DateFriendlyText { get; set; }
-
-        public int TicketCount
-        {
-            get
-            {
-                return Tickets.Count();
-            }
-        }
-
-        public string Color { get; set; }
-
-        public ReleaseViewModel()
-        {
-            Tickets = new List<ReleaseTicket>();
-        }
-    }
-
-    public class LaneColumn
-    {
-        public string Title { get; set; }
-
-        public IEnumerable<ReleaseTicket> Tickets { get; set; }
-    }
-
-    public class ReleaseTicket
-    {
-        public int Id { get; set; }
-
-        public string ExternalId { get; set; }
-
-        public string Title { get; set; }
-
-        public string Color { get; set; }
-    }
-
 }

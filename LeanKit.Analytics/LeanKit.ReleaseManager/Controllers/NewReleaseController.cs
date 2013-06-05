@@ -1,16 +1,16 @@
-﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data.SQL;
+using LeanKit.ReleaseManager.Models;
 
-namespace LeanKit.ReleaseManager.Views.NewRelease
+namespace LeanKit.ReleaseManager.Controllers
 {
     public class NewReleaseController : Controller
     {
         [HttpPost]
         public RedirectResult Index(NewReleaseViewModel release)
         {
-            const string connectionString = @"Data Source=.\Express2008;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
+            var connectionString = MvcApplication.ConnectionString;
 
             var plannedDate = release.PlannedDate;
             var splitTime = release.PlannedTime.Split(':');
@@ -30,14 +30,5 @@ namespace LeanKit.ReleaseManager.Views.NewRelease
 
             return new RedirectResult("/");
         }
-    }
-
-    public class NewReleaseViewModel
-    {
-        public DateTime PlannedDate { get; set; }
-
-        public string PlannedTime { get; set; }
-
-        public string SelectedTickets { get; set; }
     }
 }

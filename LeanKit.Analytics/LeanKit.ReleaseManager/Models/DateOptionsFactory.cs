@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LeanKit.ReleaseManager.Controllers;
-using LeanKit.Utilities.Tests.DateTimeExtensions;
+using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Models
 {
