@@ -11,7 +11,7 @@ namespace LeanKit.Utilities.Tests.DateTimeExtensions
         [Test]
         public void ReturnsTodayForDateMatchingCurrentDate()
         {
-            Assert.That(DateTime.Now.ToFriendlyText("", ""), Is.StringStarting("Today"));
+            Assert.That(DateTime.Now.ToFriendlyText("", ""), Is.EqualTo("Today"));
         }
 
         [Test]
@@ -60,7 +60,12 @@ namespace LeanKit.Utilities.Tests.DateTimeExtensions
                 friendlyText = date.ToString(dateFormat);
             }
 
-            return friendlyText + date.ToString(timeFormat);
+            if (!string.IsNullOrWhiteSpace(timeFormat))
+            {
+                return friendlyText + date.ToString(timeFormat);
+            }
+
+            return friendlyText;
         }
     }
 }

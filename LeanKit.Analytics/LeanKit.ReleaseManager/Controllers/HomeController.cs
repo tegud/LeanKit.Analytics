@@ -31,6 +31,7 @@ namespace LeanKit.ReleaseManager.Controllers
             var sqlTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var sqlTicketCurrentActivityFactory = new CurrentActivityFactory();
             var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory);
+            var dateOptionsFactory = new DateOptionsFactory();
 
             var releaseRepository = new ReleaseRepository(connectionString);
             var activityRepository = new ActivityRepository(connectionString);
@@ -87,11 +88,27 @@ namespace LeanKit.ReleaseManager.Controllers
                 {
                     Releases = releases,
                     Lanes = laneColumns,
-                    NextReleaseColor = colourPalette.Next()
+                    NextReleaseColor = colourPalette.Next(),
+                    CreateReleaseModel = new CreateReleaseModel
+                        {
+                            DateOptions = dateOptionsFactory.BuildDateOptions(5)
+                        }
                 };
 
             return View(upcomingReleasesViewModel);
         }
+    }
+
+    public class CreateReleaseModel
+    {
+        public IEnumerable<DateOption> DateOptions { get; set; }
+    }
+
+    public class DateOption
+    {
+        public DateTime Date { get; set; }
+
+        public string FriendlyText { get; set; }
     }
 
     public class UpcomingReleasesViewModel
@@ -101,6 +118,8 @@ namespace LeanKit.ReleaseManager.Controllers
         public IEnumerable<LaneColumn> Lanes { get; set; }
 
         public string NextReleaseColor { get; set; }
+
+        public CreateReleaseModel CreateReleaseModel { get; set; }
     }
 
     public class ReleaseViewModel

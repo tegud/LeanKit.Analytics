@@ -109,7 +109,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ColourPalette.cs" />
+    <Compile Include="Models\DateOptionsFactory.cs" />
     <Compile Include="Models\IColourPalette.cs" />
+    <Compile Include="Models\IMakeListsOfDateOptions.cs" />
     <Compile Include="Views\NewRelease\NewReleaseController.cs" />
   </ItemGroup>
   <ItemGroup>

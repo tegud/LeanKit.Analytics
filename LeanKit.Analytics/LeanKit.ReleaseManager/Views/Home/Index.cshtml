@@ -62,11 +62,10 @@
 
                 <h3>Date</h3>
                 <ul id="day-selector">
-                    <li data-date="5 June 2013">Today</li>
-                    <li data-date="6 June 2013">Tomorrow</li>
-                    <li data-date="7 June 2013">Friday</li>
-                    <li data-date="8 June 2013">Monday</li>
-                    <li data-date="9 June 2013">Tuesday</li>
+                    @foreach (var date in Model.CreateReleaseModel.DateOptions)
+                    {
+                        <li data-date="@date.Date.ToString("d MMM yyyy")">@date.FriendlyText</li>
+                    }
                     <li>Later</li>
                 </ul>
                 <h3>Time</h3>
