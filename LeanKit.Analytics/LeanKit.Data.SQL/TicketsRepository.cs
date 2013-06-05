@@ -11,7 +11,7 @@ namespace LeanKit.Data.SQL
         private readonly string _connectionString;
         private readonly ICreateTickets _ticketFactory;
 
-        public TicketsRepository(string connectionString, TicketFactory ticketFactory)
+        public TicketsRepository(string connectionString, ICreateTickets ticketFactory)
         {
             _connectionString = connectionString;
             _ticketFactory = ticketFactory;

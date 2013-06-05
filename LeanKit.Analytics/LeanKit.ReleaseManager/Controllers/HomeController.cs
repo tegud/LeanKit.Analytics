@@ -5,6 +5,7 @@ using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities.DateAndTime;
+using Munq.MVC3;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
@@ -28,7 +29,9 @@ namespace LeanKit.ReleaseManager.Controllers
             var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
             var sqlTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var sqlTicketCurrentActivityFactory = new CurrentActivityFactory();
-            var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory);
+            //var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory);
+            var sqlTicketFactory = MunqDependencyResolver.Container.Resolve<ICreateTickets>();
+
             var dateOptionsFactory = new DateOptionsFactory();
 
             var releaseRepository = new ReleaseRepository(connectionString);
