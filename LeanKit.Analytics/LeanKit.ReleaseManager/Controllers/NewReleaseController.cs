@@ -7,11 +7,16 @@ namespace LeanKit.ReleaseManager.Controllers
 {
     public class NewReleaseController : Controller
     {
+        private readonly IGetReleasesFromTheDatabase _releaseRepository;
+
+        public NewReleaseController(IGetReleasesFromTheDatabase releaseRepository)
+        {
+            _releaseRepository = releaseRepository;
+        }
+
         [HttpPost]
         public RedirectResult Index(NewReleaseViewModel release)
         {
-            var connectionString = MvcApplication.ConnectionString;
-
             var plannedDate = release.PlannedDate;
             var splitTime = release.PlannedTime.Split(':');
             var hours = int.Parse(splitTime[0]);
@@ -19,7 +24,7 @@ namespace LeanKit.ReleaseManager.Controllers
             plannedDate = plannedDate.AddHours(hours);
             plannedDate = plannedDate.AddMinutes(minutes);
 
-            new ReleaseRepository(connectionString).Create(new ReleaseRecord
+            _releaseRepository.Create(new ReleaseRecord
                 {
                     PlannedDate = plannedDate,
                     IncludedTickets = release.SelectedTickets.Split(',').Select(ticketId => new IncludedTicketRecord
