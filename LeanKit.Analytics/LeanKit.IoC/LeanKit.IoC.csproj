@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8838D1D0-FB0C-4093-B27B-12317183624E}</ProjectGuid>
+    <ProjectGuid>{77893FC1-D5C2-4F8A-85FD-97A0D04D3267}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LeanKit.Data.SQL</RootNamespace>
-    <AssemblyName>LeanKit.Data.SQL</AssemblyName>
+    <RootNamespace>LeanKit.IoC</RootNamespace>
+    <AssemblyName>LeanKit.IoC</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,12 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper">
-      <HintPath>..\packages\Dapper.1.13\lib\net45\Dapper.dll</HintPath>
-    </Reference>
-    <Reference Include="Munq.IocContainer">
-      <HintPath>..\packages\Munq.IocContainer.3.1.6\Lib\Munq.IocContainer.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,34 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActivityRepository.cs" />
-    <Compile Include="DataSqlRegistry.cs" />
-    <Compile Include="ICreateTicketActivities.cs" />
-    <Compile Include="ICreateTickets.cs" />
-    <Compile Include="ITicketRepository.cs" />
-    <Compile Include="ReleaseRepository.cs" />
-    <Compile Include="TicketActivityFactory.cs" />
-    <Compile Include="TicketActivityRecord.cs" />
-    <Compile Include="TicketFactory.cs" />
-    <Compile Include="TicketRecord.cs" />
-    <Compile Include="TicketsRepository.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\LeanKit.Data\LeanKit.Data.csproj">
-      <Project>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</Project>
-      <Name>LeanKit.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LeanKit.IoC\LeanKit.IoC.csproj">
-      <Project>{77893fc1-d5c2-4f8a-85fd-97a0d04d3267}</Project>
-      <Name>LeanKit.IoC</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LeanKit.Utilities\LeanKit.Utilities.csproj">
-      <Project>{46346393-ECC7-4499-8BD7-594EFB47094A}</Project>
-      <Name>LeanKit.Utilities</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
+    <Compile Include="Module.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

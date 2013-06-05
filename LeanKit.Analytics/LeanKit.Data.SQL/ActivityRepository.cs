@@ -5,7 +5,13 @@ using Dapper;
 
 namespace LeanKit.Data.SQL
 {
-    public class ActivityRepository
+    public interface IGetActivitiesFromTheDatabase
+    {
+        void SaveActivities(IEnumerable<Activity> activities);
+        IEnumerable<Activity> GetLanes();
+    }
+
+    public class ActivityRepository : IGetActivitiesFromTheDatabase
     {
         private readonly string _connectionString;
 

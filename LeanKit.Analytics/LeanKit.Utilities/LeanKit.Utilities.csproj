@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Munq.IocContainer">
+      <HintPath>..\packages\Munq.IocContainer.3.1.6\Lib\Munq.IocContainer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,6 +47,7 @@
     <Compile Include="DateAndTime\DateFriendTextExtensions.cs" />
     <Compile Include="DateAndTime\DateTimeWrapper.cs" />
     <Compile Include="DateAndTime\IKnowTheCurrentDateAndTime.cs" />
+    <Compile Include="UtilitiesRegistry.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
