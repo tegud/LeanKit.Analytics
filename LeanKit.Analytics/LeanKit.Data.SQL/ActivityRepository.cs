@@ -43,6 +43,7 @@ namespace LeanKit.Data.SQL
                                 BEGIN 
                                     UPDATE BoardLane SET Title = @Title, [Index] = @Index WHERE ID = @ID
                                 END
+                                ELSE
                                 BEGIN
                                     INSERT INTO BoardLane(ID, Title, [Index]) SELECT @ID, @Title, @Index
                                 END", new { activity.Id, activity.Title, activity.Index });

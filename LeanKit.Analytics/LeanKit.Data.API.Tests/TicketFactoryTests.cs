@@ -38,6 +38,19 @@ namespace LeanKit.Data.API.Tests
         }
 
         [Test]
+        public void SetsExternalId()
+        {
+            ITicketActivitiesFactory ticketActivitiesFactory = this;
+            ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+
+            var fakeMileStoneFactory = new FakeMileStoneFactory();
+
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+
+            Assert.That(ticketFactory.Build(new LeankitBoardCard { ExternalCardID = "R-12345" }).ExternalId, Is.EqualTo("R-12345"));
+        }
+
+        [Test]
         public void SetsStarted()
         {
             var expectedStartDate = new DateTime(2013, 02, 15, 10, 50, 35);

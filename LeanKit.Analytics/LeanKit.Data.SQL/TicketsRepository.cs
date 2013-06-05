@@ -54,13 +54,21 @@ namespace LeanKit.Data.SQL
             {
                 sqlConnection.Open();
 
-                var ticketSql = string.Format(@"IF EXISTS(SELECT ID FROM Card WHERE ID = @ID){0}BEGIN{0}UPDATE{0}Card SET Title = @Title WHERE ID = @Id;{0}END{0}ELSE{0}BEGIN{0}INSERT Card(ID, Title) values (@Id, @Title);{0}END{0}", Environment.NewLine);
+                var ticketSql = @"IF EXISTS(SELECT ID FROM Card WHERE ID = @ID)
+                                BEGIN
+                                    UPDATE Card SET Title = @Title, ExternalId = @ExternalId WHERE ID = @Id;
+                                END
+                                ELSE
+                                BEGIN
+                                    INSERT Card(ID, Title, ExternalId) values (@Id, @Title, @ExternalId);
+                                END";
 
                 sqlConnection.Execute(ticketSql,
                                     new
                                     {
                                         ticket.Id,
-                                        ticket.Title
+                                        ticket.Title,
+                                        ticket.ExternalId
                                     });
 
                 foreach(var activity in ticket.Activities)

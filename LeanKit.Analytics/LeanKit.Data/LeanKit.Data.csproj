@@ -45,10 +45,12 @@
     <Compile Include="ActivityIsInProgressSpecification.cs" />
     <Compile Include="ActivityIsLiveSpecification.cs" />
     <Compile Include="AllTicketsForBoard.cs" />
+    <Compile Include="CurrentActivityFactory.cs" />
     <Compile Include="IActivitySpecification.cs" />
     <Compile Include="IAllBoardTicketsRepository.cs" />
     <Compile Include="ICalculateTicketMilestone.cs" />
     <Compile Include="ICalculateWorkDuration.cs" />
+    <Compile Include="IFindTheCurrentActivity.cs" />
     <Compile Include="Ticket.cs" />
     <Compile Include="TicketActivity.cs" />
     <Compile Include="TicketCycleTimeDurationFactory.cs" />

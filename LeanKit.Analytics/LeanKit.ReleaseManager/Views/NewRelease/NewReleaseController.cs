@@ -10,7 +10,7 @@ namespace LeanKit.ReleaseManager.Views.NewRelease
         [HttpPost]
         public RedirectResult Index(NewReleaseViewModel release)
         {
-            const string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
+            const string connectionString = @"Data Source=.\Express2008;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
 
             var plannedDate = release.PlannedDate;
             var splitTime = release.PlannedTime.Split(':');

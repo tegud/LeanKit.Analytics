@@ -45,6 +45,7 @@
     <Compile Include="ActivityIsInProgressSpecificationTests.cs" />
     <Compile Include="ActivityIsLiveSpecificationTests.cs" />
     <Compile Include="AllTicketsForBoardFactoryTests.cs" />
+    <Compile Include="CurrentActivityFactoryTests.cs" />
     <Compile Include="FakeMileStoneFactory.cs" />
     <Compile Include="TicketCycleTimeDurationFactoryTests.cs" />
     <Compile Include="TicketFinishDateFactoryTests.cs" />

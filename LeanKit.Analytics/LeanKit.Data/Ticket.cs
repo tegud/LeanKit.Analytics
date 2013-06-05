@@ -7,6 +7,8 @@ namespace LeanKit.Data
     {
         public int Id { get; set; }
 
+        public string ExternalId { get; set; }
+
         public string Title { get; set; }
 
         public DateTime Started { get; set; }

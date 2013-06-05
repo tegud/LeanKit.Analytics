@@ -5,22 +5,6 @@ using NUnit.Framework;
 namespace LeanKit.Data.SQL.Tests
 {
     [TestFixture]
-    public class CurrentActivityFactoryTests
-    {
-        [Test]
-        public void ReturnsTheCurrentActivity()
-        {
-            var ticketActivities = new[]
-                {
-                    new TicketActivity { Started = new DateTime(2013, 5, 1), Finished = new DateTime(2013, 5, 2) },
-                    new TicketActivity { Started = new DateTime(2013, 5, 2), Finished = DateTime.MinValue }
-                };
-
-            Assert.That(new CurrentActivityFactory().Build(ticketActivities), Is.EqualTo(ticketActivities[1]));
-        }
-    }
-
-    [TestFixture]
     public class TicketFactoryTests : ICalculateWorkDuration, ICreateTicketActivities, ICalculateTicketMilestone, IFindTheCurrentActivity
     {
         private WorkDuration _cycleTime;
@@ -127,6 +111,24 @@ namespace LeanKit.Data.SQL.Tests
             var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, cycleTimeFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord()).CurrentActivity, Is.EqualTo(expectedCurrentActivity));
+        }
+
+        [Test]
+        public void SetsTicketExternalId()
+        {
+            const string expectedExternalId = "R-12345";
+
+            var ticketActivityFactory = this;
+            var ticketMilestoneFactory = this;
+            var ticketCycleTimeDurationFactory = this;
+            var ticketCurrentActivityFactory = this;
+
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+
+            Assert.That(ticketFactory.Build(new TicketRecord
+            {
+                ExternalId = expectedExternalId
+            }).ExternalId, Is.EqualTo(expectedExternalId));
         }
 
         public WorkDuration CalculateDuration(DateTime start, DateTime end)

@@ -14,7 +14,7 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         public ViewResult Index()
         {
-            const string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
+            const string connectionString = @"Data Source=.\Express2008;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
 
             var workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition
             {
@@ -68,7 +68,8 @@ namespace LeanKit.ReleaseManager.Controllers
                             var releaseTicket = new ReleaseTicket
                             {
                                 Id = t.Id,
-                                Title = t.Title
+                                Title = t.Title,
+                                ExternalId = t.ExternalId
                             };
 
                             if (matchingReleaseRecord != null)

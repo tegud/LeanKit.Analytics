@@ -13,7 +13,7 @@ namespace LeanKit.Analytics.Models.Factories
     {
         public HomeViewModel Build()
         {
-            const string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
+            const string connectionString = @"Data Source=.\Express2008;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
 
             var workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition
                 {

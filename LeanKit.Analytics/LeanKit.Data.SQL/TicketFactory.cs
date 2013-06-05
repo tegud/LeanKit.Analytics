@@ -1,23 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using LeanKit.Utilities.Collections;
 
 namespace LeanKit.Data.SQL
 {
-    public interface IFindTheCurrentActivity
-    {
-        TicketActivity Build(IEnumerable<TicketActivity> activities);
-    }
-
-    public class CurrentActivityFactory : IFindTheCurrentActivity
-    {
-        public TicketActivity Build(IEnumerable<TicketActivity> activities)
-        {
-            return activities.Last(a => a.Finished.Equals(DateTime.MinValue));
-        }
-    }
-
     public class TicketFactory : ICreateTickets
     {
         private readonly ICalculateWorkDuration _ticketCycleTimeDurationFactory;
@@ -51,6 +36,7 @@ namespace LeanKit.Data.SQL
             return new Ticket
                 {
                     Id = ticket.Id,
+                    ExternalId = ticket.ExternalId,
                     Title = ticket.Title,
                     Started = started,
                     Finished = finished,

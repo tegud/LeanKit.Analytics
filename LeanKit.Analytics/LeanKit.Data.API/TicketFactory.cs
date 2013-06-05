@@ -33,6 +33,7 @@ namespace LeanKit.Data.API
                 {
                     Id = card.Id,
                     Title = card.Title,
+                    ExternalId = card.ExternalCardID,
                     Started = started,
                     Finished = finished,
                     Activities = ticketActivities,
