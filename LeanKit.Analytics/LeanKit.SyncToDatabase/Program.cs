@@ -12,10 +12,10 @@ namespace LeanKit.SyncToDatabase
     {
         static void Main(string[] args)
         {
-            const string username = "steve.elliot@laterooms.com";
-            const string password = "1303four9";
-            const string account = "lrtest";
-            const string boardId = "32482312";
+            const string username = "";
+            const string password = "";
+            const string account = "";
+            const string boardId = "";
             const string connectionString = @"Data Source=.\Express2008;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
 
             var apiCaller = new ApiCaller
