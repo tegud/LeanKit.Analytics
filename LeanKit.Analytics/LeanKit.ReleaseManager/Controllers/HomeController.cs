@@ -1,37 +1,31 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
-using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities.DateAndTime;
-using Munq.MVC3;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
-        private readonly string _connectionString;
         private readonly IGetActivitiesFromTheDatabase _activityRepository;
+        private readonly ITicketRepository _ticketRepository;
 
         public HomeController(IGetReleasesFromTheDatabase releaseRepository,
-            IGetActivitiesFromTheDatabase activityRepository)
+            IGetActivitiesFromTheDatabase activityRepository,
+            ITicketRepository ticketRepository)
         {
-            _connectionString = MvcApplication.ConnectionString;
             _releaseRepository = releaseRepository;
             _activityRepository = activityRepository;
+            _ticketRepository = ticketRepository;
         }
 
         public ViewResult Index()
         {
-            var sqlTicketFactory = MunqDependencyResolver.Container.Resolve<ICreateTickets>();
-
             var dateOptionsFactory = new DateOptionsFactory();
 
-            var ticketRepository = new TicketsRepository(_connectionString, sqlTicketFactory);
-
-            var allTickets = ticketRepository.GetAll().Tickets;
+            var allTickets = _ticketRepository.GetAll().Tickets;
             var releaseRecords = _releaseRepository.GetUpcomingReleases().ToArray();
 
             var colourPalette = new ColourPalette(new[]
