@@ -8,10 +8,7 @@ namespace LeanKit.ReleaseManager.Controllers
 {
     public class ReleaseController : Controller
     {
-        //
-        // GET: /Release/
-
-        public ActionResult Index()
+        public ActionResult Index(int id)
         {
             return View();
         }

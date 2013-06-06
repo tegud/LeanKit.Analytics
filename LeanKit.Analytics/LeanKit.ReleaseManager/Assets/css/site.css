@@ -50,10 +50,18 @@
 
 .ticket-activity { display: inline-block;text-align: right;width: 128px; }
 
-.inline-header { display: inline-block; }
-
-.options-bar { display: inline-block;margin-left: 30px;padding-top: 24px;vertical-align: top;}
-
 .options-bar ul { margin: 0;padding: 0;list-style: none; }
 
-.release-note {height: 27px;padding-top: 5px;background-image: url('../images/release-notes.png');background-repeat: no-repeat;padding-left: 36px; }
+.options-bar ul li { display: inline-block;height: 25px;padding: 7px 5px 0 36px;background-repeat: no-repeat; cursor: pointer }
+
+.options-bar ul li.release-note {background-image: url('../images/release-notes.png');}
+
+.options-bar ul li.reschedule { background-image: url('../images/reschedule.png'); }
+
+.release-detail { margin-bottom: 10px;font-size: 1.2em; }
+
+.release-detail input { font-size: 1.2em; }
+
+.release-detail label { display: inline-block;width: 150px; }
+
+.release-detail button { font-size: 1em; }
