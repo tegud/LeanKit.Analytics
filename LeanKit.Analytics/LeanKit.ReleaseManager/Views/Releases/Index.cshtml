@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "~/Views/Layouts/_Layout.cshtml";
+}
+@model LeanKit.ReleaseManager.Controllers.ListOfReleasesViewModel
+
+<h2>All Releases</h2>
+
+<table id="release-table">
+    <tr>
+        <th class="release-id">ID</th>
+        <th class="svn-revision">SVN Revision</th>
+        <th class="service-now">Service Now ID</th>
+        <th class="planned-start-date">Planned Start Date</th>
+        <th class="actual-start-date">Actual Start/End</th>
+        <th class="no-tickets">No. Tickets</th>
+    </tr>
+    @foreach(var release in Model.Releases)
+    {
+        <tr class="release-row" data-release-id="@release.Id">
+            <td>@release.Id</td>
+            <td></td>
+            <td></td>
+            <td>@release.FormattedPlannedDate</td>
+            <td>@release.FormattedActualStartedDate</td>
+            <td>@release.NumberOfIncludedTickets</td>
+        </tr>
+    }
+</table>
+
+@section Javascript
+{
+    <script type="text/javascript">
+        $('#release-table').on('click', '.release-row', function () {
+            window.location = '/Release/' + $(this).data('releaseId');
+        });
+    </script>
+}

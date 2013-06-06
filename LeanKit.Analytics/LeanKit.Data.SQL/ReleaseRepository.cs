@@ -15,7 +15,17 @@ namespace LeanKit.Data.SQL
             _connectionString = connectionString;
         }
 
+        public IEnumerable<ReleaseRecord> GetAllReleases()
+        {
+            return GetListOfReleases(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID ORDER BY R.PlannedDate ASC");
+        }
+
         public IEnumerable<ReleaseRecord> GetUpcomingReleases()
+        {
+            return GetListOfReleases(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID WHERE R.PlannedDate > GETDATE() ORDER BY R.PlannedDate ASC");
+        }
+
+        private IEnumerable<ReleaseRecord> GetListOfReleases(string sql)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
@@ -23,11 +33,11 @@ namespace LeanKit.Data.SQL
 
                 var releases = new List<ReleaseRecord>();
 
-                sqlConnection.Query<ReleaseRecord, IncludedTicketRecord, ReleaseRecord>(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID WHERE R.PlannedDate > GETDATE() ORDER BY R.PlannedDate ASC", (release, ticket) =>
+                sqlConnection.Query<ReleaseRecord, IncludedTicketRecord, ReleaseRecord>(sql, (release, ticket) =>
                     {
                         var existingRelease = releases.FirstOrDefault(r => r.Id == release.Id);
 
-                        if(existingRelease == null)
+                        if (existingRelease == null)
                         {
                             existingRelease = release;
                             releases.Add(release);
@@ -69,6 +79,7 @@ namespace LeanKit.Data.SQL
     {
         IEnumerable<ReleaseRecord> GetUpcomingReleases();
         void Create(ReleaseRecord newRelease);
+        IEnumerable<ReleaseRecord> GetAllReleases();
     }
 
     public class ReleaseRecord

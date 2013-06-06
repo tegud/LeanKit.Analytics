@@ -1,130 +1,123 @@
-﻿@model LeanKit.ReleaseManager.Models.UpcomingReleasesViewModel
+﻿@{
+    Layout = "~/Views/Layouts/_Layout.cshtml";
+}
+@model LeanKit.ReleaseManager.Models.UpcomingReleasesViewModel
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>LeanKit.Release Manager</title>
-    
-    <link href="~/Assets/css/site.css" rel="stylesheet" />
-</head>
-<body>
-    <div>
-        <h1>Upcoming Releases</h1>
+<h1>Upcoming Releases</h1>
         
-        <ul id="releases">
-            @foreach (var release in Model.Releases)
-            {
-                <li class="release-entry">
-                    <div class="legend-block" style="background-color: @release.Color"></div> @release.DateFriendlyText, @release.TicketCount ticket@(release.TicketCount != 1 ? "s" : string.Empty)
-                </li>
-            }
-            <li class="release-entry" id="new-release-legend-entry">
-                <div class="legend-block" style="background-color: @Model.NextReleaseColor"></div> 
-                <span class="no-create-in-progress">Select tickets to create new release</span>
-                <span class="create-in-progress"></span>
-            </li>
-        </ul>
+<ul id="releases">
+    @foreach (var release in Model.Releases)
+    {
+        <li class="release-entry">
+            <div class="legend-block" style="background-color: @release.Color"></div> @release.DateFriendlyText, @release.TicketCount ticket@(release.TicketCount != 1 ? "s" : string.Empty)
+        </li>
+    }
+    <li class="release-entry" id="new-release-legend-entry">
+        <div class="legend-block" style="background-color: @Model.NextReleaseColor"></div> 
+        <span class="no-create-in-progress">Select tickets to create new release</span>
+        <span class="create-in-progress"></span>
+    </li>
+</ul>
 
-        <ul id="lanes">
-            @foreach(var lane in Model.Lanes)
-            {
-                <li class="lane-column">
-                    <div class="column-header">@lane.Title</div>
+<ul id="lanes">
+    @foreach(var lane in Model.Lanes)
+    {
+        <li class="lane-column">
+            <div class="column-header">@lane.Title</div>
                 
-                    @foreach(var ticket in lane.Tickets)
-                    {
-                        <div class="ticket" style="background-color: @ticket.Color" data-ticket-id="@ticket.Id">
-                            <div class="ticket-id">@ticket.ExternalId</div>
-                            @ticket.Title
-                            <ul class="ticket-approvals">
-                                <li>BAT</li>
-                                <li>SEO</li>
-                            </ul>
-                        </div>
-                    }
-                </li>
-            }
-        </ul>
-        
-        [<span id="deselect-all-tickets" class="fake-link">Deselect All Tickets</span>]
-        
-        <h2>Create New Release</h2>
-        <div id="create-release-form-guide">
-            Select ticket(s) to begin
-        </div>
-        <div id="create-release-form" class="hidden">
-            <form method="POST" action="/NewRelease">
-                <input type="hidden" name="selectedTickets" id="selected-tickets" />
-                <input type="hidden" name="plannedDate" id="planned-date" />
-                <input type="hidden" name="plannedTime" id="planned-time" value="10:00" />
-
-                <h3>Date</h3>
-                <ul id="day-selector">
-                    @foreach (var date in Model.CreateReleaseModel.DateOptions)
-                    {
-                        <li data-date="@date.Date.ToString("d MMM yyyy")">@date.FriendlyText</li>
-                    }
-                    <li>Later</li>
-                </ul>
-                <h3>Time</h3>
-                <label id="planned-time-fields">
-                    Start:
-                    <select>
-                        <option>00</option>
-                        <option>01</option>
-                        <option>02</option>
-                        <option>03</option>
-                        <option>04</option>
-                        <option>05</option>
-                        <option>06</option>
-                        <option>07</option>
-                        <option>08</option>
-                        <option>09</option>
-                        <option selected>10</option>
-                        <option>11</option>
-                        <option>12</option>
-                        <option>13</option>
-                        <option>14</option>
-                        <option>15</option>
-                        <option>16</option>
-                        <option>17</option>
-                        <option>18</option>
-                        <option>19</option>
-                        <option>20</option>
-                        <option>21</option>
-                        <option>22</option>
-                        <option>23</option>
-                    </select>:<select>
-                                  <option>00</option>
-                                  <option>15</option>
-                                  <option>30</option>
-                                  <option>45</option>
-                              </select>
-                </label>
-                <label>
-                    Duration:
-                    <select name="planned-duration">
-                        <option>5 mins</option>
-                        <option>10 mins</option>
-                        <option>15 mins</option>
-                        <option>30 mins</option>
-                        <option>45 mins</option>
-                        <option selected>60 mins</option>
-                        <option>90 mins</option>
-                        <option>120 mins</option>
-                    </select>
-                </label>
-            
-                <div>
-                    <button id="create-release" type="submit" disabled>Create</button>
+            @foreach(var ticket in lane.Tickets)
+            {
+                <div class="ticket" style="background-color: @ticket.Color" data-ticket-id="@ticket.Id">
+                    <div class="ticket-id">@ticket.ExternalId</div>
+                    @ticket.Title
+                    <ul class="ticket-approvals">
+                        <li>BAT</li>
+                        <li>SEO</li>
+                    </ul>
                 </div>
-            </form>
+            }
+        </li>
+    }
+</ul>
+        
+[<span id="deselect-all-tickets" class="fake-link">Deselect All Tickets</span>]
+        
+<h2>Create New Release</h2>
+<div id="create-release-form-guide">
+    Select ticket(s) to begin
+</div>
+<div id="create-release-form" class="hidden">
+    <form method="POST" action="/NewRelease">
+        <input type="hidden" name="selectedTickets" id="selected-tickets" />
+        <input type="hidden" name="plannedDate" id="planned-date" />
+        <input type="hidden" name="plannedTime" id="planned-time" value="10:00" />
+
+        <h3>Date</h3>
+        <ul id="day-selector">
+            @foreach (var date in Model.CreateReleaseModel.DateOptions)
+            {
+                <li data-date="@date.Date.ToString("d MMM yyyy")">@date.FriendlyText</li>
+            }
+            <li>Later</li>
+        </ul>
+        <h3>Time</h3>
+        <label id="planned-time-fields">
+            Start:
+            <select>
+                <option>00</option>
+                <option>01</option>
+                <option>02</option>
+                <option>03</option>
+                <option>04</option>
+                <option>05</option>
+                <option>06</option>
+                <option>07</option>
+                <option>08</option>
+                <option>09</option>
+                <option selected>10</option>
+                <option>11</option>
+                <option>12</option>
+                <option>13</option>
+                <option>14</option>
+                <option>15</option>
+                <option>16</option>
+                <option>17</option>
+                <option>18</option>
+                <option>19</option>
+                <option>20</option>
+                <option>21</option>
+                <option>22</option>
+                <option>23</option>
+            </select>:<select>
+                            <option>00</option>
+                            <option>15</option>
+                            <option>30</option>
+                            <option>45</option>
+                        </select>
+        </label>
+        <label>
+            Duration:
+            <select name="planned-duration">
+                <option>5 mins</option>
+                <option>10 mins</option>
+                <option>15 mins</option>
+                <option>30 mins</option>
+                <option>45 mins</option>
+                <option selected>60 mins</option>
+                <option>90 mins</option>
+                <option>120 mins</option>
+            </select>
+        </label>
+            
+        <div>
+            <button id="create-release" type="submit" disabled>Create</button>
         </div>
-    </div>
+    </form>
+</div>
     
-    <script type="text/javascript" src="~/Assets/js/lib/jquery-2.0.0.min.js"></script>
+@section Javascript
+{
     <script type="text/javascript">
         (function () {
             var nextColour = '@Model.NextReleaseColor';
@@ -210,5 +203,4 @@
             });
         })();
     </script>
-</body>
-</html>
+}

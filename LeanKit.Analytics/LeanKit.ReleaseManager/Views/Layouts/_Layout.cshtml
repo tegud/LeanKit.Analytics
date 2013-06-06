@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Release Manager</title>
+        <meta name="viewport" content="width=device-width" />
+    
+        <link href="~/Assets/css/site.css" rel="stylesheet" />
+    </head>
+    <body>
+        <header id="top-bar">
+            <div class="release-manager-title">LeanKit Release Manager :: LateRooms Product Team</div>
+            <nav>
+                <ul>
+                    <li><a href="/">Upcoming Releases</a></li>
+                    <li><a href="/Releases">All Releases</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="main-body">
+            @RenderBody()
+        </div>
+
+        <script type="text/javascript" src="~/Assets/js/lib/jquery-2.0.0.min.js"></script>
+    
+        @RenderSection("Javascript", false)
+    </body>
+</html>

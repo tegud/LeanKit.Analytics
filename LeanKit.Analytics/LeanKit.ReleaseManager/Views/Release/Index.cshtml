@@ -1,86 +1,73 @@
 ﻿@model LeanKit.ReleaseManager.Controllers.ReleaseDetailViewModel
 
-<!DOCTYPE html>
+@{
+    Layout = "~/Views/Layouts/_Layout.cshtml";
+}
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>LeanKit.ReleaseManager</title>
-    
-    <link href="~/Assets/css/site.css" rel="stylesheet" />
-    <style type="text/css">
-
-    </style>
-</head>
-<body>
-    <div>
-        <h1>Release Details</h1>
-        <nav class="options-bar">
-            <ul>
-                <li class="release-note">Release Notes</li>
-                @if(!Model.Completed)
-                {
-                    <li class="reschedule">Reschedule</li>
-                    <li class="mark-as-complete">Complete</li>
-                }
-            </ul>
-        </nav>
-        
-        <h2>Planned for: @Model.PlannedTime.StartFriendlyText (@Model.PlannedTime.Duration min@(Model.PlannedTime.Duration != 1 ? "s" : string.Empty))</h2>
-        @if(Model.Completed)
-        {
-            <h2>Started: @Model.ActualTime.StartedFriendlyText, Completed: @Model.ActualTime.CompletedFriendlyText (lasted @Model.ActualTime.Duration min@(Model.ActualTime.Duration != 1 ? "s" : string.Empty))</h2>
-        }
-        
-        <div class="release-detail">
-            <form method="POST" action="/Release/@Model.Id">
-                <div>
-                    <label>SVN Revision:</label>
-                    <input type="text" id="svn-revision" value="@Model.SvnRevision" />
-                </div>
-                <div>
-                    <label>Service-Now:</label>
-                    <input type="text" id="service-now-identifier" value="@Model.ServiceNowId" placeholder="CHG000000" />
-                </div>
-                <button type="submit">Update</button>
-            </form>
-        </div>
-
-        <h2>Current Status:</h2>
-        <div id="release-status">
-            <div id="release-status-indicator" class="@Model.Status.CssClass"></div>
-            @Model.Status.Text
-        </div>
-        <h2>Included Tickets</h2>
-        <ul id="ticket-list">
-            <li>
-                <div class="ticket-item">
-                    <div class="ticket-id">B-12968</div>
-                    GM Update - Hotel Details Page
-                    <div class="ticket-bottom-bar">
-                        <div class="ticket-size">Size: 1</div>
-                        <div class="ticket-activity">Ready for Release</div>
-                    </div>
-                </div>
-                
-                <ul class="ticket-approval-list">
-                    <li class="approval-item"><div class="approval-indicator approved"></div>BAT - approved</li> 
-                    <li class="approval-item"><div class="approval-indicator"></div>SEO - requested</li> 
-                </ul>
-            </li>
-            <li class="included-ticket">
-                <div class="ticket-item">
-                    <div class="ticket-id">B-12968</div>
-                    GM Update - Hotel Details Page
-                    <div class="ticket-bottom-bar">
-                        <div class="ticket-size">Size: ?</div>
-                        <div class="ticket-activity">Ready for Release</div>
-                    </div>
-                </div>
-            </li>
+<div>
+    <h1>Release Details</h1>
+    <nav class="options-bar">
+        <ul>
+            <li class="release-note">Release Notes</li>
+            @if(!Model.Completed)
+            {
+                <li class="reschedule">Reschedule</li>
+                <li class="mark-as-complete">Complete</li>
+            }
         </ul>
+    </nav>
+        
+    <h2>Planned for: @Model.PlannedTime.StartFriendlyText (@Model.PlannedTime.Duration min@(Model.PlannedTime.Duration != 1 ? "s" : string.Empty))</h2>
+    @if(Model.Completed)
+    {
+        <h2>Started: @Model.ActualTime.StartedFriendlyText, Completed: @Model.ActualTime.CompletedFriendlyText (lasted @Model.ActualTime.Duration min@(Model.ActualTime.Duration != 1 ? "s" : string.Empty))</h2>
+    }
+        
+    <div class="release-detail">
+        <form method="POST" action="/Release/@Model.Id">
+            <div>
+                <label>SVN Revision:</label>
+                <input type="text" id="svn-revision" value="@Model.SvnRevision" />
+            </div>
+            <div>
+                <label>Service-Now:</label>
+                <input type="text" id="service-now-identifier" value="@Model.ServiceNowId" placeholder="CHG000000" />
+            </div>
+            <button type="submit">Update</button>
+        </form>
     </div>
-    
-    <script type="text/javascript" src="~/Assets/js/lib/jquery-2.0.0.min.js"></script>
-</body>
-</html>
+
+    <h2>Current Status:</h2>
+    <div id="release-status">
+        <div id="release-status-indicator" class="@Model.Status.CssClass"></div>
+        @Model.Status.Text
+    </div>
+    <h2>Included Tickets</h2>
+    <ul id="ticket-list">
+        <li>
+            <div class="ticket-item">
+                <div class="ticket-id">B-12968</div>
+                GM Update - Hotel Details Page
+                <div class="ticket-bottom-bar">
+                    <div class="ticket-size">Size: 1</div>
+                    <div class="ticket-activity">Ready for Release</div>
+                </div>
+            </div>
+                
+            <ul class="ticket-approval-list">
+                <li class="approval-item"><div class="approval-indicator approved"></div>BAT - approved</li> 
+                <li class="approval-item"><div class="approval-indicator"></div>SEO - requested</li> 
+            </ul>
+        </li>
+        <li class="included-ticket">
+            <div class="ticket-item">
+                <div class="ticket-id">B-12968</div>
+                GM Update - Hotel Details Page
+                <div class="ticket-bottom-bar">
+                    <div class="ticket-size">Size: ?</div>
+                    <div class="ticket-activity">Ready for Release</div>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
