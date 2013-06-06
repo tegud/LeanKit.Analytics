@@ -116,6 +116,7 @@
     <Compile Include="App_Start\MunqMvc3Startup.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NewReleaseController.cs" />
+    <Compile Include="Controllers\ReleaseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -183,6 +184,9 @@
       <Project>{46346393-ECC7-4499-8BD7-594EFB47094A}</Project>
       <Name>LeanKit.Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Release\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

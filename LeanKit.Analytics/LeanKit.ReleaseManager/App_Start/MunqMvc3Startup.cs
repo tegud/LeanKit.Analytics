@@ -7,28 +7,28 @@ using LeanKit.Utilities;
 using Munq.MVC3;
 
 [assembly: WebActivator.PreApplicationStartMethod(
-	typeof(LeanKit.ReleaseManager.App_Start.MunqMvc3Startup), "PreStart")]
+    typeof(LeanKit.ReleaseManager.App_Start.MunqMvc3Startup), "PreStart")]
 
-namespace LeanKit.ReleaseManager.App_Start 
+namespace LeanKit.ReleaseManager.App_Start
 {
     public static class MunqMvc3Startup
-	{
-	    public static void PreStart() 
+    {
+        public static void PreStart()
         {
-			DependencyResolver.SetResolver(new MunqDependencyResolver());
+            DependencyResolver.SetResolver(new MunqDependencyResolver());
 
-		    var ioc = MunqDependencyResolver.Container;
+            var ioc = MunqDependencyResolver.Container;
 
-	        ioc.Register(Module.ConnectionString, i => MvcApplication.ConnectionString);
+            ioc.Register(Module.ConnectionString, i => MvcApplication.ConnectionString);
 
-	        ioc.Register<IIdentifyWorkDays, DateIsWorkDaySpecification>();
-	        ioc.Register<IMakeListsOfDateOptions, DateOptionsFactory>();
+            ioc.Register<IIdentifyWorkDays, DateIsWorkDaySpecification>();
+            ioc.Register<IMakeListsOfDateOptions, DateOptionsFactory>();
 
-		    UtilitiesRegistry.Register(ioc);
+            UtilitiesRegistry.Register(ioc);
             DataRegistry.Register(ioc);
-	        DataSqlRegistry.Register(ioc);
+            DataSqlRegistry.Register(ioc);
         }
-	}
+    }
 }
- 
+
 

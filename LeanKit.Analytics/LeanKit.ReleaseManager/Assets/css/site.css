@@ -27,3 +27,33 @@
 .fake-link { color: blue;cursor: pointer; }
 
 .fake-link:hover { text-decoration: underline; }
+
+#ticket-list { margin: 0;padding: 0;list-style: none; }
+
+.ticket-item { vertical-align: top; display: inline-block;width: 190px;height: 130px;padding: 5px; background-color: #ccc;border-radius: 10px;display: inline-block;margin-bottom: 10px;cursor: default;position: relative; }
+
+.ticket-approval-list {vertical-align: middle;display: inline-block;margin: 0 0 0 10px;padding: 0;list-style: none; }
+
+.approval-item { height: 28px;position: relative;padding: 6px 0 0 34px; }
+
+.approval-indicator {position: absolute;top: 0;left: 0;width: 30px;height: 30px;background-color: #ddd;display: inline-block;border-radius: 15px; }
+
+.approval-indicator.approved { background-color: #008000; }
+
+#release-status { padding: 10px 0 0 60px;position: relative;height: 30px;font-size: 1.3em; }
+
+#release-status-indicator {position: absolute;top: 0;left: 0;width: 50px;height: 50px;background-color: #ddd;border-radius: 45px; }
+
+.ticket-bottom-bar {position: absolute;bottom: 0;left: 0;height: 31px;font-size: 0.9em;  }
+
+.ticket-size {display: inline-block;width: 50px;height: 24px;background-color: #999;border-radius: 0 0 0 10px;color: #fff;padding: 6px 0 0 5px }
+
+.ticket-activity { display: inline-block;text-align: right;width: 128px; }
+
+.inline-header { display: inline-block; }
+
+.options-bar { display: inline-block;margin-left: 30px;padding-top: 24px;vertical-align: top;}
+
+.options-bar ul { margin: 0;padding: 0;list-style: none; }
+
+.release-note {height: 27px;padding-top: 5px;background-image: url('../images/release-notes.png');background-repeat: no-repeat;padding-left: 36px; }
