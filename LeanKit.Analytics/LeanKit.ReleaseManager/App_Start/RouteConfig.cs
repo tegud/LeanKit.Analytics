@@ -21,6 +21,12 @@ namespace LeanKit.ReleaseManager
             );
 
             routes.MapRoute(
+                name: "NewRelease",
+                url: "NewRelease",
+                defaults: new { controller = "NewRelease", action = "Index" }
+            );
+
+            routes.MapRoute(
                 name: "UpcomingReleases",
                 url: "",
                 defaults: new { controller = "Home", action = "Index" }

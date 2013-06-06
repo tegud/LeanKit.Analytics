@@ -1,6 +1,6 @@
 namespace LeanKit.ReleaseManager.Models
 {
-    public interface IColourPalette
+    public interface IRotateThroughASetOfColours
     {
         string Next();
     }

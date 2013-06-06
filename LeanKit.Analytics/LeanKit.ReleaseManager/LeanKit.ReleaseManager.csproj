@@ -125,7 +125,7 @@
     <Compile Include="Models\DateIsWorkDaySpecification.cs" />
     <Compile Include="Models\DateOption.cs" />
     <Compile Include="Models\DateOptionsFactory.cs" />
-    <Compile Include="Models\IColourPalette.cs" />
+    <Compile Include="Models\IRotateThroughASetOfColours.cs" />
     <Compile Include="Models\IIdentifyWorkDays.cs" />
     <Compile Include="Models\IMakeListsOfDateOptions.cs" />
     <Compile Include="Models\LaneColumn.cs" />
@@ -140,6 +140,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Assets\css\site.css" />
     <Content Include="Assets\images\release-notes.png" />
+    <Content Include="Assets\images\release_toolbar.png" />
     <Content Include="Assets\images\reschedule.png" />
     <Content Include="Assets\js\lib\d3.min.js" />
     <Content Include="Assets\js\lib\jquery-2.0.0.min.js" />

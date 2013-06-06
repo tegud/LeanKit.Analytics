@@ -1,6 +1,6 @@
 namespace LeanKit.ReleaseManager.Models
 {
-    public class ColourPalette : IColourPalette
+    public class ColourPalette : IRotateThroughASetOfColours
     {
         private readonly string[] _colourRange;
         private int _index;
@@ -12,8 +12,7 @@ namespace LeanKit.ReleaseManager.Models
 
         public string Next()
         {
-            var colour = _colourRange[_index % _colourRange.Length];
-            _index++;
+            var colour = _colourRange[_index++ % _colourRange.Length];
             return colour;
         }
     }

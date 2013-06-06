@@ -15,9 +15,22 @@
 <body>
     <div>
         <h1>Release Details</h1>
+        <nav class="options-bar">
+            <ul>
+                <li class="release-note">Release Notes</li>
+                @if(!Model.Completed)
+                {
+                    <li class="reschedule">Reschedule</li>
+                    <li class="mark-as-complete">Complete</li>
+                }
+            </ul>
+        </nav>
         
         <h2>Planned for: @Model.PlannedTime.StartFriendlyText (@Model.PlannedTime.Duration min@(Model.PlannedTime.Duration != 1 ? "s" : string.Empty))</h2>
-        <h2>Started: @Model.ActualTime.StartedFriendlyText, Completed: @Model.ActualTime.CompletedFriendlyText (lasted @Model.ActualTime.Duration min@(Model.ActualTime.Duration != 1 ? "s" : string.Empty))</h2>
+        @if(Model.Completed)
+        {
+            <h2>Started: @Model.ActualTime.StartedFriendlyText, Completed: @Model.ActualTime.CompletedFriendlyText (lasted @Model.ActualTime.Duration min@(Model.ActualTime.Duration != 1 ? "s" : string.Empty))</h2>
+        }
         
         <div class="release-detail">
             <form method="POST" action="/Release/@Model.Id">
@@ -33,12 +46,6 @@
             </form>
         </div>
 
-        <nav class="options-bar">
-            <ul>
-                <li class="release-note">View Release Notes</li>
-                <li class="reschedule">Reschedule</li>
-            </ul>
-        </nav>
         <h2>Current Status:</h2>
         <div id="release-status">
             <div id="release-status-indicator" class="@Model.Status.CssClass"></div>

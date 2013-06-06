@@ -18,6 +18,7 @@ namespace LeanKit.ReleaseManager.Controllers
                             StartFriendlyText = "Today at 10:00",
                             Duration = 60
                         },
+                    Completed = true,
                     ActualTime = new ReleaseActualTime
                         {
                             StartedFriendlyText = "Today at 10:00",
@@ -46,6 +47,8 @@ namespace LeanKit.ReleaseManager.Controllers
         public string ServiceNowId { get; set; }
 
         public ReleaseStatusViewModel Status { get; set; }
+
+        public bool Completed { get; set; }
     }
 
     public class ReleaseStatusViewModel

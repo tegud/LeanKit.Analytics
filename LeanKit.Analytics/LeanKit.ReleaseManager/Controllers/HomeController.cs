@@ -12,31 +12,25 @@ namespace LeanKit.ReleaseManager.Controllers
         private readonly IGetActivitiesFromTheDatabase _activityRepository;
         private readonly ITicketRepository _ticketRepository;
         private readonly IMakeListsOfDateOptions _dateOptionsFactory;
+        private readonly IRotateThroughASetOfColours _colourPalette;
 
         public HomeController(IGetReleasesFromTheDatabase releaseRepository,
             IGetActivitiesFromTheDatabase activityRepository,
             ITicketRepository ticketRepository, 
-            IMakeListsOfDateOptions dateOptionsFactory)
+            IMakeListsOfDateOptions dateOptionsFactory,
+            IRotateThroughASetOfColours colourPalette)
         {
             _releaseRepository = releaseRepository;
             _activityRepository = activityRepository;
             _ticketRepository = ticketRepository;
             _dateOptionsFactory = dateOptionsFactory;
+            _colourPalette = colourPalette;
         }
 
         public ViewResult Index()
         {
             var allTickets = _ticketRepository.GetAll().Tickets;
             var releaseRecords = _releaseRepository.GetUpcomingReleases().ToArray();
-
-            var colourPalette = new ColourPalette(new[]
-                {
-                    "#D15300",
-                    "#83BF00",
-                    "#FFF268",
-                    "#9682FF",
-                    "#FF9999"
-                });
 
             var lanes = _activityRepository.GetLanes().Where(l => l.Title != "Live");
 
@@ -45,7 +39,7 @@ namespace LeanKit.ReleaseManager.Controllers
                     Id = r.Id,
                     PlannedDate = r.PlannedDate,
                     DateFriendlyText = r.PlannedDate.ToFriendlyText("dd MMM yyyy", " \"at\" HH:mm"),
-                    Color = colourPalette .Next()
+                    Color = _colourPalette .Next()
                 }).ToArray();
 
             var laneColumns = lanes.Select(l => new LaneColumn
@@ -77,7 +71,7 @@ namespace LeanKit.ReleaseManager.Controllers
                 {
                     Releases = releases,
                     Lanes = laneColumns,
-                    NextReleaseColor = colourPalette.Next(),
+                    NextReleaseColor = _colourPalette.Next(),
                     CreateReleaseModel = new CreateReleaseModel
                         {
                             DateOptions = _dateOptionsFactory.BuildDateOptions(5)
