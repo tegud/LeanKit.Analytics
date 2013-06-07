@@ -16,9 +16,9 @@
 
 #omnibar { font-size: 1em;margin: 10px;width: 400px; }
 
-h1 { font-size: 1.6em;margin: 5px 0; }
+.main-body { margin: 0 14px; }
 
-.main-body { margin: 0 5px; }
+h1 { font-size: 1.6em;margin: 5px 0; }
 
 #lanes, #releases { margin: 0;padding: 0;list-style: none; }
 
@@ -86,12 +86,13 @@ h1 { font-size: 1.6em;margin: 5px 0; }
 
 .release-detail button { font-size: 1em; }
 
-#release-table { width: 900px;border-collapse: collapse; }
-
-.release-table th { text-align: left; }
+#release-table { width: 1000px;border-collapse: collapse; }
+#release-table th { text-align: left; }
 
 .release-row { cursor: pointer; }
 
 .release-row td { padding: 2px; }
 
 .release-row:hover { color: #75A4FF }
+
+.scheduling-entry { font-size: 1.1em;font-weight: bold; }

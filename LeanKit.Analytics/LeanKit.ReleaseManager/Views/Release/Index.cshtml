@@ -16,26 +16,18 @@
             }
         </ul>
     </nav>
-        
-    <h2>Planned for: @Model.PlannedTime.StartFriendlyText (@Model.PlannedTime.Duration min@(Model.PlannedTime.Duration != 1 ? "s" : string.Empty))</h2>
-    @if(Model.Completed)
+    
+    <h2>Scheduling</h2>
+    <div class="scheduling-entry">Planned for: @Model.PlannedTime.StartFriendlyText @Model.PlannedTime.Duration</div>
+    @if(Model.Status.HasStarted)
     {
-        <h2>Started: @Model.ActualTime.StartedFriendlyText, Completed: @Model.ActualTime.CompletedFriendlyText (lasted @Model.ActualTime.Duration min@(Model.ActualTime.Duration != 1 ? "s" : string.Empty))</h2>
+        <div class="scheduling-entry">Started: @Model.ActualTime.StartedFriendlyText</div>
+    }
+    @if (Model.Status.HasCompleted)
+    {
+        <div class="scheduling-entry">Completed: @Model.ActualTime.CompletedFriendlyText (took @Model.ActualTime.Duration mins)</div>     
     }
         
-    <div class="release-detail">
-        <form method="POST" action="/Release/@Model.Id">
-            <div>
-                <label>SVN Revision:</label>
-                <input type="text" id="svn-revision" value="@Model.SvnRevision" />
-            </div>
-            <div>
-                <label>Service-Now:</label>
-                <input type="text" id="service-now-identifier" value="@Model.ServiceNowId" placeholder="CHG000000" />
-            </div>
-            <button type="submit">Update</button>
-        </form>
-    </div>
 
     <h2>Current Status:</h2>
     <div id="release-status">

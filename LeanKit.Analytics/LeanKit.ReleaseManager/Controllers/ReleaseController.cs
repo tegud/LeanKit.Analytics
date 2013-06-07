@@ -12,6 +12,9 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
 
+        const string FriendlyTextDate = "dddd dd MMM yyyy";
+        const string FriendlyTextTime = " \"at\" HH:mm";
+
         public ReleaseController(IGetReleasesFromTheDatabase releaseRepository)
         {
             _releaseRepository = releaseRepository;
@@ -21,16 +24,12 @@ namespace LeanKit.ReleaseManager.Controllers
         {
             var releaseRecord = _releaseRepository.GetRelease(id);
 
-            var releaseActualTime = new ReleaseActualTime
-                {
-                    StartedFriendlyText = "Today at 10:00", 
-                    CompletedFriendlyText = "Today at 10:45", 
-                    Duration = 45
-                };
+            var releaseActualTime = GetReleaseActualTime(releaseRecord);
 
             var releasePlannedTime = new ReleasePlannedTime
                 {
-                    StartFriendlyText = releaseRecord.PlannedDate.ToFriendlyText("dddd dd MMM yyyy", " \"at\" HH:mm"), Duration = releaseRecord.PlannedDuration
+                    StartFriendlyText = releaseRecord.PlannedDate.ToFriendlyText(FriendlyTextDate, FriendlyTextTime), 
+                    Duration = GetPlannedDurationText(releaseRecord)
                 };
 
             var releaseViewModel = new ReleaseDetailViewModel
@@ -41,10 +40,41 @@ namespace LeanKit.ReleaseManager.Controllers
                     ActualTime = releaseActualTime,
                     Status = new ReleaseStatusViewModel
                         {
+                            HasStarted = true,
+                            HasCompleted = true,
                             Text = "Awaiting Approval"
                         }
                 };
             return View("Index", releaseViewModel);
+        }
+
+        private static ReleaseActualTime GetReleaseActualTime(ReleaseRecord releaseRecord)
+        {
+            if (releaseRecord.StartedAt == DateTime.MinValue)
+            {
+                return new ReleaseActualTime();
+            }
+
+            if (releaseRecord.CompletedAt == DateTime.MinValue)
+            {
+                return new ReleaseActualTime
+                    {
+                        StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FriendlyTextDate, FriendlyTextTime)
+                    };
+            }
+
+            return new ReleaseActualTime
+                {
+                    StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FriendlyTextDate, FriendlyTextTime),
+                    CompletedFriendlyText = releaseRecord.CompletedAt.ToFriendlyText(FriendlyTextDate, FriendlyTextTime),
+                    Duration = (releaseRecord.CompletedAt - releaseRecord.StartedAt).TotalMinutes
+                };
+        }
+
+        private static string GetPlannedDurationText(ReleaseRecord releaseRecord)
+        {
+            return releaseRecord.PlannedDuration > 0 ? string.Format(" ({0} min{1})", releaseRecord.PlannedDate,
+                                                                     releaseRecord.PlannedDuration > 1 ? "s" : "") : "";
         }
     }
 
@@ -67,6 +97,10 @@ namespace LeanKit.ReleaseManager.Controllers
 
     public class ReleaseStatusViewModel
     {
+        public bool HasStarted { get; set; }
+
+        public bool HasCompleted { get; set; }
+
         public string Text { get; set; }
 
         public string CssClass { get; set; }
@@ -76,7 +110,7 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         public string StartFriendlyText { get; set; }
 
-        public int Duration { get; set; }
+        public string Duration { get; set; }
     }
 
     public class ReleaseActualTime
@@ -85,6 +119,6 @@ namespace LeanKit.ReleaseManager.Controllers
 
         public string CompletedFriendlyText { get; set; }
 
-        public int Duration { get; set; }
+        public double Duration { get; set; }
     }
 }
