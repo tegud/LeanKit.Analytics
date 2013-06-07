@@ -8,7 +8,7 @@
 
 #top-bar ul { padding: 0 4px;margin: 0;list-style: none;border-left: solid 1px #ddd;height: 100%; }
 
-#top-bar li { display: inline-block;padding: 13px 5px 5px 5px;font-size: 1em;font-weight: bold; }
+#top-bar li { display: inline-block;padding: 15px 5px 5px 5px;font-size: 0.9em;font-weight: bold; }
 
 #top-bar li a { text-decoration: none;color: #444;transition-property: color; transition-duration: 300ms }
 
@@ -91,3 +91,5 @@
 .release-row { cursor: pointer; }
 
 .release-row td { padding: 2px; }
+
+.release-row:hover { color: #75A4FF }
