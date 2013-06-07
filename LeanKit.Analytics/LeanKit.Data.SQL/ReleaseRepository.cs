@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
@@ -15,6 +16,17 @@ namespace LeanKit.Data.SQL
             _connectionString = connectionString;
         }
 
+        public ReleaseRecord GetRelease(int id)
+        {
+            var parameters = new Dictionary<string, object>
+                {
+                    {"id", id}
+                };
+
+            return GetListOfReleases(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID WHERE R.ID = @ID",
+                parameters).Single();
+        }
+
         public IEnumerable<ReleaseRecord> GetAllReleases()
         {
             return GetListOfReleases(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID ORDER BY R.PlannedDate ASC");
@@ -27,6 +39,18 @@ namespace LeanKit.Data.SQL
 
         private IEnumerable<ReleaseRecord> GetListOfReleases(string sql)
         {
+            return GetListOfReleases(sql, new Dictionary<string, object>(0));
+        }
+
+        private IEnumerable<ReleaseRecord> GetListOfReleases(string sql, Dictionary<string, object> parameters)
+        {
+            var sqlParameters = new DynamicParameters();
+
+            foreach (var param in parameters)
+            {
+                sqlParameters.Add(param.Key, param.Value);
+            }
+
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
@@ -46,7 +70,7 @@ namespace LeanKit.Data.SQL
                         existingRelease.IncludedTickets.Add(ticket);
 
                         return release;
-                    }, splitOn: "CardID");
+                    }, splitOn: "CardID", param: sqlParameters);
 
                 return releases;
             }
@@ -63,7 +87,7 @@ namespace LeanKit.Data.SQL
                         plannedStart = newRelease.PlannedDate
                     }).First();
 
-                foreach(var ticket in newRelease.IncludedTickets)
+                foreach (var ticket in newRelease.IncludedTickets)
                 {
                     sqlConnection.Execute(@"DELETE FROM ReleaseCard WHERE CardID = @CardID; INSERT INTO ReleaseCard (ReleaseID, CardID) SELECT @ReleaseID, @CardID", new
                     {
@@ -80,6 +104,7 @@ namespace LeanKit.Data.SQL
         IEnumerable<ReleaseRecord> GetUpcomingReleases();
         void Create(ReleaseRecord newRelease);
         IEnumerable<ReleaseRecord> GetAllReleases();
+        ReleaseRecord GetRelease(int id);
     }
 
     public class ReleaseRecord
@@ -89,6 +114,12 @@ namespace LeanKit.Data.SQL
         public string SvnRevision { get; set; }
 
         public DateTime PlannedDate { get; set; }
+
+        public int PlannedDuration { get; set; }
+
+        public DateTime StartedAt { get; set; }
+
+        public DateTime CompletedAt { get; set; }
 
         public List<IncludedTicketRecord> IncludedTickets { get; set; }
 

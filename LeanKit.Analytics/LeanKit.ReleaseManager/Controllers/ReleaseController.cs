@@ -3,28 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LeanKit.Data.SQL;
+using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
     public class ReleaseController : Controller
     {
+        private readonly IGetReleasesFromTheDatabase _releaseRepository;
+
+        public ReleaseController(IGetReleasesFromTheDatabase releaseRepository)
+        {
+            _releaseRepository = releaseRepository;
+        }
+
         public ActionResult Index(int id)
         {
+            var releaseRecord = _releaseRepository.GetRelease(id);
+
+            var releaseActualTime = new ReleaseActualTime
+                {
+                    StartedFriendlyText = "Today at 10:00", 
+                    CompletedFriendlyText = "Today at 10:45", 
+                    Duration = 45
+                };
+
+            var releasePlannedTime = new ReleasePlannedTime
+                {
+                    StartFriendlyText = releaseRecord.PlannedDate.ToFriendlyText("dddd dd MMM yyyy", " \"at\" HH:mm"), Duration = releaseRecord.PlannedDuration
+                };
+
             var releaseViewModel = new ReleaseDetailViewModel
                 {
                     Id = id,
-                    PlannedTime = new ReleasePlannedTime
-                        {
-                            StartFriendlyText = "Today at 10:00",
-                            Duration = 60
-                        },
+                    PlannedTime = releasePlannedTime,
                     Completed = true,
-                    ActualTime = new ReleaseActualTime
-                        {
-                            StartedFriendlyText = "Today at 10:00",
-                            CompletedFriendlyText = "Today at 10:45",
-                            Duration = 45
-                        },
+                    ActualTime = releaseActualTime,
                     Status = new ReleaseStatusViewModel
                         {
                             Text = "Awaiting Approval"
