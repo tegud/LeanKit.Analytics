@@ -23,7 +23,7 @@ namespace LeanKit.Data.SQL
                     {"id", id}
                 };
 
-            return GetListOfReleases(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID WHERE R.ID = @ID",
+            return GetListOfReleases(@"SELECT R.*, RC.CardID, C.ExternalID, C.Title, C.Size FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID LEFT OUTER JOIN Card C ON RC.CardID = C.ID WHERE R.ID = @ID",
                 parameters).Single();
         }
 
@@ -67,7 +67,10 @@ namespace LeanKit.Data.SQL
                             releases.Add(release);
                         }
 
-                        existingRelease.IncludedTickets.Add(ticket);
+                        if (ticket != null)
+                        {
+                            existingRelease.IncludedTickets.Add(ticket);
+                        }
 
                         return release;
                     }, splitOn: "CardID", param: sqlParameters);
@@ -113,6 +116,8 @@ namespace LeanKit.Data.SQL
 
         public string SvnRevision { get; set; }
 
+        public string ServiceNowId { get; set; }
+
         public DateTime PlannedDate { get; set; }
 
         public int PlannedDuration { get; set; }
@@ -132,5 +137,11 @@ namespace LeanKit.Data.SQL
     public class IncludedTicketRecord
     {
         public int CardId { get; set; }
+
+        public string ExternalId { get; set; }
+
+        public string Title { get; set; }
+
+        public int Size { get; set; }
     }
 }

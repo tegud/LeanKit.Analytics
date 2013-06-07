@@ -38,31 +38,29 @@
         @Model.Status.Text
     </div>
     <h2>Included Tickets</h2>
+    <nav class="options-bar">
+        <ul>
+            <li class="edit-content">Edit Included Tickets</li>
+        </ul>
+    </nav>
     <ul id="ticket-list">
-        <li>
-            <div class="ticket-item">
-                <div class="ticket-id">B-12968</div>
-                GM Update - Hotel Details Page
-                <div class="ticket-bottom-bar">
-                    <div class="ticket-size">Size: 1</div>
-                    <div class="ticket-activity">Ready for Release</div>
+        @foreach(var ticket in Model.IncludedTickets)
+        {
+            <li>
+                <div class="ticket-item">
+                    <div class="ticket-id">@ticket.ExternalId</div>
+                    @ticket.Title
+                    <div class="ticket-bottom-bar">
+                        <div class="ticket-size">Size: @ticket.Size</div>
+                        <div class="ticket-activity">Ready for Release</div>
+                    </div>
                 </div>
-            </div>
                 
-            <ul class="ticket-approval-list">
-                <li class="approval-item"><div class="approval-indicator approved"></div>BAT - approved</li> 
-                <li class="approval-item"><div class="approval-indicator"></div>SEO - requested</li> 
-            </ul>
-        </li>
-        <li class="included-ticket">
-            <div class="ticket-item">
-                <div class="ticket-id">B-12968</div>
-                GM Update - Hotel Details Page
-                <div class="ticket-bottom-bar">
-                    <div class="ticket-size">Size: ?</div>
-                    <div class="ticket-activity">Ready for Release</div>
-                </div>
-            </div>
-        </li>
+                <ul class="ticket-approval-list" style="display: none;">
+                    <li class="approval-item"><div class="approval-indicator approved"></div>BAT - approved</li> 
+                    <li class="approval-item"><div class="approval-indicator"></div>SEO - requested</li> 
+                </ul>
+            </li>
+        }
     </ul>
 </div>

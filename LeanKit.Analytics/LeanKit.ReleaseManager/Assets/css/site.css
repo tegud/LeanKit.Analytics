@@ -50,7 +50,7 @@ h2 { margin: 10px 0; }
 
 .fake-link:hover { text-decoration: underline; }
 
-#ticket-list { margin: 0;padding: 0;list-style: none; }
+#ticket-list { margin: 10px 0 0 0;padding: 0;list-style: none; }
 
 .ticket-item { vertical-align: top; display: inline-block;width: 190px;height: 130px;padding: 5px; background-color: #ccc;border-radius: 10px;display: inline-block;margin-bottom: 10px;cursor: default;position: relative; }
 
@@ -62,7 +62,7 @@ h2 { margin: 10px 0; }
 
 .approval-indicator.approved { background-color: #008000; }
 
-#release-status { padding: 10px 0 0 60px;position: relative;height: 30px;font-size: 1.3em; }
+#release-status { padding: 15px 0 0 60px;position: relative;height: 25px;font-size: 1.3em; }
 
 #release-status-indicator {position: absolute;top: 0;left: 0;width: 50px;height: 50px;background-color: #ddd;border-radius: 45px; }
 
@@ -82,6 +82,7 @@ h2 { margin: 10px 0; }
 
 .options-bar ul li.mark-as-complete { background-position: 0 -52px;  }
 
+.options-bar ul li.edit-content { background-position: 0 -78px;  }
 
 .release-detail { margin-bottom: 10px;font-size: 1.2em; }
 
@@ -91,13 +92,28 @@ h2 { margin: 10px 0; }
 
 .release-detail button { font-size: 1em; }
 
-#release-table { width: 1000px;border-collapse: collapse; }
-#release-table th { text-align: left; }
+#release-table { border-collapse: collapse; }
+#release-table th { text-align: left;background-color: #f7f7f7;height: 30px;padding: 5px;cursor: default; }
 
-.release-row { cursor: pointer; }
+.release-row { cursor: pointer;height: 40px;background-color: #fcfcfc;transition-property: color;transition-duration: 300ms; }
+
+.release-row:nth-child(odd) { background-color: #f7f7f7; }
 
 .release-row td { padding: 2px; }
 
 .release-row:hover { color: #75A4FF }
 
 .scheduling-entry { font-size: 1.1em;font-weight: bold; }
+
+a { color: #000;transition-property: color;transition-duration: 300ms;text-decoration: none; }
+
+.release-row:hover a, a:hover { color: #75A4FF }
+
+.release-id { width: 60px; }
+.svn-revision { width: 110px; }
+.service-now { width: 120px; }
+.planned-start-date { width: 170px; }
+.actual-start-date { width: 170px; }
+.actual-end-date { width: 170px; }
+.actual-duration { width: 140px; }
+.no-tickets { width: 100px; }

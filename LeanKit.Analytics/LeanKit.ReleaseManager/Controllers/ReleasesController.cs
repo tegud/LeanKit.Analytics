@@ -23,13 +23,29 @@ namespace LeanKit.ReleaseManager.Controllers
 
             return View(new ListOfReleasesViewModel
                 {
-                    Releases = allReleases.Select(r => new ReleaseListItemViewModel
+                    Releases = allReleases.Select(r =>
                         {
-                            Id = r.Id,
-                            FormattedPlannedDate = r.PlannedDate.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
-                            FormattedActualStartedDate = r.StartedAt.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
-                            FormattedActualEndDate = r.CompletedAt.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
-                            NumberOfIncludedTickets = r.IncludedTickets.Count()
+                            var totalMinutes = (r.CompletedAt - r.StartedAt).TotalMinutes;
+                            string formattedTotalMinutes = string.Empty;
+
+                            if(totalMinutes > 0)
+                            {
+                                formattedTotalMinutes = string.Format("{0} min{1}", 
+                                    totalMinutes,
+                                    totalMinutes > 1 ? "s" : string.Empty);
+                            }
+
+                            return new ReleaseListItemViewModel
+                                                               {
+                                                                   Id = r.Id,
+                                                                   SvnRevision = r.SvnRevision,
+                                                                   ServiceNowId = r.ServiceNowId,
+                                                                   FormattedPlannedDate = r.PlannedDate.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
+                                                                   FormattedActualStartedDate = r.StartedAt.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
+                                                                   FormattedActualEndDate = r.CompletedAt.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
+                                                                   FormattedActualDuration = formattedTotalMinutes,
+                                                                   NumberOfIncludedTickets = r.IncludedTickets.Count(t => t != null)
+                                                               };
                         })
                 });
         }
@@ -56,5 +72,6 @@ namespace LeanKit.ReleaseManager.Controllers
 
         public int NumberOfIncludedTickets { get; set; }
 
+        public string FormattedActualDuration { get; set; }
     }
 }

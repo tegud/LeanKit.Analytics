@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using LeanKit.Data.SQL;
 using LeanKit.Utilities.DateAndTime;
@@ -12,8 +11,8 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
 
-        const string FriendlyTextDate = "dddd dd MMM yyyy";
-        const string FriendlyTextTime = " \"at\" HH:mm";
+        const string FRIENDLY_TEXT_DATE = "dddd dd MMM yyyy";
+        const string FRIENDLY_TEXT_TIME = " \"at\" HH:mm";
 
         public ReleaseController(IGetReleasesFromTheDatabase releaseRepository)
         {
@@ -28,7 +27,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var releasePlannedTime = new ReleasePlannedTime
                 {
-                    StartFriendlyText = releaseRecord.PlannedDate.ToFriendlyText(FriendlyTextDate, FriendlyTextTime), 
+                    StartFriendlyText = releaseRecord.PlannedDate.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME), 
                     Duration = GetPlannedDurationText(releaseRecord)
                 };
 
@@ -41,12 +40,17 @@ namespace LeanKit.ReleaseManager.Controllers
                     Text = hasStarted ? hasCompleted ? "Completed" : "In Progress" : "Awaiting Approval"
                 };
 
+            var releaseDetailIncludedTicketViewModels = releaseRecord.IncludedTickets.Any() ? releaseRecord.IncludedTickets.Select(rr => new ReleaseDetailIncludedTicketViewModel
+                {
+                    ExternalId = rr.ExternalId, Title = rr.Title, Size = rr.Size > 0 ? rr.Size.ToString() : "?"
+                }) : new List<ReleaseDetailIncludedTicketViewModel>(0);
             var releaseViewModel = new ReleaseDetailViewModel
                 {
                     Id = id,
                     PlannedTime = releasePlannedTime,
                     ActualTime = releaseActualTime,
-                    Status = releaseStatusViewModel
+                    Status = releaseStatusViewModel,
+                    IncludedTickets = releaseDetailIncludedTicketViewModels
                 };
             return View("Index", releaseViewModel);
         }
@@ -62,14 +66,14 @@ namespace LeanKit.ReleaseManager.Controllers
             {
                 return new ReleaseActualTime
                     {
-                        StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FriendlyTextDate, FriendlyTextTime)
+                        StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME)
                     };
             }
 
             return new ReleaseActualTime
                 {
-                    StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FriendlyTextDate, FriendlyTextTime),
-                    CompletedFriendlyText = releaseRecord.CompletedAt.ToFriendlyText(FriendlyTextDate, FriendlyTextTime),
+                    StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
+                    CompletedFriendlyText = releaseRecord.CompletedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
                     Duration = (releaseRecord.CompletedAt - releaseRecord.StartedAt).TotalMinutes
                 };
         }
@@ -94,6 +98,26 @@ namespace LeanKit.ReleaseManager.Controllers
         public string ServiceNowId { get; set; }
 
         public ReleaseStatusViewModel Status { get; set; }
+
+        public IEnumerable<ReleaseDetailIncludedTicketViewModel> IncludedTickets { get; set; }
+    }
+
+    public class ReleaseDetailIncludedTicketViewModel
+    {
+        public string ExternalId { get; set; }
+
+        public string Title { get; set; }
+
+        public string Size { get; set; }
+
+        public IEnumerable<ReleaseDetailTicketApproval> Approvals { get; set; }
+    }
+
+    public class ReleaseDetailTicketApproval
+    {
+        public string Name { get; set; }
+
+        public bool Approved { get; set; }
     }
 
     public class ReleaseStatusViewModel
