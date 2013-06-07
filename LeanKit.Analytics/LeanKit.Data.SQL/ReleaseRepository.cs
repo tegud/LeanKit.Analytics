@@ -29,7 +29,7 @@ namespace LeanKit.Data.SQL
 
         public IEnumerable<ReleaseRecord> GetAllReleases()
         {
-            return GetListOfReleases(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID ORDER BY R.PlannedDate ASC");
+            return GetListOfReleases(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID ORDER BY R.PlannedDate DESC");
         }
 
         public IEnumerable<ReleaseRecord> GetUpcomingReleases()

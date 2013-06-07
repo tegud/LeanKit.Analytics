@@ -27,6 +27,8 @@ namespace LeanKit.ReleaseManager.Controllers
                         {
                             Id = r.Id,
                             FormattedPlannedDate = r.PlannedDate.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
+                            FormattedActualStartedDate = r.StartedAt.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
+                            FormattedActualEndDate = r.CompletedAt.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
                             NumberOfIncludedTickets = r.IncludedTickets.Count()
                         })
                 });
@@ -50,6 +52,9 @@ namespace LeanKit.ReleaseManager.Controllers
 
         public string FormattedActualStartedDate { get; set; }
 
+        public string FormattedActualEndDate { get; set; }
+
         public int NumberOfIncludedTickets { get; set; }
+
     }
 }

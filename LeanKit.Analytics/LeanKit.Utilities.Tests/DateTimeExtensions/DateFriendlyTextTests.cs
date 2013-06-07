@@ -8,33 +8,39 @@ namespace LeanKit.Utilities.Tests.DateTimeExtensions
     public class DateFriendlyTextTests
     {
         [Test]
+        public void ReturnsEmptyStringForDateTimeMin()
+        {
+            Assert.That(DateTime.MinValue.ToFriendlyText(string.Empty, string.Empty), Is.EqualTo(string.Empty));
+        }
+
+        [Test]
         public void ReturnsTodayForDateMatchingCurrentDate()
         {
-            Assert.That(DateTime.Now.ToFriendlyText("", ""), Is.EqualTo("Today"));
+            Assert.That(DateTime.Now.ToFriendlyText(string.Empty, string.Empty), Is.EqualTo("Today"));
         }
 
         [Test]
         public void ReturnsTomorrowForDateMatchingCurrentDatePlusOneDay()
         {
-            Assert.That(DateTime.Now.AddDays(1).ToFriendlyText("", ""), Is.StringStarting("Tomorrow"));
+            Assert.That(DateTime.Now.AddDays(1).ToFriendlyText(string.Empty, string.Empty), Is.StringStarting("Tomorrow"));
         }
 
         [Test]
         public void ReturnsYesterdayForDateMatchingCurrentDateMinusOneDay()
         {
-            Assert.That(DateTime.Now.AddDays(1).ToFriendlyText("", ""), Is.StringStarting("Tomorrow"));
+            Assert.That(DateTime.Now.AddDays(1).ToFriendlyText(string.Empty, string.Empty), Is.StringStarting("Tomorrow"));
         }
 
         [Test]
         public void ReturnsDateFormattedUsingProvidedStringWhenDateIsADateInThePast()
         {
-            Assert.That(new DateTime(1990, 1, 1).ToFriendlyText("dd MMM yyyy", ""), Is.StringStarting("01 Jan 1990"));
+            Assert.That(new DateTime(1990, 1, 1).ToFriendlyText("dd MMM yyyy", string.Empty), Is.StringStarting("01 Jan 1990"));
         }
 
         [Test]
         public void ReturnsTimeFormattedToEndOfString()
         {
-            Assert.That(new DateTime(1990, 1, 1, 15, 10, 0).ToFriendlyText("", "HH:mm"), Is.StringEnding("15:10"));
+            Assert.That(new DateTime(1990, 1, 1, 15, 10, 0).ToFriendlyText(string.Empty, "HH:mm"), Is.StringEnding("15:10"));
         }
     }
 }

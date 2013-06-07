@@ -33,7 +33,7 @@ namespace LeanKit.ReleaseManager.Controllers
                         }).ToList()
                 });
 
-            return new RedirectResult("/");
+            return new RedirectResult("/UpcomingReleases");
         }
     }
 }

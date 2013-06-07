@@ -14,6 +14,11 @@ namespace LeanKit.Utilities.DateAndTime
 
         public static string ToFriendlyText (this DateTime date, string dateFormat, string timeFormat)
         {
+            if (date == DateTime.MinValue)
+            {
+                return string.Empty;
+            }
+
             var todaysDate = DateTime.Now.Date;
             var daysDiff = (date.Date - todaysDate).TotalDays;
 
