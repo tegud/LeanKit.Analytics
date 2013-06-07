@@ -32,18 +32,21 @@ namespace LeanKit.ReleaseManager.Controllers
                     Duration = GetPlannedDurationText(releaseRecord)
                 };
 
+            var hasStarted = releaseRecord.StartedAt > DateTime.MinValue;
+            var hasCompleted = releaseRecord.CompletedAt > DateTime.MinValue;
+            var releaseStatusViewModel = new ReleaseStatusViewModel
+                {
+                    HasStarted = hasStarted,
+                    HasCompleted = hasCompleted,
+                    Text = hasStarted ? hasCompleted ? "Completed" : "In Progress" : "Awaiting Approval"
+                };
+
             var releaseViewModel = new ReleaseDetailViewModel
                 {
                     Id = id,
                     PlannedTime = releasePlannedTime,
-                    Completed = true,
                     ActualTime = releaseActualTime,
-                    Status = new ReleaseStatusViewModel
-                        {
-                            HasStarted = true,
-                            HasCompleted = true,
-                            Text = "Awaiting Approval"
-                        }
+                    Status = releaseStatusViewModel
                 };
             return View("Index", releaseViewModel);
         }
@@ -91,8 +94,6 @@ namespace LeanKit.ReleaseManager.Controllers
         public string ServiceNowId { get; set; }
 
         public ReleaseStatusViewModel Status { get; set; }
-
-        public bool Completed { get; set; }
     }
 
     public class ReleaseStatusViewModel

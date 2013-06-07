@@ -9,9 +9,12 @@
     <nav class="options-bar">
         <ul>
             <li class="release-note">Release Notes</li>
-            @if(!Model.Completed)
+            @if (!Model.Status.HasStarted)
             {
                 <li class="reschedule">Reschedule</li>
+            }
+            @if (!Model.Status.HasCompleted)
+            {
                 <li class="mark-as-complete">Complete</li>
             }
         </ul>
