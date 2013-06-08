@@ -20,13 +20,13 @@
     {
         <tr class="release-row" data-release-id="@release.Id">
             <td class="release-id"><a href="/Release/@release.Id">@release.Id</a></td>
-            <td>@release.SvnRevision</td>
-            <td>@release.ServiceNowId</td>
-            <td>@release.FormattedPlannedDate</td>
-            <td>@release.FormattedActualStartedDate</td>
-            <td>@release.FormattedActualEndDate</td>
-            <td>@release.FormattedActualDuration</td>
-            <td>@release.NumberOfIncludedTickets</td>
+            <td class="svn-revision">@release.SvnRevision</td>
+            <td class="service-now">@release.ServiceNowId</td>
+            <td class="planned-start-date">@release.FormattedPlannedDate</td>
+            <td class="actual-start-date">@release.FormattedActualStartedDate</td>
+            <td class="actual-end-date">@release.FormattedActualEndDate</td>
+            <td class="actual-duration">@release.FormattedActualDuration</td>
+            <td class="no-tickets">@release.NumberOfIncludedTickets</td>
         </tr>
     }
 </table>

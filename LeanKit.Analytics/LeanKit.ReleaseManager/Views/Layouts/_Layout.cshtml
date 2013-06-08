@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width" />
     
         <link href="~/Assets/css/site.css" rel="stylesheet" />
+        <link href="~/Assets/css/ladda.css" rel="stylesheet" />
     </head>
     <body>
         <header id="top-bar">
@@ -30,8 +31,9 @@
         <div class="main-body">
             @RenderBody()
         </div>
-
+        
         <script type="text/javascript" src="~/Assets/js/lib/jquery-2.0.0.min.js"></script>
+        <script type="text/javascript" src="~/Assets/js/ladda.js"></script>
     
         @RenderSection("Javascript", false)
     </body>
