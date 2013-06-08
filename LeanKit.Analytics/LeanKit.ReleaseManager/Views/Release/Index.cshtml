@@ -21,11 +21,14 @@
     </nav>
     
     <div id="started-and-completed-form">
-        <div>
-            <label>Started At:</label>
-            <input type="date" />
-            <input type="time" />
-        </div>
+        @if (!Model.Status.HasStarted)
+        {
+            <div>
+                <label>Started At:</label>
+                <input type="date" />
+                <input type="time" />
+            </div>
+        }
         <div>
             <label>Completed At:</label>
             <input type="date" />
