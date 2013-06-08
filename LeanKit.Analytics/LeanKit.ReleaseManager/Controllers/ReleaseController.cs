@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data.SQL;
+using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Controllers
@@ -83,67 +84,5 @@ namespace LeanKit.ReleaseManager.Controllers
             return releaseRecord.PlannedDuration > 0 ? string.Format(" ({0} min{1})", releaseRecord.PlannedDate,
                                                                      releaseRecord.PlannedDuration > 1 ? "s" : "") : "";
         }
-    }
-
-    public class ReleaseDetailViewModel
-    {
-        public int Id { get; set; }
-
-        public ReleasePlannedTime PlannedTime { get; set; }
-
-        public ReleaseActualTime ActualTime { get; set; }
-
-        public string SvnRevision { get; set; }
-
-        public string ServiceNowId { get; set; }
-
-        public ReleaseStatusViewModel Status { get; set; }
-
-        public IEnumerable<ReleaseDetailIncludedTicketViewModel> IncludedTickets { get; set; }
-    }
-
-    public class ReleaseDetailIncludedTicketViewModel
-    {
-        public string ExternalId { get; set; }
-
-        public string Title { get; set; }
-
-        public string Size { get; set; }
-
-        public IEnumerable<ReleaseDetailTicketApproval> Approvals { get; set; }
-    }
-
-    public class ReleaseDetailTicketApproval
-    {
-        public string Name { get; set; }
-
-        public bool Approved { get; set; }
-    }
-
-    public class ReleaseStatusViewModel
-    {
-        public bool HasStarted { get; set; }
-
-        public bool HasCompleted { get; set; }
-
-        public string Text { get; set; }
-
-        public string CssClass { get; set; }
-    }
-
-    public class ReleasePlannedTime
-    {
-        public string StartFriendlyText { get; set; }
-
-        public string Duration { get; set; }
-    }
-
-    public class ReleaseActualTime
-    {
-        public string StartedFriendlyText { get; set; }
-
-        public string CompletedFriendlyText { get; set; }
-
-        public double Duration { get; set; }
     }
 }

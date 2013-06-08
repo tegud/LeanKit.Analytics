@@ -1,0 +1,55 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using LeanKit.Data.SQL;
+using LeanKit.ReleaseManager.Models;
+using NUnit.Framework;
+
+namespace LeanKit.ReleaseManager.Tests.Models
+{
+    [TestFixture]
+    public class ReleaseDetailViewModelFactoryTests : IGetReleasesFromTheDatabase
+    {
+        private ReleaseRecord _dbRecord;
+
+        [Test]
+        public void SetsId()
+        {
+            _dbRecord = new ReleaseRecord { Id = 12345 };
+
+            var releaseRepository = this;
+            Assert.That(new ReleaseDetailViewModelFactory(releaseRepository).Build(0).Id, Is.EqualTo(12345));
+        }
+
+        [Test]
+        public void SetsSvnRevision()
+        {
+            _dbRecord = new ReleaseRecord { SvnRevision = "812343" };
+
+            var releaseRepository = this;
+            Assert.That(new ReleaseDetailViewModelFactory(releaseRepository).Build(0).SvnRevision, Is.EqualTo("812343"));
+        }
+
+        public IEnumerable<ReleaseRecord> GetUpcomingReleases()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Create(ReleaseRecord newRelease)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<ReleaseRecord> GetAllReleases()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ReleaseRecord GetRelease(int id)
+        {
+            return _dbRecord;
+        }
+    }
+}

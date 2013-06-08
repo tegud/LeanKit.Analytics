@@ -132,6 +132,13 @@
     <Compile Include="Models\IMakeListsOfDateOptions.cs" />
     <Compile Include="Models\LaneColumn.cs" />
     <Compile Include="Models\NewReleaseViewModel.cs" />
+    <Compile Include="Models\ReleaseActualTime.cs" />
+    <Compile Include="Models\ReleaseDetailIncludedTicketViewModel.cs" />
+    <Compile Include="Models\ReleaseDetailTicketApproval.cs" />
+    <Compile Include="Models\ReleaseDetailViewModel.cs" />
+    <Compile Include="Models\ReleaseDetailViewModelFactory.cs" />
+    <Compile Include="Models\ReleasePlannedTime.cs" />
+    <Compile Include="Models\ReleaseStatusViewModel.cs" />
     <Compile Include="Models\ReleaseTicket.cs" />
     <Compile Include="Models\ReleaseViewModel.cs" />
     <Compile Include="Models\UpcomingReleasesViewModel.cs" />
@@ -141,6 +148,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Assets\css\site.css" />
+    <Content Include="Assets\images\logo.png" />
     <Content Include="Assets\images\release-notes.png" />
     <Content Include="Assets\images\release_toolbar.png" />
     <Content Include="Assets\images\reschedule.png" />
