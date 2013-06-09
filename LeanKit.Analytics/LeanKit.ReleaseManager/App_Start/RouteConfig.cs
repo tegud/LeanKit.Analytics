@@ -14,10 +14,17 @@ namespace LeanKit.ReleaseManager
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "ReleaseView",
+                name: "Release",
+                url: "Release/{action}/{id}",
+                defaults: new { controller = "Release" },
+                constraints:new { id = "[0-9]{1,9}" }
+            );
+
+            routes.MapRoute(
+                name: "ReleaseDetail",
                 url: "Release/{id}",
                 defaults: new { controller = "Release", action = "Index" },
-                constraints:new { id = "[0-9]{1,9}" }
+                constraints: new { id = "[0-9]{1,9}" }
             );
 
             routes.MapRoute(

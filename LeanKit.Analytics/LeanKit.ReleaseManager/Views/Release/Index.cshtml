@@ -23,13 +23,21 @@
     <div id="started-and-completed-form">
         <div>
             <label>Started At:</label>
-            <input type="date" @(Model.Status.HasStarted ? "disabled" : "") />
-            <input type="time" @(Model.Status.HasStarted ? "disabled" : "") />
+            @if (Model.Status.HasStarted)
+            {
+                <input type="date" id="started-at-field-date" value="@Model.ActualTime.StartedAt.ToString("yyyy-MM-dd")" disabled />
+                <input type="time" id="started-at-field-time" value="@Model.ActualTime.StartedAt.ToString("HH:mm")" disabled />
+            }
+            else
+            {
+                <input type="date" id="started-at-field-date" />
+                <input type="time" id="started-at-field-time" />
+            }
         </div>
         <div>
             <label>Completed At:</label>
-            <input type="date" />
-            <input type="time" />
+            <input type="date" id="completed-at-field-date" />
+            <input type="time" id="completed-at-field-time" />
         </div>
         <div style="text-align: right;">
             <button id="cancel-started-and-completed" class="form-button cancel-button ladda-button"><span class="ladda-label">Cancel</span></button>
@@ -39,7 +47,7 @@
 
     <h2>Scheduling</h2>
     <div class="scheduling-entry">Planned for: @Model.PlannedTime.StartFriendlyText @Model.PlannedTime.Duration</div>
-    @if(Model.Status.HasStarted)
+    @if (Model.Status.HasStarted)
     {
         <div class="scheduling-entry">Started: @Model.ActualTime.StartedFriendlyText</div>
     }
@@ -64,7 +72,7 @@
         </nav>
     }
     <ul id="ticket-list">
-        @foreach(var ticket in Model.IncludedTickets)
+        @foreach (var ticket in Model.IncludedTickets)
         {
             <li>
                 <div class="ticket-item">
@@ -102,10 +110,30 @@
             });
 
             $submitButton.on('click', function () {
+                $submitButton.addClass('active');
                 $('#started-and-completed-form input').prop('disabled', true);
                 $('#cancel-started-and-completed').prop('disabled', true);
 
                 submitButton.start();
+                
+                var startedAsync = $.ajax('/Release/SetStarted/16', {
+                    cache: false,
+                    data: {
+                        started: $('#started-at-field-date').val() + ' ' + $('#started-at-field-time').val()
+                    }
+                });
+                var completedAsync = $.ajax('/Release/SetCompleted/16', {
+                    cache: false,
+                    data: {
+                        completed: $('#completed-at-field-date').val() + ' ' + $('#completed-at-field-time').val()
+                    }
+                });
+
+                $.when(startedAsync, completedAsync).then(function () {
+                    submitButton.stop();
+                    $submitButton.removeClass('active');
+                    window.location = window.location + '';
+                });
             });
         })();
     </script>

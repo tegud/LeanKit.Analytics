@@ -51,5 +51,15 @@ namespace LeanKit.ReleaseManager.Tests.Models
         {
             return _dbRecord;
         }
+
+        public void SetStartedDate(int id, DateTime started)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetCompletedDate(int id, DateTime completed)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

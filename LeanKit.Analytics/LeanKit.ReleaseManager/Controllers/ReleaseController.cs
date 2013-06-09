@@ -20,6 +20,20 @@ namespace LeanKit.ReleaseManager.Controllers
             _releaseRepository = releaseRepository;
         }
 
+        public ContentResult SetStarted(int id, DateTime started)
+        {
+            _releaseRepository.SetStartedDate(id, started);
+
+            return Content(string.Empty);
+        }
+
+        public ContentResult SetCompleted(int id, DateTime completed)
+        {
+            _releaseRepository.SetCompletedDate(id, completed);
+
+            return Content(string.Empty);
+        }
+
         public ActionResult Index(int id)
         {
             var releaseRecord = _releaseRepository.GetRelease(id);
@@ -67,12 +81,15 @@ namespace LeanKit.ReleaseManager.Controllers
             {
                 return new ReleaseActualTime
                     {
+                        StartedAt = releaseRecord.StartedAt,
                         StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME)
                     };
             }
 
             return new ReleaseActualTime
-                {
+            {
+                    StartedAt = releaseRecord.StartedAt,
+                    CompletedAt = releaseRecord.CompletedAt,
                     StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
                     CompletedFriendlyText = releaseRecord.CompletedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
                     Duration = (releaseRecord.CompletedAt - releaseRecord.StartedAt).TotalMinutes

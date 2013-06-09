@@ -147,11 +147,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Assets\css\ladda.css" />
     <Content Include="Assets\css\site.css" />
     <Content Include="Assets\images\logo.png" />
     <Content Include="Assets\images\release-notes.png" />
     <Content Include="Assets\images\release_toolbar.png" />
     <Content Include="Assets\images\reschedule.png" />
+    <Content Include="Assets\js\ladda.js" />
     <Content Include="Assets\js\lib\d3.min.js" />
     <Content Include="Assets\js\lib\jquery-2.0.0.min.js" />
     <Content Include="Global.asax" />

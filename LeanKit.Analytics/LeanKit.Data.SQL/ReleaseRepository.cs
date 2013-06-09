@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
@@ -25,6 +24,26 @@ namespace LeanKit.Data.SQL
 
             return GetListOfReleases(@"SELECT R.*, RC.CardID, C.ExternalID, C.Title, C.Size FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID LEFT OUTER JOIN Card C ON RC.CardID = C.ID WHERE R.ID = @ID",
                 parameters).Single();
+        }
+
+        public void SetStartedDate(int id, DateTime started)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                sqlConnection.Execute("UPDATE Release SET StartedAt = @started WHERE ID = @ID AND StartedAt IS NULL", new { id, started });
+            }
+        }
+
+        public void SetCompletedDate(int id, DateTime completed)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                sqlConnection.Execute("UPDATE Release SET CompletedAt = @completed WHERE ID = @ID", new { id, completed });
+            }
         }
 
         public IEnumerable<ReleaseRecord> GetAllReleases()
@@ -108,6 +127,8 @@ namespace LeanKit.Data.SQL
         void Create(ReleaseRecord newRelease);
         IEnumerable<ReleaseRecord> GetAllReleases();
         ReleaseRecord GetRelease(int id);
+        void SetStartedDate(int id, DateTime started);
+        void SetCompletedDate(int id, DateTime completed);
     }
 
     public class ReleaseRecord
