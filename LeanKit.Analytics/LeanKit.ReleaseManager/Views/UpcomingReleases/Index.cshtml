@@ -109,9 +109,17 @@
                 <option>120 mins</option>
             </select>
         </label>
-            
-        <div>
-            <button id="create-release" type="submit" disabled>Create</button>
+        
+        <h3>Details</h3>    
+        
+        <label>
+            SVN Revision: <input type="text" name="svnRevision" />
+        </label>
+        <label>
+            Service-now ID: <input type="text" name="serviceNowId" />
+        </label>
+        <div class="button-container">
+            <button id="create-release" type="submit" class="ladda-button form-button" disabled>Create</button>
         </div>
     </form>
 </div>

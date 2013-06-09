@@ -104,9 +104,11 @@ namespace LeanKit.Data.SQL
             {
                 sqlConnection.Open();
 
-                var releaseId = sqlConnection.Query<int>(@"INSERT INTO Release (PlannedDate) SELECT @plannedStart; SELECT CAST(SCOPE_IDENTITY() as int)", new
+                var releaseId = sqlConnection.Query<int>(@"INSERT INTO Release (PlannedDate, SvnRevision, ServiceNowId) SELECT @plannedStart, @SvnRevision, @ServiceNowId; SELECT CAST(SCOPE_IDENTITY() as int)", new
                     {
-                        plannedStart = newRelease.PlannedDate
+                        plannedStart = newRelease.PlannedDate, 
+                        newRelease.SvnRevision, 
+                        newRelease.ServiceNowId
                     }).First();
 
                 foreach (var ticket in newRelease.IncludedTickets)

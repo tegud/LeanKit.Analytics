@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
@@ -8,30 +7,21 @@ namespace LeanKit.ReleaseManager.Controllers
     public class NewReleaseController : Controller
     {
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
+        private readonly IBuildNewReleaseRecords _createReleaseReleaseRecordFactory;
 
-        public NewReleaseController(IGetReleasesFromTheDatabase releaseRepository)
+        public NewReleaseController(IGetReleasesFromTheDatabase releaseRepository,
+            IBuildNewReleaseRecords createReleaseReleaseRecordFactory)
         {
             _releaseRepository = releaseRepository;
+            _createReleaseReleaseRecordFactory = createReleaseReleaseRecordFactory;
         }
 
         [HttpPost]
         public RedirectResult Index(NewReleaseViewModel release)
         {
-            var plannedDate = release.PlannedDate;
-            var splitTime = release.PlannedTime.Split(':');
-            var hours = int.Parse(splitTime[0]);
-            var minutes = int.Parse(splitTime[1]);
-            plannedDate = plannedDate.AddHours(hours);
-            plannedDate = plannedDate.AddMinutes(minutes);
+            var releaseRecord = _createReleaseReleaseRecordFactory.Build(release);
 
-            _releaseRepository.Create(new ReleaseRecord
-                {
-                    PlannedDate = plannedDate,
-                    IncludedTickets = release.SelectedTickets.Split(',').Select(ticketId => new IncludedTicketRecord
-                        {
-                            CardId = int.Parse((ticketId))
-                        }).ToList()
-                });
+            _releaseRepository.Create(releaseRecord);
 
             return new RedirectResult("/UpcomingReleases");
         }

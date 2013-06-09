@@ -135,6 +135,8 @@ a { color: #000;transition-property: color;transition-duration: 300ms;text-decor
 
 .ladda-button[disabled] { cursor: default }
 
+.button-container { margin: 10px 0; }
+
 @media (max-width: 800px)
 {
     .actual-end-date,

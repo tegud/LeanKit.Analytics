@@ -124,14 +124,20 @@
     </Compile>
     <Compile Include="Models\ColourPalette.cs" />
     <Compile Include="Models\CreateReleaseModel.cs" />
+    <Compile Include="Models\CreateReleaseReleaseRecordFactory.cs" />
     <Compile Include="Models\DateIsWorkDaySpecification.cs" />
     <Compile Include="Models\DateOption.cs" />
     <Compile Include="Models\DateOptionsFactory.cs" />
+    <Compile Include="Models\IBuildIncludedTicketsForNewReleases.cs" />
+    <Compile Include="Models\IBuildNewReleaseRecords.cs" />
+    <Compile Include="Models\IParsePlannedReleaseDate.cs" />
     <Compile Include="Models\IRotateThroughASetOfColours.cs" />
     <Compile Include="Models\IIdentifyWorkDays.cs" />
     <Compile Include="Models\IMakeListsOfDateOptions.cs" />
     <Compile Include="Models\LaneColumn.cs" />
+    <Compile Include="Models\NewReleaseIncludedTicketsBuilders.cs" />
     <Compile Include="Models\NewReleaseViewModel.cs" />
+    <Compile Include="Models\PlannedDateParser.cs" />
     <Compile Include="Models\ReleaseActualTime.cs" />
     <Compile Include="Models\ReleaseDetailIncludedTicketViewModel.cs" />
     <Compile Include="Models\ReleaseDetailTicketApproval.cs" />

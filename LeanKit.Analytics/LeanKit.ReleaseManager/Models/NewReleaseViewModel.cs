@@ -9,5 +9,9 @@ namespace LeanKit.ReleaseManager.Models
         public string PlannedTime { get; set; }
 
         public string SelectedTickets { get; set; }
+
+        public string SvnRevision { get; set; }
+
+        public string ServiceNowId { get; set; }
     }
 }
