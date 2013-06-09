@@ -43,6 +43,9 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IIdentifyWorkDays, DateIsWorkDaySpecification>();
             ioc.Register<IMakeListsOfDateOptions, DateOptionsFactory>();
             ioc.Register<IRotateThroughASetOfColours>(i => new ColourPalette(Configuration.GetReleaseColours()));
+            ioc.Register<IBuildIncludedTicketsForNewReleases, NewReleaseIncludedTicketsBuilders>();
+            ioc.Register<IParsePlannedReleaseDate, PlannedDateParser>();
+            ioc.Register<IBuildNewReleaseRecords, CreateReleaseReleaseRecordFactory>();
 
             UtilitiesRegistry.Register(ioc);
             DataRegistry.Register(ioc);
