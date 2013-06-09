@@ -20,7 +20,7 @@
         </ul>
     </nav>
     
-    <div id="started-and-completed-form">
+    <div id="started-and-completed-form" data-release-id="@Model.Id">
         <div>
             <label>Started At:</label>
             @if (Model.Status.HasStarted)
@@ -115,14 +115,15 @@
                 $('#cancel-started-and-completed').prop('disabled', true);
 
                 submitButton.start();
-                
-                var startedAsync = $.ajax('/Release/SetStarted/16', {
+
+                var id = $('#started-and-completed-form').data('releaseId');
+                var startedAsync = $.ajax('/Release/SetStarted/' + id, {
                     cache: false,
                     data: {
                         started: $('#started-at-field-date').val() + ' ' + $('#started-at-field-time').val()
                     }
                 });
-                var completedAsync = $.ajax('/Release/SetCompleted/16', {
+                var completedAsync = $.ajax('/Release/SetCompleted/' + id, {
                     cache: false,
                     data: {
                         completed: $('#completed-at-field-date').val() + ' ' + $('#completed-at-field-time').val()
