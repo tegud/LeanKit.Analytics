@@ -137,6 +137,8 @@ a { color: #000;transition-property: color;transition-duration: 300ms;text-decor
 
 .button-container { margin: 10px 0; }
 
+.edit-release .selected { background-color: #8fbc8f } 
+
 @media (max-width: 800px)
 {
     .actual-end-date,

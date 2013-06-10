@@ -13,5 +13,13 @@ namespace LeanKit.ReleaseManager.Models
         public DateTime StartedAt { get; set; }
 
         public DateTime CompletedAt { get; set; }
+
+        public string StartedAtDateFieldValue { get; set; }
+
+        public string StartedAtTimeFieldValue { get; set; }
+
+        public string CompletedAtDateFieldValue { get; set; }
+
+        public string CompletedAtTimeFieldValue { get; set; }
     }
 }

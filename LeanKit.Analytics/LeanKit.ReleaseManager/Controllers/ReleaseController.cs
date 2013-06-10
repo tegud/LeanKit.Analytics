@@ -42,7 +42,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var releasePlannedTime = new ReleasePlannedTime
                 {
-                    StartFriendlyText = releaseRecord.PlannedDate.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME), 
+                    StartFriendlyText = releaseRecord.PlannedDate.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
                     Duration = GetPlannedDurationText(releaseRecord)
                 };
 
@@ -57,7 +57,9 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var releaseDetailIncludedTicketViewModels = releaseRecord.IncludedTickets.Any() ? releaseRecord.IncludedTickets.Select(rr => new ReleaseDetailIncludedTicketViewModel
                 {
-                    ExternalId = rr.ExternalId, Title = rr.Title, Size = rr.Size > 0 ? rr.Size.ToString() : "?"
+                    ExternalId = rr.ExternalId,
+                    Title = rr.Title,
+                    Size = rr.Size > 0 ? rr.Size.ToString() : "?"
                 }) : new List<ReleaseDetailIncludedTicketViewModel>(0);
             var releaseViewModel = new ReleaseDetailViewModel
                 {
@@ -77,23 +79,32 @@ namespace LeanKit.ReleaseManager.Controllers
                 return new ReleaseActualTime();
             }
 
+            const string dateFieldFormat = "yyyy-MM-dd";
+            const string timeFieldFormat = "HH:mm";
+
             if (releaseRecord.CompletedAt == DateTime.MinValue)
             {
                 return new ReleaseActualTime
                     {
                         StartedAt = releaseRecord.StartedAt,
+                        StartedAtDateFieldValue = releaseRecord.StartedAt.ToString(dateFieldFormat),
+                        StartedAtTimeFieldValue = releaseRecord.StartedAt.ToString(timeFieldFormat),
                         StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME)
                     };
             }
 
             return new ReleaseActualTime
             {
-                    StartedAt = releaseRecord.StartedAt,
-                    CompletedAt = releaseRecord.CompletedAt,
-                    StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
-                    CompletedFriendlyText = releaseRecord.CompletedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
-                    Duration = (releaseRecord.CompletedAt - releaseRecord.StartedAt).TotalMinutes
-                };
+                StartedAt = releaseRecord.StartedAt,
+                StartedAtDateFieldValue = releaseRecord.StartedAt.ToString(dateFieldFormat),
+                StartedAtTimeFieldValue = releaseRecord.StartedAt.ToString(timeFieldFormat),
+                CompletedAtDateFieldValue = releaseRecord.CompletedAt.ToString(dateFieldFormat),
+                CompletedAtTimeFieldValue = releaseRecord.CompletedAt.ToString(timeFieldFormat),
+                CompletedAt = releaseRecord.CompletedAt,
+                StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
+                CompletedFriendlyText = releaseRecord.CompletedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
+                Duration = (releaseRecord.CompletedAt - releaseRecord.StartedAt).TotalMinutes
+            };
         }
 
         private static string GetPlannedDurationText(ReleaseRecord releaseRecord)

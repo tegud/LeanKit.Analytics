@@ -9,10 +9,6 @@
     <nav class="options-bar" id="release-options">
         <ul>
             <li class="release-note">Release Notes</li>
-            @if (!Model.Status.HasStarted)
-            {
-                <li class="reschedule">Reschedule</li>
-            }
             @if (!Model.Status.HasCompleted)
             {
                 <li class="edit-content">Edit Details/Tickets</li>
@@ -24,16 +20,8 @@
     <div id="started-and-completed-form" data-release-id="@Model.Id">
         <div>
             <label>Started At:</label>
-            @if (Model.Status.HasStarted)
-            {
-                <input type="date" id="started-at-field-date" value="@Model.ActualTime.StartedAt.ToString("yyyy-MM-dd")" disabled />
-                <input type="time" id="started-at-field-time" value="@Model.ActualTime.StartedAt.ToString("HH:mm")" disabled />
-            }
-            else
-            {
-                <input type="date" id="started-at-field-date" />
-                <input type="time" id="started-at-field-time" />
-            }
+            <input type="date" id="started-at-field-date" value="@Model.ActualTime.StartedAtDateFieldValue" @(Model.Status.HasStarted ? "disabled" : string.Empty) />
+            <input type="time" id="started-at-field-time" value="@Model.ActualTime.StartedAtTimeFieldValue" @(Model.Status.HasStarted ? "disabled" : string.Empty) />
         </div>
         <div>
             <label>Completed At:</label>
@@ -41,8 +29,8 @@
             <input type="time" id="completed-at-field-time" />
         </div>
         <div style="text-align: right;">
-            <button id="cancel-started-and-completed" class="form-button cancel-button ladda-button"><span class="ladda-label">Cancel</span></button>
             <button type="submit" id="set-started-and-completed" class="form-button ladda-button slide-left"><span class="ladda-label">Update</span></button>
+            <button id="cancel-started-and-completed" class="form-button cancel-button ladda-button"><span class="ladda-label">Cancel</span></button>
         </div>
     </div>
 
@@ -96,19 +84,24 @@
 @section Javascript
 {
     <script type="text/javascript">
-        (function () {
+        (function() {
             var $submitButton = $('#set-started-and-completed'),
                 submitButton = Ladda.create($submitButton[0]);
 
-            $('#release-options').on('click', '.mark-as-complete', function () {
-                $('#started-and-completed-form').slideDown(300);
-            });
+            $('#release-options')
+                .on('click', '.edit-content', function () {
+                    var id = $('#started-and-completed-form').data('releaseId');
+                    window.location = '/EditRelease/' + id;
+                })
+                .on('click', '.mark-as-complete', function() {
+                    $('#started-and-completed-form').slideDown(300);
+                });
 
-            $('#cancel-started-and-completed').on('click', function () {
+            $('#cancel-started-and-completed').on('click', function() {
                 $('#started-and-completed-form').slideUp(300);
             });
 
-            $submitButton.on('click', function () {
+            $submitButton.on('click', function() {
                 $submitButton.addClass('active');
                 $('#started-and-completed-form input').prop('disabled', true);
                 $('#cancel-started-and-completed').prop('disabled', true);
@@ -129,7 +122,7 @@
                     }
                 });
 
-                $.when(startedAsync, completedAsync).then(function () {
+                $.when(startedAsync, completedAsync).then(function() {
                     submitButton.stop();
                     $submitButton.removeClass('active');
                     window.location = window.location + '';

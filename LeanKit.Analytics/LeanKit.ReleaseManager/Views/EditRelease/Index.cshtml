@@ -1,0 +1,121 @@
+﻿@{
+    Layout = "~/Views/Layouts/_Layout.cshtml";
+}
+@model LeanKit.ReleaseManager.Controllers.EditReleaseViewModel
+
+
+<h1>Edit Release</h1>
+
+<ul id="lanes" class="edit-release">
+    @foreach(var lane in Model.Lanes)
+    {
+        <li class="lane-column">
+            <div class="column-header">@lane.Title</div>
+                
+            @foreach(var ticket in lane.Tickets)
+            {
+                <div class="ticket@(!string.IsNullOrWhiteSpace(ticket.Color) ? " selected" : "")" data-ticket-id="@ticket.Id">
+                    <div class="ticket-id">@ticket.ExternalId</div>
+                    @ticket.Title
+                    <ul class="ticket-approvals">
+                        <li>BAT</li>
+                        <li>SEO</li>
+                    </ul>
+                </div>
+            }
+        </li>
+    }
+</ul>
+        
+[<span id="deselect-all-tickets" class="fake-link">Deselect All Tickets</span>]
+        
+<div>
+    <form method="POST" action="/EditRelease/@Model.Id" data-release-id="@Model.Id" id="details-form">
+        <input type="hidden" name="selectedTickets" id="selected-tickets" />
+
+        <h3>Planned Start</h3>
+        <input type="date" name="plannedStartDate" value="@Model.FormattedStartDate" /> <input type="time" name="plannedStartTime" value="@Model.FormattedStartTime" />
+        <select name="planned-duration">
+            <option>5 mins</option>
+            <option>10 mins</option>
+            <option>15 mins</option>
+            <option>30 mins</option>
+            <option>45 mins</option>
+            <option selected>60 mins</option>
+            <option>90 mins</option>
+            <option>120 mins</option>
+        </select>
+        
+        <h3>Details</h3>    
+        
+        <label>
+            SVN Revision: <input type="text" name="svnRevision" value="@Model.SvnRevision" />
+        </label>
+        <label>
+            Service-now ID: <input type="text" name="serviceNowId" value="@Model.ServiceNowId" />
+        </label>
+        <div class="button-container">
+            <button id="update-release" type="submit" class="ladda-button form-button">Update</button>
+            <button id="cancel-release" class="ladda-button cancel-button form-button">Cancel</button>
+        </div>
+    </form>
+</div>
+    
+@section Javascript
+{
+    <script type="text/javascript">
+        (function() {
+            var nextColour = '@Model.ReleaseColour';
+
+            function deselectTicket(ticket) {
+                ticket.removeClass('selected');
+            }
+
+            function selectTicket(ticket) {
+                ticket.addClass('selected');
+            }
+
+            $('#cancel-release').on('click', function () {
+                window.location = '/Release/' + $('#details-form').data('releaseId');
+                return false;
+            });
+
+            $('#day-selector').on('click', 'li', function() {
+                $(this).css('background-color', nextColour).siblings().css('background-color', '');
+                $('#create-release')[0].disabled = false;
+                $('#planned-date').val($(this).data('date'));
+            });
+
+            $('#planned-time-fields').on('change', 'select', function() {
+                var fields = $('#planned-time-fields select');
+                var time = fields[0].value + ':' + fields[1].value;
+
+                $('#planned-time').val(time);
+            });
+
+            $('#lanes').on('click', '.ticket', function() {
+                var ticket = $(this);
+
+                if (ticket.hasClass('selected')) {
+                    deselectTicket(ticket);
+                } else {
+                    selectTicket(ticket);
+                }
+                var selectedTickets = [];
+
+                $('#lanes .ticket.selected').each(function() {
+                    selectedTickets[selectedTickets.length] = $(this).data('ticketId');
+                });
+
+                $('#selected-tickets').val(selectedTickets.join(','));
+            });
+
+            $('#deselect-all-tickets').on('click', function() {
+                $('#lanes .ticket.selected').each(function() {
+                    deselectTicket($(this));
+                });
+                hideCreateForm();
+            });
+        })();
+    </script>
+}
