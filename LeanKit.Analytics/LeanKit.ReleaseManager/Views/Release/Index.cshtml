@@ -15,6 +15,7 @@
             }
             @if (!Model.Status.HasCompleted)
             {
+                <li class="edit-content">Edit Details/Tickets</li>
                 <li class="mark-as-complete">Complete</li>
             }
         </ul>
@@ -45,6 +46,12 @@
         </div>
     </div>
 
+    <h2>Current Status:</h2>
+    <div id="release-status">
+        <div id="release-status-indicator" class="@Model.Status.CssClass"></div>
+        @Model.Status.Text
+    </div>
+
     <h2>Scheduling</h2>
     <div class="scheduling-entry">Planned for: @Model.PlannedTime.StartFriendlyText @Model.PlannedTime.Duration</div>
     @if (Model.Status.HasStarted)
@@ -55,22 +62,14 @@
     {
         <div class="scheduling-entry">Completed: @Model.ActualTime.CompletedFriendlyText (took @Model.ActualTime.Duration mins)</div>     
     }
-        
-
-    <h2>Current Status:</h2>
-    <div id="release-status">
-        <div id="release-status-indicator" class="@Model.Status.CssClass"></div>
-        @Model.Status.Text
+    
+    <h2>Detail:</h2>
+    <div>
+        SVN Revision: @Model.SvnRevision<br />
+        Service Now ID: @Model.ServiceNowId<br />
     </div>
+
     <h2>Included Tickets</h2>
-    @if (!Model.Status.HasCompleted)
-    {
-        <nav class="options-bar">
-            <ul>
-                <li class="edit-content">Edit Included Tickets</li>
-            </ul>
-        </nav>
-    }
     <ul id="ticket-list">
         @foreach (var ticket in Model.IncludedTickets)
         {
@@ -101,7 +100,7 @@
             var $submitButton = $('#set-started-and-completed'),
                 submitButton = Ladda.create($submitButton[0]);
 
-            $('#release-options').on('click', function () {
+            $('#release-options').on('click', '.mark-as-complete', function () {
                 $('#started-and-completed-form').slideDown(300);
             });
 
