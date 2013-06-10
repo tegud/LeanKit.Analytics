@@ -2,11 +2,15 @@ using System;
 
 namespace LeanKit.ReleaseManager.Models
 {
-    public class NewReleaseViewModel
+    public class ReleaseInputModel
     {
+        public int Id { get; set; }
+
         public DateTime PlannedDate { get; set; }
 
         public string PlannedTime { get; set; }
+
+        public int PlannedDuration { get; set; }
 
         public string SelectedTickets { get; set; }
 

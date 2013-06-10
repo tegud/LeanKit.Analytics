@@ -4,7 +4,7 @@ namespace LeanKit.ReleaseManager.Models
 {
     public class PlannedDateParser : IParsePlannedReleaseDate
     {
-        public DateTime ParsePlannedDate(NewReleaseViewModel release)
+        public DateTime ParsePlannedDate(ReleaseInputModel release)
         {
             var plannedDate = release.PlannedDate;
             var splitTime = release.PlannedTime.Split(':');

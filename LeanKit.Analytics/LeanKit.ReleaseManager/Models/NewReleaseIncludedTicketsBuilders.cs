@@ -7,7 +7,7 @@ namespace LeanKit.ReleaseManager.Models
 {
     public class NewReleaseIncludedTicketsBuilders : IBuildIncludedTicketsForNewReleases
     {
-        public List<IncludedTicketRecord> ParseIncludedTickets(NewReleaseViewModel release)
+        public List<IncludedTicketRecord> ParseIncludedTickets(ReleaseInputModel release)
         {
             var includedTicketRecords = release.SelectedTickets.Split(',').Select(ticketId => new IncludedTicketRecord
                 {

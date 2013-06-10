@@ -17,13 +17,13 @@ namespace LeanKit.ReleaseManager.Controllers
         }
 
         [HttpPost]
-        public RedirectResult Index(NewReleaseViewModel release)
+        public RedirectResult Index(ReleaseInputModel release)
         {
             var releaseRecord = _createReleaseReleaseRecordFactory.Build(release);
 
-            _releaseRepository.Create(releaseRecord);
+            var releaseId = _releaseRepository.Create(releaseRecord);
 
-            return new RedirectResult("/UpcomingReleases");
+            return new RedirectResult("/Release/" + releaseId);
         }
     }
 }

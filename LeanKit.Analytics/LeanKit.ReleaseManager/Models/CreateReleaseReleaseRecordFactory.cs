@@ -13,7 +13,7 @@ namespace LeanKit.ReleaseManager.Models
             _newReleaseIncludedTicketsBuilders = newReleaseIncludedTicketsBuilders;
         }
 
-        public ReleaseRecord Build(NewReleaseViewModel release)
+        public ReleaseRecord Build(ReleaseInputModel release)
         {
             var plannedDate = _plannedDateParser.ParsePlannedDate(release);
             var includedTicketRecords = _newReleaseIncludedTicketsBuilders.ParseIncludedTickets(release);
@@ -22,7 +22,8 @@ namespace LeanKit.ReleaseManager.Models
                     PlannedDate = plannedDate,
                     SvnRevision = release.SvnRevision,
                     ServiceNowId = release.ServiceNowId,
-                    IncludedTickets = includedTicketRecords
+                    IncludedTickets = includedTicketRecords,
+                    Id = release.Id
                 };
             return releaseRecord;
         }

@@ -120,6 +120,7 @@
     <Compile Include="Controllers\ReleaseController.cs" />
     <Compile Include="Controllers\ReleasesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\UpdateExistingReleaseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -137,7 +138,7 @@
     <Compile Include="Models\IMakeListsOfDateOptions.cs" />
     <Compile Include="Models\LaneColumn.cs" />
     <Compile Include="Models\NewReleaseIncludedTicketsBuilders.cs" />
-    <Compile Include="Models\NewReleaseViewModel.cs" />
+    <Compile Include="Models\ReleaseInputModel.cs" />
     <Compile Include="Models\PlannedDateParser.cs" />
     <Compile Include="Models\ReleaseActualTime.cs" />
     <Compile Include="Models\ReleaseDetailIncludedTicketViewModel.cs" />

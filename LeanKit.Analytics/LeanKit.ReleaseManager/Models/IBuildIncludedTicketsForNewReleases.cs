@@ -5,6 +5,6 @@ namespace LeanKit.ReleaseManager.Models
 {
     public interface IBuildIncludedTicketsForNewReleases
     {
-        List<IncludedTicketRecord> ParseIncludedTickets(NewReleaseViewModel release);
+        List<IncludedTicketRecord> ParseIncludedTickets(ReleaseInputModel release);
     }
 }

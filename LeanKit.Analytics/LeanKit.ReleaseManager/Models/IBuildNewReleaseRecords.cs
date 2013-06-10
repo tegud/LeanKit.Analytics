@@ -4,6 +4,6 @@ namespace LeanKit.ReleaseManager.Models
 {
     public interface IBuildNewReleaseRecords
     {
-        ReleaseRecord Build(NewReleaseViewModel release);
+        ReleaseRecord Build(ReleaseInputModel release);
     }
 }

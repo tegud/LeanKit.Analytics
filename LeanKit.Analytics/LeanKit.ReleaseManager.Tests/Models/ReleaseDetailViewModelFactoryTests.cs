@@ -37,7 +37,12 @@ namespace LeanKit.ReleaseManager.Tests.Models
             throw new NotImplementedException();
         }
 
-        public void Create(ReleaseRecord newRelease)
+        public int Create(ReleaseRecord newRelease)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(ReleaseRecord releaseRecord)
         {
             throw new NotImplementedException();
         }

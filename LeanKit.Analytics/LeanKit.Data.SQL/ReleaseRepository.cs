@@ -98,7 +98,7 @@ namespace LeanKit.Data.SQL
             }
         }
 
-        public void Create(ReleaseRecord newRelease)
+        public int Create(ReleaseRecord newRelease)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
@@ -119,6 +119,37 @@ namespace LeanKit.Data.SQL
                         ticket.CardId
                     });
                 }
+
+                return releaseId;
+            }
+        }
+
+        public void Update(ReleaseRecord releaseRecord)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                sqlConnection.Execute(@"UPDATE Release 
+                                        SET PlannedDate = @plannedStart, SvnRevision = @SvnRevision, ServiceNowId =  @ServiceNowId 
+                                        WHERE ID = @ID; DELETE FROM ReleaseCard WHERE ReleaseID = @ID;",
+                                      new
+                                          {
+                                              plannedStart = releaseRecord.PlannedDate,
+                                              releaseRecord.SvnRevision,
+                                              releaseRecord.ServiceNowId,
+                                              releaseRecord.Id
+                                          });
+
+                foreach (var ticket in releaseRecord.IncludedTickets)
+                {
+                    sqlConnection.Execute(@"INSERT INTO ReleaseCard (ReleaseID, CardID) 
+                                            SELECT @ID, @CardID", new
+                    {
+                        releaseRecord.Id,
+                        ticket.CardId
+                    });
+                }
             }
         }
     }
@@ -126,7 +157,10 @@ namespace LeanKit.Data.SQL
     public interface IGetReleasesFromTheDatabase
     {
         IEnumerable<ReleaseRecord> GetUpcomingReleases();
-        void Create(ReleaseRecord newRelease);
+
+        int Create(ReleaseRecord newRelease);
+        void Update(ReleaseRecord releaseRecord);
+
         IEnumerable<ReleaseRecord> GetAllReleases();
         ReleaseRecord GetRelease(int id);
         void SetStartedDate(int id, DateTime started);

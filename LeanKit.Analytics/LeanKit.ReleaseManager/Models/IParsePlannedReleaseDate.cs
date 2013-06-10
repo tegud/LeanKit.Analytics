@@ -4,6 +4,6 @@ namespace LeanKit.ReleaseManager.Models
 {
     public interface IParsePlannedReleaseDate
     {
-        DateTime ParsePlannedDate(NewReleaseViewModel release);
+        DateTime ParsePlannedDate(ReleaseInputModel release);
     }
 }
