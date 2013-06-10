@@ -10,7 +10,7 @@
     @foreach (var release in Model.Releases)
     {
         <li class="release-entry">
-            <div class="legend-block" style="background-color: @release.Color"></div> @release.DateFriendlyText, @release.TicketCount ticket@(release.TicketCount != 1 ? "s" : string.Empty)
+            <div class="legend-block" style="background-color: @release.Color"></div> <a href="/Release/@release.Id">@release.DateFriendlyText, @release.IncludedTickets ticket@(release.IncludedTickets != 1 ? "s" : string.Empty)</a>
         </li>
     }
     <li class="release-entry" id="new-release-legend-entry">

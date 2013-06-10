@@ -132,6 +132,7 @@
     <Compile Include="Models\DateOptionsFactory.cs" />
     <Compile Include="Models\IBuildIncludedTicketsForNewReleases.cs" />
     <Compile Include="Models\IBuildNewReleaseRecords.cs" />
+    <Compile Include="Models\IBuildReleaseViewModels.cs" />
     <Compile Include="Models\IParsePlannedReleaseDate.cs" />
     <Compile Include="Models\IRotateThroughASetOfColours.cs" />
     <Compile Include="Models\IIdentifyWorkDays.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Models\ReleaseStatusViewModel.cs" />
     <Compile Include="Models\ReleaseTicket.cs" />
     <Compile Include="Models\ReleaseViewModel.cs" />
+    <Compile Include="Models\ReleaseViewModelFactory.cs" />
     <Compile Include="Models\UpcomingReleasesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

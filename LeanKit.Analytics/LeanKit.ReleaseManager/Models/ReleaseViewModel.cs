@@ -24,6 +24,8 @@ namespace LeanKit.ReleaseManager.Models
 
         public string Color { get; set; }
 
+        public int IncludedTickets { get; set; }
+
         public ReleaseViewModel()
         {
             Tickets = new List<ReleaseTicket>();

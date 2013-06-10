@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.IoC;
+using LeanKit.ReleaseManager.Controllers;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities;
 using LeanKit.Utilities.Collections;
@@ -46,6 +47,7 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IBuildIncludedTicketsForNewReleases, NewReleaseIncludedTicketsBuilders>();
             ioc.Register<IParsePlannedReleaseDate, PlannedDateParser>();
             ioc.Register<IBuildNewReleaseRecords, CreateReleaseReleaseRecordFactory>();
+            ioc.Register<IBuildReleaseViewModels, ReleaseViewModelFactory>();
 
             UtilitiesRegistry.Register(ioc);
             DataRegistry.Register(ioc);
