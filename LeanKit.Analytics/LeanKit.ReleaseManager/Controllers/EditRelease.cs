@@ -14,19 +14,16 @@ namespace LeanKit.ReleaseManager.Controllers
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
         private readonly IGetActivitiesFromTheDatabase _activityRepository;
         private readonly ITicketRepository _ticketRepository;
-        private readonly IMakeListsOfDateOptions _dateOptionsFactory;
         private readonly IRotateThroughASetOfColours _colourPalette;
 
         public EditReleaseController(IGetReleasesFromTheDatabase releaseRepository,
             IGetActivitiesFromTheDatabase activityRepository,
-            ITicketRepository ticketRepository, 
-            IMakeListsOfDateOptions dateOptionsFactory,
+            ITicketRepository ticketRepository,
             IRotateThroughASetOfColours colourPalette)
         {
             _releaseRepository = releaseRepository;
             _activityRepository = activityRepository;
             _ticketRepository = ticketRepository;
-            _dateOptionsFactory = dateOptionsFactory;
             _colourPalette = colourPalette;
         }
 
@@ -69,7 +66,8 @@ namespace LeanKit.ReleaseManager.Controllers
                     SvnRevision = releaseRecord.SvnRevision,
                     ServiceNowId = releaseRecord.ServiceNowId,
                     FormattedStartDate = releaseRecord.PlannedDate.ToString("yyyy-MM-dd"),
-                    FormattedStartTime = releaseRecord.PlannedDate.ToString("HH:mm")
+                    FormattedStartTime = releaseRecord.PlannedDate.ToString("HH:mm"),
+                    IncludedTickets = string.Join(",", releaseRecord.IncludedTickets.Select(t => t.CardId))
                 };
 
             return View(upcomingReleasesViewModel);
@@ -91,5 +89,7 @@ namespace LeanKit.ReleaseManager.Controllers
         public string FormattedStartDate { get; set; }
 
         public string FormattedStartTime { get; set; }
+
+        public string IncludedTickets { get; set; }
     }
 }

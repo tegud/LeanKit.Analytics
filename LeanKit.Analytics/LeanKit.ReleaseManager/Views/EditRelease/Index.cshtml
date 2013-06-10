@@ -30,11 +30,13 @@
 [<span id="deselect-all-tickets" class="fake-link">Deselect All Tickets</span>]
         
 <div>
-    <form method="POST" action="/EditRelease/@Model.Id" data-release-id="@Model.Id" id="details-form">
-        <input type="hidden" name="selectedTickets" id="selected-tickets" />
+    <form method="POST" action="/UpdateExistingRelease" data-release-id="@Model.Id" id="details-form">
+        <input type="hidden" name="selectedTickets" id="selected-tickets" value="@Model.IncludedTickets" />
+        <input type="hidden" name="ID" value="@Model.Id" />
 
         <h3>Planned Start</h3>
-        <input type="date" name="plannedStartDate" value="@Model.FormattedStartDate" /> <input type="time" name="plannedStartTime" value="@Model.FormattedStartTime" />
+        <input type="date" name="plannedDate" value="@Model.FormattedStartDate" />
+        <input type="time" name="plannedTime" value="@Model.FormattedStartTime" />
         <select name="planned-duration">
             <option>5 mins</option>
             <option>10 mins</option>
