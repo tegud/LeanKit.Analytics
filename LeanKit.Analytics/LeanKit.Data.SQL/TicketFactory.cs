@@ -43,7 +43,13 @@ namespace LeanKit.Data.SQL
                     CycleTime = duration,
                     Size = ticket.Size,
                     Activities = activities,
-                    CurrentActivity = currentActivity
+                    CurrentActivity = currentActivity,
+                    Release = new TicketReleaseInfo
+                        {
+                            Id = ticket.Release == null ? 0 : ticket.Release.Id,
+                            SvnRevision = ticket.Release == null ? "" : ticket.Release.SvnRevision,
+                            ServiceNowId = ticket.Release == null ? "" : ticket.Release.ServiceNowId
+                        }
                 };
         }
     }

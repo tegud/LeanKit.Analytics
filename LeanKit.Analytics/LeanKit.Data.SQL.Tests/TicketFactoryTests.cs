@@ -147,6 +147,60 @@ namespace LeanKit.Data.SQL.Tests
             }).ExternalId, Is.EqualTo(expectedExternalId));
         }
 
+        [Test]
+        public void SetsTicketReleaseId()
+        {
+            const int expectedReleaseId = 12345;
+
+            var ticketActivityFactory = this;
+            var ticketMilestoneFactory = this;
+            var ticketCycleTimeDurationFactory = this;
+            var ticketCurrentActivityFactory = this;
+
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+
+            Assert.That(ticketFactory.Build(new TicketRecord
+            {
+                Release = new TicketReleaseRecord { Id = expectedReleaseId }
+            }).Release.Id, Is.EqualTo(expectedReleaseId));
+        }
+
+        [Test]
+        public void SetsTicketReleaseSvnRevision()
+        {
+            const string expectedSvnRevision = "84324";
+
+            var ticketActivityFactory = this;
+            var ticketMilestoneFactory = this;
+            var ticketCycleTimeDurationFactory = this;
+            var ticketCurrentActivityFactory = this;
+
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+
+            Assert.That(ticketFactory.Build(new TicketRecord
+            {
+                Release = new TicketReleaseRecord { SvnRevision = expectedSvnRevision }
+            }).Release.SvnRevision, Is.EqualTo(expectedSvnRevision));
+        }
+
+        [Test]
+        public void SetsTicketReleaseServiceNowId()
+        {
+            const string expectedServiceNowId = "CHG000123";
+
+            var ticketActivityFactory = this;
+            var ticketMilestoneFactory = this;
+            var ticketCycleTimeDurationFactory = this;
+            var ticketCurrentActivityFactory = this;
+
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+
+            Assert.That(ticketFactory.Build(new TicketRecord
+            {
+                Release = new TicketReleaseRecord { ServiceNowId = expectedServiceNowId }
+            }).Release.ServiceNowId, Is.EqualTo(expectedServiceNowId));
+        }
+
         public WorkDuration CalculateDuration(DateTime start, DateTime end)
         {
             return _cycleTime;

@@ -30,7 +30,7 @@ namespace LeanKit.Data.SQL
             {
                 sqlConnection.Open();
 
-                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketRecord>(
+                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketReleaseRecord, TicketRecord>(
                         @"SELECT C.*, CA.*, R.*
                             FROM CardActivity CA 
                                 INNER JOIN Card C ON CA.CardID = C.ID
@@ -38,7 +38,7 @@ namespace LeanKit.Data.SQL
                                 LEFT OUTER JOIN Release R ON RC.ReleaseID = R.ID
                             WHERE C.Finished IS NOT NULL
                             ORDER BY C.Finished DESC",
-                                                 (ticket, activity) =>
+                                                 (ticket, activity, release) =>
                                                  {
                                                      var existingTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id);
 
@@ -46,6 +46,7 @@ namespace LeanKit.Data.SQL
 
                                                      if (existingTicket == null)
                                                      {
+                                                         ticket.Release = release;
                                                          tickets.Add(ticket);
                                                      }
 

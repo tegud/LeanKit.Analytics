@@ -22,5 +22,16 @@ namespace LeanKit.Data
         public TicketActivity CurrentActivity { get; set; }
 
         public int Size { get; set; }
+
+        public TicketReleaseInfo Release { get; set; }
+    }
+
+    public class TicketReleaseInfo
+    {
+        public int Id { get; set; }
+
+        public string SvnRevision { get; set; }
+
+        public string ServiceNowId { get; set; }
     }
 }

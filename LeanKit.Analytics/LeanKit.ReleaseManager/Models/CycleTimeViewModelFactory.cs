@@ -26,7 +26,12 @@ namespace LeanKit.ReleaseManager.Models
                         ExternalId = t.ExternalId,
                         Title = t.Title,
                         StartedFriendlyText = t.Started.ToFriendlyText("dd MMM yyyy", " HH:mm"),
-                        Release = new CycleTimeReleaseViewModel {},
+                        Release = new CycleTimeReleaseViewModel
+                            {
+                                Id = t.Release == null ? 0 : t.Release.Id,
+                                Name = t.Release == null ? "" : !string.IsNullOrWhiteSpace(t.Release.SvnRevision)
+                                ? t.Release.SvnRevision : !string.IsNullOrWhiteSpace(t.Release.ServiceNowId) ? t.Release.ServiceNowId : t.Release.Id.ToString()
+                            },
                         FinishedFriendlyText = t.Finished.ToFriendlyText("dd MMM yyyy", " HH:mm"),
                         Duration = t.CycleTime.Days + " Day" + (t.CycleTime.Days != 1 ? "s" : ""),
                         Size = t.Size > 0 ? t.Size.ToString(CultureInfo.InvariantCulture) : "?"

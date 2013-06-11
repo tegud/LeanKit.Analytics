@@ -166,6 +166,88 @@ namespace LeanKit.ReleaseManager.Tests.Models
             Assert.That(cycleTimeViewModel.Tickets.First().Size, Is.EqualTo("?"));
         }
 
+        [Test]
+        public void SetsReleaseId()
+        {
+            _ticketReturnedFromDb = new Ticket
+            {
+                CycleTime = new WorkDuration(),
+                Release = new TicketReleaseInfo
+                {
+                    Id = 12345
+                }
+            };
+
+            ITicketRepository ticketRepository = this;
+
+            var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+
+            Assert.That(cycleTimeViewModel.Tickets.First().Release.Id, Is.EqualTo(12345));
+        }
+
+        [Test]
+        public void SetsReleaseNameToSvnRevisionWhenPresent()
+        {
+            _ticketReturnedFromDb = new Ticket
+            {
+                CycleTime = new WorkDuration(),
+                Release = new TicketReleaseInfo
+                {
+                    Id = 12345,
+                    SvnRevision = "864353"
+                }
+            };
+
+            ITicketRepository ticketRepository = this;
+
+            var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+
+            Assert.That(cycleTimeViewModel.Tickets.First().Release.Name, Is.EqualTo("864353"));
+        }
+
+        [Test]
+        public void SetsReleaseNameToServiceNowIdWhenNoSvnRevisionPresent()
+        {
+            _ticketReturnedFromDb = new Ticket
+            {
+                CycleTime = new WorkDuration(),
+                Release = new TicketReleaseInfo
+                {
+                    Id = 12345,
+                    ServiceNowId = "CHG0001234"
+                }
+            };
+
+            ITicketRepository ticketRepository = this;
+
+            var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+
+            Assert.That(cycleTimeViewModel.Tickets.First().Release.Name, Is.EqualTo("CHG0001234"));
+        }
+
+        [Test]
+        public void SetsReleaseNameReleaseIdWhenNoOtherIdentifierPresent()
+        {
+            _ticketReturnedFromDb = new Ticket
+            {
+                CycleTime = new WorkDuration(),
+                Release = new TicketReleaseInfo
+                {
+                    Id = 12345
+                }
+            };
+
+            ITicketRepository ticketRepository = this;
+
+            var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+
+            Assert.That(cycleTimeViewModel.Tickets.First().Release.Name, Is.EqualTo("12345"));
+        }
+
         public void Save(Ticket ticket)
         {
             throw new NotImplementedException();

@@ -62,6 +62,7 @@
     <Compile Include="TicketActivityRecord.cs" />
     <Compile Include="TicketFactory.cs" />
     <Compile Include="TicketRecord.cs" />
+    <Compile Include="TicketReleaseRecord.cs" />
     <Compile Include="TicketsRepository.cs" />
   </ItemGroup>
   <ItemGroup>
