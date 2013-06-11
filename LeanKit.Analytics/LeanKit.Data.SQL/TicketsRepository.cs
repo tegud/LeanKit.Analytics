@@ -117,13 +117,14 @@ namespace LeanKit.Data.SQL
                                     UPDATE Card 
                                     SET Title = @Title, 
                                         ExternalId = @ExternalId,
+                                        Size = @Size,
                                         Started = @Started,
                                         Finished = @Finished
                                     WHERE ID = @Id;
                                 END
                                 ELSE
                                 BEGIN
-                                    INSERT Card(ID, Title, ExternalId, Started, Finished) values (@Id, @Title, @ExternalId, @Started, @Finished);
+                                    INSERT Card(ID, Title, ExternalId, Started, Finished, Size) values (@Id, @Title, @ExternalId, @Started, @Finished, @Size);
                                 END";
 
                 sqlConnection.Execute(ticketSql,
@@ -132,6 +133,7 @@ namespace LeanKit.Data.SQL
                                         ticket.Id,
                                         ticket.Title,
                                         ticket.ExternalId,
+                                        Size = ticket.Size > 0 ? (int?) ticket.Size : null,
                                         Started = ticket.Started > DateTime.MinValue ? (DateTime?)ticket.Started : null,
                                         Finished = ticket.Finished > DateTime.MinValue ? (DateTime?)ticket.Finished : null
                                     });
