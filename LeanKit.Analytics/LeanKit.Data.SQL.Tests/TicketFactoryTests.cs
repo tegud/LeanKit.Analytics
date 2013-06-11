@@ -40,9 +40,25 @@ namespace LeanKit.Data.SQL.Tests
             var ticketCurrentActivityFactory = this;
 
             Assert.That(new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory).Build(new TicketRecord
-                {
-                    Id = expectedId
-                }).Id, Is.EqualTo(expectedId));
+            {
+                Id = expectedId
+            }).Id, Is.EqualTo(expectedId));
+        }
+
+        [Test]
+        public void SetsTicketSize()
+        {
+            const int expectedSize = 2;
+
+            var ticketActivityFactory = this;
+            var ticketMilestoneFactory = this;
+            var ticketCycleTimeDurationFactory = this;
+            var ticketCurrentActivityFactory = this;
+
+            Assert.That(new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory).Build(new TicketRecord
+            {
+                Size = expectedSize
+            }).Size, Is.EqualTo(expectedSize));
         }
 
         [Test]

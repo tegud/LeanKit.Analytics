@@ -12,6 +12,7 @@
         <th class="ticket-started">Started</th>
         <th class="ticket-release">Release</th>
         <th class="ticket-released">Released</th>
+        <th class="ticket-estimate">Estimate</th>
         <th class="ticket-cycle-time">Cycle Time</th>
     </tr>
     @foreach (var ticket in Model.Tickets)
@@ -22,6 +23,7 @@
         <td class="ticket-started">@ticket.StartedFriendlyText</td>
         <td class="ticket-release"><a href="/Release/@ticket.Release.Id">@ticket.Release.Name</a></td>
         <td class="ticket-released">@ticket.FinishedFriendlyText</td>
+        <td class="ticket-estimate">@ticket.Size</td>
         <td class="ticket-cycle-time">@ticket.Duration</td>
     </tr>
     }

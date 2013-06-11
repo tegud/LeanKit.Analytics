@@ -41,6 +41,7 @@ namespace LeanKit.Data.SQL
                     Started = started,
                     Finished = finished,
                     CycleTime = duration,
+                    Size = ticket.Size,
                     Activities = activities,
                     CurrentActivity = currentActivity
                 };

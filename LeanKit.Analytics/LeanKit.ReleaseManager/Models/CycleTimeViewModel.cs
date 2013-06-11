@@ -23,5 +23,7 @@ namespace LeanKit.ReleaseManager.Models
         public string Duration { get; set; }
 
         public CycleTimeReleaseViewModel Release { get; set; }
+
+        public string Size { get; set; }
     }
 }

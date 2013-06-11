@@ -12,6 +12,8 @@ namespace LeanKit.Data.SQL
 
         public string ExternalId { get; set; }
 
+        public int Size { get; set; }
+
         public TicketRecord()
         {
             Activities = new List<TicketActivityRecord>();

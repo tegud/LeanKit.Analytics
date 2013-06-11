@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Globalization;
+using System.Linq;
 using LeanKit.Data.SQL;
 using LeanKit.Utilities.DateAndTime;
 
@@ -27,7 +28,8 @@ namespace LeanKit.ReleaseManager.Models
                         StartedFriendlyText = t.Started.ToFriendlyText("dd MMM yyyy", " HH:mm"),
                         Release = new CycleTimeReleaseViewModel {},
                         FinishedFriendlyText = t.Finished.ToFriendlyText("dd MMM yyyy", " HH:mm"),
-                        Duration = t.CycleTime.Days + " Day" + (t.CycleTime.Days != 1 ? "s" : "")
+                        Duration = t.CycleTime.Days + " Day" + (t.CycleTime.Days != 1 ? "s" : ""),
+                        Size = t.Size > 0 ? t.Size.ToString(CultureInfo.InvariantCulture) : "?"
                     })
             };
         }

@@ -140,6 +140,32 @@ namespace LeanKit.ReleaseManager.Tests.Models
             Assert.That(cycleTimeViewModel.Tickets.First().Duration, Is.EqualTo(expectedDuration));
         }
 
+        [Test]
+        public void SetsTicketSize()
+        {
+            _ticketReturnedFromDb = new Ticket { CycleTime = new WorkDuration(), Size = 2 };
+
+            ITicketRepository ticketRepository = this;
+
+            var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+
+            Assert.That(cycleTimeViewModel.Tickets.First().Size, Is.EqualTo("2"));
+        }
+
+        [Test]
+        public void SetsTicketUnknownSizeWhenSizeIsZero()
+        {
+            _ticketReturnedFromDb = new Ticket { CycleTime = new WorkDuration () };
+
+            ITicketRepository ticketRepository = this;
+
+            var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+
+            Assert.That(cycleTimeViewModel.Tickets.First().Size, Is.EqualTo("?"));
+        }
+
         public void Save(Ticket ticket)
         {
             throw new NotImplementedException();
