@@ -51,6 +51,19 @@ namespace LeanKit.Data.API.Tests
         }
 
         [Test]
+        public void SetsSize()
+        {
+            ITicketActivitiesFactory ticketActivitiesFactory = this;
+            ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+
+            var fakeMileStoneFactory = new FakeMileStoneFactory();
+
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+
+            Assert.That(ticketFactory.Build(new LeankitBoardCard { Size = 1 }).Size, Is.EqualTo(1));
+        }
+
+        [Test]
         public void SetsStarted()
         {
             var expectedStartDate = new DateTime(2013, 02, 15, 10, 50, 35);

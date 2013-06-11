@@ -20,5 +20,7 @@ namespace LeanKit.Data
         public DateTime Finished { get; set; }
 
         public TicketActivity CurrentActivity { get; set; }
+
+        public int Size { get; set; }
     }
 }

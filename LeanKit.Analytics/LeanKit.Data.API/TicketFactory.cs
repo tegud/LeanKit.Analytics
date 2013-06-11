@@ -37,7 +37,8 @@ namespace LeanKit.Data.API
                     Started = started,
                     Finished = finished,
                     Activities = ticketActivities,
-                    CycleTime = duration
+                    CycleTime = duration,
+                    Size = card.Size
                 };
         }
     }
