@@ -128,9 +128,12 @@
     <Compile Include="Models\ColourPalette.cs" />
     <Compile Include="Models\CreateReleaseModel.cs" />
     <Compile Include="Models\CreateReleaseReleaseRecordFactory.cs" />
+    <Compile Include="Models\CycleTimeViewModel.cs" />
+    <Compile Include="Models\CycleTimeViewModelFactory.cs" />
     <Compile Include="Models\DateIsWorkDaySpecification.cs" />
     <Compile Include="Models\DateOption.cs" />
     <Compile Include="Models\DateOptionsFactory.cs" />
+    <Compile Include="Models\IBuildCycleTimeViewModels.cs" />
     <Compile Include="Models\IBuildIncludedTicketsForNewReleases.cs" />
     <Compile Include="Models\IBuildNewReleaseRecords.cs" />
     <Compile Include="Models\IBuildReleaseViewModels.cs" />
