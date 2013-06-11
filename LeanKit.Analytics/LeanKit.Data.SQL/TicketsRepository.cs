@@ -6,6 +6,59 @@ using Dapper;
 
 namespace LeanKit.Data.SQL
 {
+    public interface IGetReleasedTicketsFromTheDatabase
+    {
+        IEnumerable<Ticket> Get();
+    }
+
+    public class CompletedTicketsRepository : IGetReleasedTicketsFromTheDatabase
+    {
+        private readonly string _connectionString;
+        private readonly ICreateTickets _ticketFactory;
+
+        public CompletedTicketsRepository(string connectionString, ICreateTickets ticketFactory)
+        {
+            _connectionString = connectionString;
+            _ticketFactory = ticketFactory;
+        }
+
+        public IEnumerable<Ticket> Get()
+        {
+            var tickets = new List<TicketRecord>();
+
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketRecord>(
+                        @"SELECT C.*, CA.*, R.*
+                            FROM CardActivity CA 
+                                INNER JOIN Card C ON CA.CardID = C.ID
+                                LEFT OUTER JOIN ReleaseCard RC ON C.ID = RC.CardID
+                                LEFT OUTER JOIN Release R ON RC.ReleaseID = R.ID
+                            WHERE C.Finished IS NOT NULL
+                            ORDER BY C.Finished DESC",
+                                                 (ticket, activity) =>
+                                                 {
+                                                     var existingTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id);
+
+                                                     var currentTicket = existingTicket ?? ticket;
+
+                                                     if (existingTicket == null)
+                                                     {
+                                                         tickets.Add(ticket);
+                                                     }
+
+                                                     currentTicket.Activities.Add(activity);
+
+                                                     return ticket;
+                                                 });
+            }
+
+            return tickets.Select(_ticketFactory.Build);
+        }
+    }
+
     public class TicketsRepository : ITicketRepository
     {
         private readonly string _connectionString;
@@ -25,21 +78,26 @@ namespace LeanKit.Data.SQL
             {
                 sqlConnection.Open();
 
-                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketRecord>(@"SELECT C.*, CA.* FROM CardActivity CA INNER JOIN Card C ON CA.CardID = C.ID ORDER BY C.ID, CA.ID", (ticket, activity) =>
-                    {
-                        var existingTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id);
+                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketRecord>(
+                        @"SELECT C.*, CA.* 
+                            FROM CardActivity CA 
+                                INNER JOIN Card C ON CA.CardID = C.ID 
+                            ORDER BY C.ID, CA.ID",
+                                                 (ticket, activity) =>
+                                                 {
+                                                     var existingTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id);
 
-                        var currentTicket = existingTicket ?? ticket;
+                                                     var currentTicket = existingTicket ?? ticket;
 
-                        if(existingTicket == null)
-                        {
-                            tickets.Add(ticket);
-                        }
+                                                     if (existingTicket == null)
+                                                     {
+                                                         tickets.Add(ticket);
+                                                     }
 
-                        currentTicket.Activities.Add(activity);
+                                                     currentTicket.Activities.Add(activity);
 
-                        return ticket;
-                    });
+                                                     return ticket;
+                                                 });
             }
 
             return new AllTicketsForBoard
@@ -54,13 +112,18 @@ namespace LeanKit.Data.SQL
             {
                 sqlConnection.Open();
 
-                var ticketSql = @"IF EXISTS(SELECT ID FROM Card WHERE ID = @ID)
+                const string ticketSql = @"IF EXISTS(SELECT ID FROM Card WHERE ID = @ID)
                                 BEGIN
-                                    UPDATE Card SET Title = @Title, ExternalId = @ExternalId WHERE ID = @Id;
+                                    UPDATE Card 
+                                    SET Title = @Title, 
+                                        ExternalId = @ExternalId,
+                                        Started = @Started,
+                                        Finished = @Finished
+                                    WHERE ID = @Id;
                                 END
                                 ELSE
                                 BEGIN
-                                    INSERT Card(ID, Title, ExternalId) values (@Id, @Title, @ExternalId);
+                                    INSERT Card(ID, Title, ExternalId, Started, Finished) values (@Id, @Title, @ExternalId, @Started, @Finished);
                                 END";
 
                 sqlConnection.Execute(ticketSql,
@@ -68,12 +131,18 @@ namespace LeanKit.Data.SQL
                                     {
                                         ticket.Id,
                                         ticket.Title,
-                                        ticket.ExternalId
+                                        ticket.ExternalId,
+                                        Started = ticket.Started > DateTime.MinValue ? (DateTime?)ticket.Started : null,
+                                        Finished = ticket.Finished > DateTime.MinValue ? (DateTime?)ticket.Finished : null
                                     });
 
-                foreach(var activity in ticket.Activities)
+                foreach (var activity in ticket.Activities)
                 {
-                    var activitySql = string.Format("IF NOT EXISTS(SELECT ID FROM CardActivity WHERE CardID = @ID AND Activity = @Title AND Date = @Started){0}BEGIN{0}INSERT INTO CardActivity(CardID, Activity, Date) VALUES (@Id, @Title, @Started){0}END", Environment.NewLine);
+                    const string activitySql = @"IF NOT EXISTS(SELECT ID FROM CardActivity WHERE CardID = @ID AND Activity = @Title AND Date = @Started)
+                                        BEGIN
+                                            INSERT INTO CardActivity(CardID, Activity, Date) 
+                                            VALUES (@Id, @Title, @Started)
+                                        END";
 
                     sqlConnection.Execute(activitySql,
                                         new

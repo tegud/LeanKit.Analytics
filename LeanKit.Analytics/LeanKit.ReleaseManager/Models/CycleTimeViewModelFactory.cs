@@ -25,10 +25,18 @@ namespace LeanKit.ReleaseManager.Models
                         ExternalId = t.ExternalId,
                         Title = t.Title,
                         StartedFriendlyText = t.Started.ToFriendlyText("dd MMM yyyy", " HH:mm"),
+                        Release = new CycleTimeReleaseViewModel {},
                         FinishedFriendlyText = t.Finished.ToFriendlyText("dd MMM yyyy", " HH:mm"),
                         Duration = t.CycleTime.Days + " Day" + (t.CycleTime.Days != 1 ? "s" : "")
                     })
             };
         }
+    }
+
+    public class CycleTimeReleaseViewModel
+    {
+        public string Name { get; set; }
+
+        public int Id { get; set; }
     }
 }

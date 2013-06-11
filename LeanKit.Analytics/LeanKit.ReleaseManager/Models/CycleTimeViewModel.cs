@@ -21,5 +21,7 @@ namespace LeanKit.ReleaseManager.Models
         public string FinishedFriendlyText { get; set; }
 
         public string Duration { get; set; }
+
+        public CycleTimeReleaseViewModel Release { get; set; }
     }
 }
