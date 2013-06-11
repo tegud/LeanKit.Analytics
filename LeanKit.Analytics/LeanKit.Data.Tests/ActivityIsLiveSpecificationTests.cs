@@ -31,9 +31,20 @@ namespace LeanKit.Data.Tests
         public void LiveActivityReturnsTrueIgnoringCase()
         {
             var ticketActivity = new TicketActivity
-                {
-                    Title = "live"
-                };
+            {
+                Title = "live"
+            };
+
+            Assert.That(new ActivityIsLiveSpecification().IsSatisfiedBy(ticketActivity), Is.True);
+        }
+
+        [Test]
+        public void LiveLegacyActivityReturnsTrueIgnoringCase()
+        {
+            var ticketActivity = new TicketActivity
+            {
+                Title = "Live: W/C 16/12/12"
+            };
 
             Assert.That(new ActivityIsLiveSpecification().IsSatisfiedBy(ticketActivity), Is.True);
         }

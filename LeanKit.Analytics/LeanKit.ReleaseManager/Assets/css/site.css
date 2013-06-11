@@ -144,12 +144,11 @@ a { color: #000;transition-property: color;transition-duration: 300ms;text-decor
 
 .edit-release .selected { background-color: #8fbc8f } 
 
-#ticket-cycle-time { width: 900px; }
+#ticket-cycle-time { width: 100%; }
 
-td.ticket-id { width: 90px; }
-td.ticket-title {}
-td.ticket-started { width: 140px;}
-td.ticket-released { width: 140px;}
+td.ticket-id { width: 110px; }
+td.ticket-started { width: 160px;}
+td.ticket-released { width: 160px;}
 td.ticket-cycle-time { width: 90px;}
 
 @media (max-width: 800px)

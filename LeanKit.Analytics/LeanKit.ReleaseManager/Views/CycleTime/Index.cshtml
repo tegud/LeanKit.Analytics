@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "~/Views/Layouts/_Layout.cshtml";
 }
+@model LeanKit.ReleaseManager.Models.CycleTimeViewModel
 
 <h2>Ticket Cycle Time</h2>
 
@@ -12,25 +13,14 @@
         <th class="ticket-released">Released</th>
         <th class="ticket-cycle-time">Cycle Time</th>
     </tr>
+    @foreach (var ticket in Model.Tickets)
+    {
     <tr class="ticket-row">
-        <td class="ticket-id">R-21421</td>
-        <td class="ticket-title">An example ticket</td>
-        <td class="ticket-started">Yesterday at 9:00</td>
-        <td class="ticket-released">Today at 15:00</td>
-        <td class="ticket-cycle-time">1 Day</td>
+        <td class="ticket-id">@ticket.ExternalId</td>
+        <td class="ticket-title">@ticket.Title</td>
+        <td class="ticket-started">@ticket.StartedFriendlyText</td>
+        <td class="ticket-released">@ticket.FinishedFriendlyText</td>
+        <td class="ticket-cycle-time">@ticket.Duration</td>
     </tr>
-    <tr class="ticket-row">
-        <td class="ticket-id">R-21421</td>
-        <td class="ticket-title">An example ticket</td>
-        <td class="ticket-started">Yesterday at 9:00</td>
-        <td class="ticket-released">Today at 15:00</td>
-        <td class="ticket-cycle-time">1 Day</td>
-    </tr>
-    <tr class="ticket-row">
-        <td class="ticket-id">R-21421</td>
-        <td class="ticket-title">An example ticket</td>
-        <td class="ticket-started">Yesterday at 9:00</td>
-        <td class="ticket-released">Today at 15:00</td>
-        <td class="ticket-cycle-time">1 Day</td>
-    </tr>
+    }
 </table>

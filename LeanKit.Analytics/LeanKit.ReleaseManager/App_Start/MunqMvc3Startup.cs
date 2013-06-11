@@ -48,6 +48,7 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IParsePlannedReleaseDate, PlannedDateParser>();
             ioc.Register<IBuildNewReleaseRecords, CreateReleaseReleaseRecordFactory>();
             ioc.Register<IBuildReleaseViewModels, ReleaseViewModelFactory>();
+            ioc.Register<IBuildCycleTimeViewModels, CycleTimeViewModelFactory>();
 
             UtilitiesRegistry.Register(ioc);
             DataRegistry.Register(ioc);

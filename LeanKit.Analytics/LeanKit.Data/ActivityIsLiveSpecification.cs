@@ -5,7 +5,7 @@ namespace LeanKit.Data
         public bool IsSatisfiedBy(TicketActivity activity)
         {
             var title = activity.Title.ToUpper();
-            return title == "LIVE" || title == "WASTE";
+            return title.Contains("LIVE") || title == "WASTE";
         }
     }
 }

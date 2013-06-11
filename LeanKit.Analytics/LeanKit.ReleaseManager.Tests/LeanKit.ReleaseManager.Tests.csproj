@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CycleTimeControllerTests.cs" />
+    <Compile Include="Models\CycleTimeViewModelFactoryTests.cs" />
     <Compile Include="Models\DateIsWorkDaySpecificationTests.cs" />
     <Compile Include="Models\DateOptionsFactoryTests.cs" />
     <Compile Include="Models\ReleaseDetailViewModelFactoryTests.cs" />
@@ -55,6 +56,10 @@
     <ProjectReference Include="..\LeanKit.Data.SQL\LeanKit.Data.SQL.csproj">
       <Project>{8838D1D0-FB0C-4093-B27B-12317183624E}</Project>
       <Name>LeanKit.Data.SQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LeanKit.Data\LeanKit.Data.csproj">
+      <Project>{C42BBCFB-D21B-4A9C-B55D-A4F8CCEA7949}</Project>
+      <Name>LeanKit.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\LeanKit.ReleaseManager\LeanKit.ReleaseManager.csproj">
       <Project>{BFE6AAD8-E981-4814-87CF-0616BEE82F28}</Project>
