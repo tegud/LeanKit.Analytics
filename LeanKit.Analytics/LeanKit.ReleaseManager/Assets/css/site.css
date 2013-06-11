@@ -92,14 +92,19 @@ h2 { margin: 10px 0; }
 
 .release-detail button { font-size: 1em; }
 
-#release-table { border-collapse: collapse; }
-#release-table th { text-align: left;background-color: #f7f7f7;height: 30px;padding: 5px;cursor: default; }
+table { border-collapse: collapse; }
+table th { text-align: left;background-color: #f7f7f7;height: 30px;padding: 5px;cursor: default; }
 
-.release-row { cursor: pointer;height: 40px;background-color: #fcfcfc;transition-property: color;transition-duration: 300ms; }
+.release-row,
+.ticket-row { height: 40px;background-color: #fcfcfc;transition-property: color;transition-duration: 300ms; }
 
-.release-row:nth-child(odd) { background-color: #f7f7f7; }
+.release-row:nth-child(odd),
+.ticket-row:nth-child(odd) { background-color: #f7f7f7; }
 
-.release-row td { padding: 2px; }
+.release-row { cursor: pointer; }
+
+.release-row td,
+.ticket-row td { padding: 2px; }
 
 .release-row:hover { color: #75A4FF }
 
@@ -138,6 +143,14 @@ a { color: #000;transition-property: color;transition-duration: 300ms;text-decor
 .button-container { margin: 10px 0; }
 
 .edit-release .selected { background-color: #8fbc8f } 
+
+#ticket-cycle-time { width: 900px; }
+
+td.ticket-id { width: 90px; }
+td.ticket-title {}
+td.ticket-started { width: 140px;}
+td.ticket-released { width: 140px;}
+td.ticket-cycle-time { width: 90px;}
 
 @media (max-width: 800px)
 {

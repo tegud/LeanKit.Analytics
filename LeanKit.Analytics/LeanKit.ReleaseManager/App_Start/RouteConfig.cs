@@ -41,6 +41,12 @@ namespace LeanKit.ReleaseManager
             );
 
             routes.MapRoute(
+                name: "CycleTime",
+                url: "CycleTime",
+                defaults: new { controller = "CycleTime", action = "Index" }
+            );
+
+            routes.MapRoute(
                 name: "UpdateExistingRelease",
                 url: "UpdateExistingRelease",
                 defaults: new { controller = "UpdateExistingRelease", action = "Index" }
