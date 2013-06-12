@@ -39,7 +39,7 @@ namespace LeanKit.ReleaseManager.App_Start
 
             var ioc = MunqDependencyResolver.Container;
 
-            ioc.Register(Module.ConnectionString, i => MvcApplication.ConnectionString);
+            ioc.Register(i => MvcApplication.ConnectionString);
 
             ioc.Register<IIdentifyWorkDays, DateIsWorkDaySpecification>();
             ioc.Register<IMakeListsOfDateOptions, DateOptionsFactory>();
@@ -49,6 +49,7 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IBuildNewReleaseRecords, CreateReleaseReleaseRecordFactory>();
             ioc.Register<IBuildReleaseViewModels, ReleaseViewModelFactory>();
             ioc.Register<IBuildCycleTimeViewModels, CycleTimeViewModelFactory>();
+            ioc.Register<IMakeCycleTimeReleaseViewModels, CycleTimeReleaseViewModelFactory>();
 
             UtilitiesRegistry.Register(ioc);
             DataRegistry.Register(ioc);

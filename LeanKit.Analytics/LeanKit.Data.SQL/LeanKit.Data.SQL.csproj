@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="ActivityRepository.cs" />
     <Compile Include="DataSqlRegistry.cs" />
+    <Compile Include="DbConnectionString.cs" />
     <Compile Include="ICreateTicketActivities.cs" />
     <Compile Include="ICreateTickets.cs" />
     <Compile Include="ITicketRepository.cs" />

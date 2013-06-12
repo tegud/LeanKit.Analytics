@@ -15,9 +15,9 @@ namespace LeanKit.Data.SQL
     {
         private readonly string _connectionString;
 
-        public ActivityRepository(string connectionString)
+        public ActivityRepository(DbConnectionString connectionString)
         {
-            _connectionString = connectionString;
+            _connectionString = connectionString.ConnectionString;
         }
 
         public void SaveActivities(IEnumerable<Activity> activities)

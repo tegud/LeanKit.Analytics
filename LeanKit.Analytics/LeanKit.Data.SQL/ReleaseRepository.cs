@@ -10,9 +10,9 @@ namespace LeanKit.Data.SQL
     {
         private readonly string _connectionString;
 
-        public ReleaseRepository(string connectionString)
+        public ReleaseRepository(DbConnectionString connectionString)
         {
-            _connectionString = connectionString;
+            _connectionString = connectionString.ConnectionString;
         }
 
         public ReleaseRecord GetRelease(int id)

@@ -16,9 +16,9 @@ namespace LeanKit.Data.SQL
         private readonly string _connectionString;
         private readonly ICreateTickets _ticketFactory;
 
-        public CompletedTicketsRepository(string connectionString, ICreateTickets ticketFactory)
+        public CompletedTicketsRepository(DbConnectionString connectionString, ICreateTickets ticketFactory)
         {
-            _connectionString = connectionString;
+            _connectionString = connectionString.ConnectionString;
             _ticketFactory = ticketFactory;
         }
 
@@ -65,9 +65,9 @@ namespace LeanKit.Data.SQL
         private readonly string _connectionString;
         private readonly ICreateTickets _ticketFactory;
 
-        public TicketsRepository(string connectionString, ICreateTickets ticketFactory)
+        public TicketsRepository(DbConnectionString connectionString, ICreateTickets ticketFactory)
         {
-            _connectionString = connectionString;
+            _connectionString = connectionString.ConnectionString;
             _ticketFactory = ticketFactory;
         }
 

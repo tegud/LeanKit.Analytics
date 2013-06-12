@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using LeanKit.Data.SQL;
 
 namespace LeanKit.ReleaseManager
 {
@@ -13,7 +14,7 @@ namespace LeanKit.ReleaseManager
     // visit http://go.microsoft.com/?LinkId=9394801
     public class MvcApplication : System.Web.HttpApplication
     {
-        public static string ConnectionString { get; private set; }
+        public static DbConnectionString ConnectionString { get; private set; }
 
         protected void Application_Start()
         {
@@ -23,7 +24,7 @@ namespace LeanKit.ReleaseManager
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
-            ConnectionString = ConfigurationManager.ConnectionStrings["LeanKitSyncDb"].ConnectionString;
+            ConnectionString = new DbConnectionString(ConfigurationManager.ConnectionStrings["LeanKitSyncDb"].ConnectionString);
         }
     }
 }

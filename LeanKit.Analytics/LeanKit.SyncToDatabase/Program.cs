@@ -23,7 +23,7 @@ namespace LeanKit.SyncToDatabase
             var account = apiSettingsSection.GetValue("account");
             var boardId = apiSettingsSection.GetValue("boardId");
 
-            var connectionString = ConfigurationManager.ConnectionStrings["LeanKitSyncDb"].ConnectionString;
+            var connectionString = new DbConnectionString(ConfigurationManager.ConnectionStrings["LeanKitSyncDb"].ConnectionString);
 
             var apiCaller = new ApiCaller
                 {
