@@ -53,6 +53,7 @@
     <Compile Include="Models\DateIsWorkDaySpecificationTests.cs" />
     <Compile Include="Models\DateOptionsFactoryTests.cs" />
     <Compile Include="Models\ReleaseDetailViewModelFactoryTests.cs" />
+    <Compile Include="Models\TimePeriodViewModelFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LeanKit.Data.SQL\LeanKit.Data.SQL.csproj">

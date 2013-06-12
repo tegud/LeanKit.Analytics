@@ -23,7 +23,7 @@ namespace LeanKit.ReleaseManager.Models
         public CycleTimeViewModel Build(CycleTimeQuery query)
         {
             var tickets = _ticketRepository.Get(query);
-
+            
             return new CycleTimeViewModel
             {
                 Tickets = tickets.Select(t => new CycleTimeTicketItem
@@ -37,7 +37,7 @@ namespace LeanKit.ReleaseManager.Models
                         Duration = GetDurationText(t),
                         Size = GetSize(t)
                     }),
-                CycleTimePeriods = _timePeriodViewModelFactory.Build()
+                CycleTimePeriods = _timePeriodViewModelFactory.Build(query.Period)
             };
         }
 

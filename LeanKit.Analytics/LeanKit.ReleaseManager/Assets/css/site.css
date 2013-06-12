@@ -158,6 +158,8 @@ td.ticket-cycle-time { width: 90px;}
 
 .time-option { background-color: #eee;border-radius: 3px; }
 
+.time-option.selected { background-color: #75A4FF }
+
 @media (max-width: 800px)
 {
     .actual-end-date,

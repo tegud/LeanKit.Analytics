@@ -22,7 +22,10 @@ namespace LeanKit.ReleaseManager.Models
 
             if (timePeriod == "all-time")
             {
-                return CycleTimeQuery.Empty;
+                return new CycleTimeQuery
+                    {
+                        Period = timePeriod
+                    };
             }
 
             var currentDate = _dateTimeWrapper.Now().Date;
@@ -51,7 +54,8 @@ namespace LeanKit.ReleaseManager.Models
             return new CycleTimeQuery
             {
                 Start = start,
-                End = end
+                End = end,
+                Period = timePeriod
             };
         }
     }

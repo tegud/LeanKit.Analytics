@@ -16,12 +16,13 @@ namespace LeanKit.ReleaseManager.Models
                 {"all-time", "All Time"}
             };
 
-        public CycleTimePeriodViewModel Build()
+        public CycleTimePeriodViewModel Build(string selectedPeriod)
         {
             var periods = _periodOrder.Select(p => new CycleTimePeriod
                 {
                     Label = GetLabel(p),
-                    Value = p
+                    Value = p,
+                    Selected = p == selectedPeriod
                 });
 
             return new CycleTimePeriodViewModel(periods);

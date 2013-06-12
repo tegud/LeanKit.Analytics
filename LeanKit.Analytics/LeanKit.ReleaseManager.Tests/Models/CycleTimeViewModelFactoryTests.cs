@@ -9,35 +9,13 @@ using NUnit.Framework;
 namespace LeanKit.ReleaseManager.Tests.Models
 {
     [TestFixture]
-    public class TimePeriodViewModelFactoryTests
-    {
-        [TestCase(0, "This Week")]
-        [TestCase(1, "Last Week")]
-        [TestCase(2, "Last 30 Days")]
-        [TestCase(3, "All Time")]
-        public void SetsLabel(int index, string expectedLabel)
-        {
-            Assert.That(new CycleTimePeriodViewModelFactory().Build().ElementAt(index).Label, Is.EqualTo(expectedLabel));
-        }
-
-        [TestCase(0, "this-week")]
-        [TestCase(1, "last-week")]
-        [TestCase(2, "30")]
-        [TestCase(3, "all-time")]
-        public void SetsValue(int index, string expectedValue)
-        {
-            Assert.That(new CycleTimePeriodViewModelFactory().Build().ElementAt(index).Value, Is.EqualTo(expectedValue));
-        }
-    }
-
-
-    [TestFixture]
     public class CycleTimeViewModelFactoryTests : IGetReleasedTicketsFromTheDatabase, IMakeCycleTimeReleaseViewModels, IMakeTimePeriodViewModels
     {
         private Ticket _ticketReturnedFromDb;
         private CycleTimeQuery _queryPassedToRepository;
         private CycleTimeReleaseViewModel _cycleTimeTicketReleaseInfo;
         private CycleTimePeriodViewModel _cycleTimePeriodViewModel;
+        private string _queryPassedToTimePeriodFactory;
 
         [Test]
         public void SetsTicketId()
@@ -55,7 +33,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().Id, Is.EqualTo(expectedId));
         }
@@ -76,7 +54,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().ExternalId, Is.EqualTo(expectedExternalId));
         }
@@ -97,7 +75,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().Title, Is.EqualTo(expectedTitle));
         }
@@ -118,7 +96,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().StartedFriendlyText, Is.EqualTo(expectedStarted));
         }
@@ -139,7 +117,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().FinishedFriendlyText, Is.EqualTo(expectedFinished));
         }
@@ -156,7 +134,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().Duration, Is.EqualTo(expectedDuration));
         }
@@ -173,7 +151,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().Duration, Is.EqualTo(expectedDuration));
         }
@@ -188,7 +166,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().Size, Is.EqualTo("2"));
         }
@@ -203,7 +181,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().Size, Is.EqualTo("?"));
         }
@@ -223,9 +201,27 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.CycleTimePeriods, Is.EqualTo(_cycleTimePeriodViewModel));
+        }
+
+        [Test]
+        public void PassesQueryTimePeriodToTimePeriodFactory()
+        {
+            _ticketReturnedFromDb = new Ticket
+            {
+                CycleTime = new WorkDuration()
+            };
+
+            IGetReleasedTicketsFromTheDatabase ticketRepository = this;
+            IMakeCycleTimeReleaseViewModels cycleReleaseInfoFactory = this;
+            IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
+
+            var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
+            cycleTimeViewModelFactory.Build(new CycleTimeQuery { Period = "1234" });
+
+            Assert.That(_queryPassedToTimePeriodFactory, Is.EqualTo("1234"));
         }
 
         [Test]
@@ -243,7 +239,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IMakeTimePeriodViewModels timePeriodViewModelFactory = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, cycleReleaseInfoFactory, timePeriodViewModelFactory);
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(new CycleTimeQuery());
 
             Assert.That(cycleTimeViewModel.Tickets.First().Release, Is.EqualTo(_cycleTimeTicketReleaseInfo));
         }
@@ -276,8 +272,9 @@ namespace LeanKit.ReleaseManager.Tests.Models
             return _cycleTimeTicketReleaseInfo;
         }
 
-        public CycleTimePeriodViewModel Build()
+        public CycleTimePeriodViewModel Build(string selectedPeriod)
         {
+            _queryPassedToTimePeriodFactory = selectedPeriod;
             return _cycleTimePeriodViewModel;
         }
     }

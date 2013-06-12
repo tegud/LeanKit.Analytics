@@ -1,5 +1,4 @@
 ﻿using System;
-using LeanKit.Data;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities.DateAndTime;
 using NUnit.Framework;
@@ -11,10 +10,13 @@ namespace LeanKit.ReleaseManager.Tests.Models
     {
         private DateTime _currentDateTime;
 
-        [Test]
-        public void AllTimeReturnsEmptyQuery()
+        [TestCase("all-time")]
+        [TestCase("this-week")]
+        public void SetsPeriod(string period)
         {
-            Assert.That(new CycleTimeQueryFactory(null).Build("all-time"), Is.EqualTo(CycleTimeQuery.Empty));
+            _currentDateTime = new DateTime(2013, 6, 5);
+            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
+            Assert.That(new CycleTimeQueryFactory(dateTimeWrapper).Build(period).Period, Is.EqualTo(period));
         }
 
         [TestCase(-3)]
