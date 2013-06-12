@@ -1,4 +1,5 @@
-﻿using LeanKit.Utilities.DateAndTime;
+﻿using System;
+using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Models
 {
@@ -13,20 +14,44 @@ namespace LeanKit.ReleaseManager.Models
 
         public CycleTimeQuery Build(string timePeriod)
         {
-            if (string.IsNullOrWhiteSpace(timePeriod) || timePeriod == "all-time")
+            if (string.IsNullOrWhiteSpace(timePeriod))
+            {
+                timePeriod = "30";
+            }
+
+            if (timePeriod == "all-time")
             {
                 return CycleTimeQuery.Empty;
             }
 
             var currentDate = _dateTimeWrapper.Now().Date;
-            var dayOfWeekOffset = -(int) currentDate.DayOfWeek;
 
-            var start = currentDate.AddDays(dayOfWeekOffset);
-            return new CycleTimeQuery
+            DateTime start;
+            DateTime end;
+
+            if (timePeriod.Contains("-week"))
+            {
+                var dayOfWeekOffset = -(int) currentDate.DayOfWeek;
+                start = currentDate.AddDays(dayOfWeekOffset);
+
+                if (timePeriod == "last-week")
                 {
-                    Start = start,
-                    End = start.AddDays(6)
-                };
+                    start = start.AddDays(-7);
+                }
+
+                end = start.AddDays(6);
+            }
+            else
+            {
+                start = currentDate.AddDays(-int.Parse(timePeriod));
+                end = currentDate;
+            }
+
+            return new CycleTimeQuery
+            {
+                Start = start,
+                End = end
+            };
         }
     }
 }

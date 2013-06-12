@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LeanKit.ReleaseManager.Controllers;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities.DateAndTime;
 using NUnit.Framework;
@@ -14,12 +9,6 @@ namespace LeanKit.ReleaseManager.Tests.Models
     public class CycleTimeQueryFactoryTests : IKnowTheCurrentDateAndTime
     {
         private DateTime _currentDateTime;
-
-        [Test]
-        public void EmptyStringReturnsEmptyQuery()
-        {
-            Assert.That(new CycleTimeQueryFactory(null).Build(""), Is.EqualTo(CycleTimeQuery.Empty));
-        }
 
         [Test]
         public void AllTimeReturnsEmptyQuery()
@@ -61,6 +50,44 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
 
             Assert.That(new CycleTimeQueryFactory(dateTimeWrapper).Build("this-week").End, Is.EqualTo(expectedStartDate));
+        }
+
+        [Test]
+        public void LastWeekSetsStartDateToTheSundayBeforePrevious()
+        {
+            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
+
+            var expectedStartDate = new DateTime(2013, 5, 26);
+
+            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
+
+            Assert.That(new CycleTimeQueryFactory(dateTimeWrapper).Build("last-week").Start, Is.EqualTo(expectedStartDate));
+        }
+
+        [TestCase("", 30)]
+        [TestCase("30", 30)]
+        [TestCase("90", 90)]
+        public void NumberSetsStartDateToThatNumberOfDaysBeforeCurrentDate(string timePeriod, int numberOfDays)
+        {
+            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
+
+            var expectedStartDate = _currentDateTime.Date.AddDays(-numberOfDays);
+
+            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
+
+            Assert.That(new CycleTimeQueryFactory(dateTimeWrapper).Build(timePeriod).Start, Is.EqualTo(expectedStartDate));
+        }
+
+        [Test]
+        public void NumberSetsEndDateToCurrentDate()
+        {
+            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
+
+            var expectedStartDate = _currentDateTime.Date;
+
+            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
+
+            Assert.That(new CycleTimeQueryFactory(dateTimeWrapper).Build("30").End, Is.EqualTo(expectedStartDate));
         }
 
         public DateTime Now()
