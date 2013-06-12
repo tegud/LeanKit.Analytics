@@ -1,7 +1,9 @@
-﻿namespace LeanKit.ReleaseManager.Models
+﻿using LeanKit.ReleaseManager.Controllers;
+
+namespace LeanKit.ReleaseManager.Models
 {
     public interface IBuildCycleTimeViewModels
     {
-        CycleTimeViewModel Build();
+        CycleTimeViewModel Build(CycleTimeQuery query);
     }
 }

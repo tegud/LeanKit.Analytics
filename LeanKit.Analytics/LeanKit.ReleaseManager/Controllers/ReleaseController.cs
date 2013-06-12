@@ -67,7 +67,9 @@ namespace LeanKit.ReleaseManager.Controllers
                     PlannedTime = releasePlannedTime,
                     ActualTime = releaseActualTime,
                     Status = releaseStatusViewModel,
-                    IncludedTickets = releaseDetailIncludedTicketViewModels
+                    IncludedTickets = releaseDetailIncludedTicketViewModels,
+                    SvnRevision = releaseRecord.SvnRevision,
+                    ServiceNowId = releaseRecord.ServiceNowId
                 };
             return View("Index", releaseViewModel);
         }

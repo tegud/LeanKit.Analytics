@@ -27,7 +27,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Id, Is.EqualTo(expectedId));
         }
@@ -46,7 +46,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().ExternalId, Is.EqualTo(expectedExternalId));
         }
@@ -65,7 +65,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Title, Is.EqualTo(expectedTitle));
         }
@@ -84,7 +84,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().StartedFriendlyText, Is.EqualTo(expectedStarted));
         }
@@ -103,7 +103,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().FinishedFriendlyText, Is.EqualTo(expectedFinished));
         }
@@ -118,7 +118,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Duration, Is.EqualTo(expectedDuration));
         }
@@ -133,7 +133,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Duration, Is.EqualTo(expectedDuration));
         }
@@ -146,7 +146,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Size, Is.EqualTo("2"));
         }
@@ -159,7 +159,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Size, Is.EqualTo("?"));
         }
@@ -175,7 +175,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Release, Is.EqualTo(CycleTimeReleaseViewModel.NotReleased));
         }
@@ -195,7 +195,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Release.Id, Is.EqualTo(12345));
         }
@@ -216,7 +216,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Release.Name, Is.EqualTo("864353"));
         }
@@ -237,7 +237,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Release.Name, Is.EqualTo("CHG0001234"));
         }
@@ -257,7 +257,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             IGetReleasedTicketsFromTheDatabase ticketRepository = this;
 
             var cycleTimeViewModelFactory = new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory());
-            var cycleTimeViewModel = cycleTimeViewModelFactory.Build();
+            var cycleTimeViewModel = cycleTimeViewModelFactory.Build(null);
 
             Assert.That(cycleTimeViewModel.Tickets.First().Release.Name, Is.EqualTo("12345"));
         }

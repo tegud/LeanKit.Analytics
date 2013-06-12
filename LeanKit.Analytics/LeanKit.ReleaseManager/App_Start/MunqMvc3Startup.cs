@@ -9,6 +9,7 @@ using LeanKit.ReleaseManager.Controllers;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.Utilities;
 using LeanKit.Utilities.Collections;
+using LeanKit.Utilities.DateAndTime;
 using Munq.MVC3;
 
 [assembly: WebActivator.PreApplicationStartMethod(
@@ -41,6 +42,8 @@ namespace LeanKit.ReleaseManager.App_Start
 
             ioc.Register(i => MvcApplication.ConnectionString);
 
+            UtilitiesRegistry.Register(ioc);
+
             ioc.Register<IIdentifyWorkDays, DateIsWorkDaySpecification>();
             ioc.Register<IMakeListsOfDateOptions, DateOptionsFactory>();
             ioc.Register<IRotateThroughASetOfColours>(i => new ColourPalette(Configuration.GetReleaseColours()));
@@ -50,8 +53,8 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IBuildReleaseViewModels, ReleaseViewModelFactory>();
             ioc.Register<IBuildCycleTimeViewModels, CycleTimeViewModelFactory>();
             ioc.Register<IMakeCycleTimeReleaseViewModels, CycleTimeReleaseViewModelFactory>();
+            ioc.Register<IMakeCycleTimeQueries>(i => new CycleTimeQueryFactory(i.Resolve<IKnowTheCurrentDateAndTime>()));
 
-            UtilitiesRegistry.Register(ioc);
             DataRegistry.Register(ioc);
             DataSqlRegistry.Register(ioc);
         }

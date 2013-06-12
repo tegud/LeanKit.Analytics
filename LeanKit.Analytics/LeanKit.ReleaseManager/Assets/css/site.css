@@ -152,6 +152,12 @@ td.ticket-started { width: 160px;}
 td.ticket-released { width: 160px;}
 td.ticket-cycle-time { width: 90px;}
 
+#cycle-time-period-options { margin: 0 0 10px 0;padding: 0;list-style: none; }
+
+#cycle-time-period-options li { display: inline-block;padding: 5px; }
+
+.time-option { background-color: #eee;border-radius: 3px; }
+
 @media (max-width: 800px)
 {
     .actual-end-date,

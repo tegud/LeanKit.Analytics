@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CycleTimeControllerTests.cs" />
+    <Compile Include="Models\CycleTimeQueryFactoryTests.cs" />
     <Compile Include="Models\CycleTimeViewModelFactoryTests.cs" />
     <Compile Include="Models\DateIsWorkDaySpecificationTests.cs" />
     <Compile Include="Models\DateOptionsFactoryTests.cs" />
@@ -64,6 +65,10 @@
     <ProjectReference Include="..\LeanKit.ReleaseManager\LeanKit.ReleaseManager.csproj">
       <Project>{BFE6AAD8-E981-4814-87CF-0616BEE82F28}</Project>
       <Name>LeanKit.ReleaseManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LeanKit.Utilities\LeanKit.Utilities.csproj">
+      <Project>{46346393-ECC7-4499-8BD7-594EFB47094A}</Project>
+      <Name>LeanKit.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

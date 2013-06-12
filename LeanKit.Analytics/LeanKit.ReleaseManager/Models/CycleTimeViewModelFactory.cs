@@ -1,8 +1,8 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
+using LeanKit.ReleaseManager.Controllers;
 using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Models
@@ -18,7 +18,7 @@ namespace LeanKit.ReleaseManager.Models
             _ticketRepository = ticketRepository;
         }
 
-        public CycleTimeViewModel Build()
+        public CycleTimeViewModel Build(CycleTimeQuery query)
         {
             var tickets = _ticketRepository.Get();
 
@@ -55,47 +55,5 @@ namespace LeanKit.ReleaseManager.Models
 
             return string.Format("{0} Day{1}", ticket.CycleTime.Days, suffix);
         }
-    }
-
-    public interface IMakeCycleTimeReleaseViewModels
-    {
-        CycleTimeReleaseViewModel Build(Ticket ticket);
-    }
-
-    public class CycleTimeReleaseViewModelFactory : IMakeCycleTimeReleaseViewModels
-    {
-        public CycleTimeReleaseViewModel Build(Ticket ticket)
-        {
-            if (ticket.Release == null || ticket.Release.Id < 1)
-            {
-                return CycleTimeReleaseViewModel.NotReleased;
-            }
-
-            var name = ticket.Release.Id.ToString();
-
-            if (!String.IsNullOrWhiteSpace(ticket.Release.SvnRevision))
-            {
-                name = ticket.Release.SvnRevision;
-            }
-            else if (!String.IsNullOrWhiteSpace(ticket.Release.ServiceNowId))
-            {
-                name = ticket.Release.ServiceNowId;
-            }
-
-            return new CycleTimeReleaseViewModel
-                {
-                    Id = ticket.Release.Id,
-                    Name = name
-                };
-        }
-    }
-
-    public class CycleTimeReleaseViewModel
-    {
-        public static CycleTimeReleaseViewModel NotReleased = new CycleTimeReleaseViewModel();
-
-        public string Name { get; set; }
-
-        public int Id { get; set; }
     }
 }
