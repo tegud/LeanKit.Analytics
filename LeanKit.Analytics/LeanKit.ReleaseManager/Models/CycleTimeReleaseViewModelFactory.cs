@@ -5,27 +5,27 @@ namespace LeanKit.ReleaseManager.Models
 {
     public class CycleTimeReleaseViewModelFactory : IMakeCycleTimeReleaseViewModels
     {
-        public CycleTimeReleaseViewModel Build(Ticket ticket)
+        public CycleTimeReleaseViewModel Build(TicketReleaseInfo ticketReleaseInfo)
         {
-            if (ticket.Release == null || ticket.Release.Id < 1)
+            if (ticketReleaseInfo == null || ticketReleaseInfo.Id < 1)
             {
                 return CycleTimeReleaseViewModel.NotReleased;
             }
 
-            var name = ticket.Release.Id.ToString();
+            var name = ticketReleaseInfo.Id.ToString();
 
-            if (!String.IsNullOrWhiteSpace(ticket.Release.SvnRevision))
+            if (!String.IsNullOrWhiteSpace(ticketReleaseInfo.SvnRevision))
             {
-                name = ticket.Release.SvnRevision;
+                name = ticketReleaseInfo.SvnRevision;
             }
-            else if (!String.IsNullOrWhiteSpace(ticket.Release.ServiceNowId))
+            else if (!String.IsNullOrWhiteSpace(ticketReleaseInfo.ServiceNowId))
             {
-                name = ticket.Release.ServiceNowId;
+                name = ticketReleaseInfo.ServiceNowId;
             }
 
             return new CycleTimeReleaseViewModel
                 {
-                    Id = ticket.Release.Id,
+                    Id = ticketReleaseInfo.Id,
                     Name = name
                 };
         }

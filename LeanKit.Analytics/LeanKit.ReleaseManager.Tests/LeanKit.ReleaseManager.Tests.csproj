@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="CycleTimeControllerTests.cs" />
     <Compile Include="Models\CycleTimeQueryFactoryTests.cs" />
+    <Compile Include="Models\CycleTimeReleaseViewModelFactoryTests.cs" />
     <Compile Include="Models\CycleTimeViewModelFactoryTests.cs" />
     <Compile Include="Models\DateIsWorkDaySpecificationTests.cs" />
     <Compile Include="Models\DateOptionsFactoryTests.cs" />

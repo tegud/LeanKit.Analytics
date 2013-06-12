@@ -128,9 +128,13 @@
     <Compile Include="Models\ColourPalette.cs" />
     <Compile Include="Models\CreateReleaseModel.cs" />
     <Compile Include="Models\CreateReleaseReleaseRecordFactory.cs" />
+    <Compile Include="Models\CycleTimePeriod.cs" />
+    <Compile Include="Models\CycleTimePeriodViewModel.cs" />
+    <Compile Include="Models\CycleTimePeriodViewModelFactory.cs" />
     <Compile Include="Models\CycleTimeQueryFactory.cs" />
     <Compile Include="Models\CycleTimeReleaseViewModel.cs" />
     <Compile Include="Models\CycleTimeReleaseViewModelFactory.cs" />
+    <Compile Include="Models\CycleTimeTicketItem.cs" />
     <Compile Include="Models\CycleTimeViewModel.cs" />
     <Compile Include="Models\CycleTimeViewModelFactory.cs" />
     <Compile Include="Models\DateIsWorkDaySpecification.cs" />
@@ -142,6 +146,7 @@
     <Compile Include="Models\IBuildReleaseViewModels.cs" />
     <Compile Include="Models\IMakeCycleTimeQueries.cs" />
     <Compile Include="Models\IMakeCycleTimeReleaseViewModels.cs" />
+    <Compile Include="Models\IMakeTimePeriodViewModels.cs" />
     <Compile Include="Models\IParsePlannedReleaseDate.cs" />
     <Compile Include="Models\IRotateThroughASetOfColours.cs" />
     <Compile Include="Models\IIdentifyWorkDays.cs" />

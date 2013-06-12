@@ -4,6 +4,6 @@ namespace LeanKit.ReleaseManager.Models
 {
     public interface IMakeCycleTimeReleaseViewModels
     {
-        CycleTimeReleaseViewModel Build(Ticket ticket);
+        CycleTimeReleaseViewModel Build(TicketReleaseInfo ticketReleaseInfo);
     }
 }

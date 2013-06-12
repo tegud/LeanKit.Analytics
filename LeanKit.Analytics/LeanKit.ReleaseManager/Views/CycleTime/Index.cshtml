@@ -7,10 +7,10 @@
 
 <ul id="cycle-time-period-options">
     <li><strong>Select Period:</strong></li>
-    <li class="time-option"><a href="?timePeriod=this-week">This Week</a></li>
-    <li class="time-option"><a href="?timePeriod=last-week">Last Week</a></li>
-    <li class="time-option"><a href="?timePeriod=30">Last 30 Days</a></li>
-    <li class="time-option"><a href="?timePeriod=all-time">All Time</a></li>
+    @foreach(var period in Model.CycleTimePeriods) 
+    {
+        <li class="time-option"><a href="?timePeriod=@period.Value">@period.Label</a></li>
+    }
 </ul>
 
 <table id="ticket-cycle-time">

@@ -9,10 +9,14 @@ namespace LeanKit.ReleaseManager.Models
     {
         private readonly IGetReleasedTicketsFromTheDatabase _ticketRepository;
         private readonly IMakeCycleTimeReleaseViewModels _cycleTimeReleaseViewModelFactory;
+        private readonly IMakeTimePeriodViewModels _timePeriodViewModelFactory;
 
-        public CycleTimeViewModelFactory(IGetReleasedTicketsFromTheDatabase ticketRepository, IMakeCycleTimeReleaseViewModels cycleTimeReleaseViewModelFactory)
+        public CycleTimeViewModelFactory(IGetReleasedTicketsFromTheDatabase ticketRepository, 
+            IMakeCycleTimeReleaseViewModels cycleTimeReleaseViewModelFactory, 
+            IMakeTimePeriodViewModels timePeriodViewModelFactory)
         {
             _cycleTimeReleaseViewModelFactory = cycleTimeReleaseViewModelFactory;
+            _timePeriodViewModelFactory = timePeriodViewModelFactory;
             _ticketRepository = ticketRepository;
         }
 
@@ -28,11 +32,12 @@ namespace LeanKit.ReleaseManager.Models
                         ExternalId = t.ExternalId,
                         Title = t.Title,
                         StartedFriendlyText = t.Started.ToFriendlyText("dd MMM yyyy", " HH:mm"),
-                        Release = _cycleTimeReleaseViewModelFactory.Build(t),
+                        Release = _cycleTimeReleaseViewModelFactory.Build(t.Release),
                         FinishedFriendlyText = t.Finished.ToFriendlyText("dd MMM yyyy", " HH:mm"),
                         Duration = GetDurationText(t),
                         Size = GetSize(t)
-                    })
+                    }),
+                CycleTimePeriods = _timePeriodViewModelFactory.Build()
             };
         }
 
