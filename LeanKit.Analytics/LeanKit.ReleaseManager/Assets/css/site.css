@@ -118,7 +118,7 @@ a { color: #000;transition-property: color;transition-duration: 300ms;text-decor
 .svn-revision { width: 110px; }
 .service-now { width: 120px; }
 .planned-start-date { width: 170px; }
-.ticket-release { width: 170px; }
+.ticket-release { width: 120px; }
 .actual-start-date { width: 170px; }
 .actual-end-date { width: 170px; }
 .actual-duration { width: 140px; }

@@ -10,6 +10,8 @@ namespace LeanKit.Data.SQL
             ioc.Register<IGetReleasesFromTheDatabase>(i => new ReleaseRepository(i.Resolve<string>(Module.ConnectionString)));
             ioc.Register<IGetActivitiesFromTheDatabase>(i => new ActivityRepository(i.Resolve<string>(Module.ConnectionString)));
             ioc.Register<ITicketRepository>(i => new TicketsRepository(i.Resolve<string>(Module.ConnectionString), i.Resolve<ICreateTickets>()));
+            ioc.Register<IGetReleasedTicketsFromTheDatabase>(
+                i => new CompletedTicketsRepository(i.Resolve<string>(Module.ConnectionString), i.Resolve<ICreateTickets>()));
 
             ioc.Register<ICreateTicketActivities>(i => new TicketActivityFactory(i.Resolve<ICalculateWorkDuration>()));
 
