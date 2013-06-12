@@ -1,4 +1,6 @@
-﻿namespace LeanKit.ReleaseManager.Models
+﻿using LeanKit.Data;
+
+namespace LeanKit.ReleaseManager.Models
 {
     public interface IMakeCycleTimeQueries
     {

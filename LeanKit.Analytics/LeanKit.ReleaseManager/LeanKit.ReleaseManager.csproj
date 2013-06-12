@@ -128,7 +128,6 @@
     <Compile Include="Models\ColourPalette.cs" />
     <Compile Include="Models\CreateReleaseModel.cs" />
     <Compile Include="Models\CreateReleaseReleaseRecordFactory.cs" />
-    <Compile Include="Models\CycleTimeQuery.cs" />
     <Compile Include="Models\CycleTimeQueryFactory.cs" />
     <Compile Include="Models\CycleTimeReleaseViewModel.cs" />
     <Compile Include="Models\CycleTimeReleaseViewModelFactory.cs" />

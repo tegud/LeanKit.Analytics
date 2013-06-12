@@ -1,4 +1,5 @@
-﻿using LeanKit.ReleaseManager.Controllers;
+﻿using LeanKit.Data;
+using LeanKit.ReleaseManager.Controllers;
 
 namespace LeanKit.ReleaseManager.Models
 {

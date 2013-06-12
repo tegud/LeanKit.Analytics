@@ -12,6 +12,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
     public class CycleTimeViewModelFactoryTests : IGetReleasedTicketsFromTheDatabase
     {
         private Ticket _ticketReturnedFromDb;
+        private CycleTimeQuery _queryPassedToRepository;
 
         [Test]
         public void SetsTicketId()
@@ -262,8 +263,21 @@ namespace LeanKit.ReleaseManager.Tests.Models
             Assert.That(cycleTimeViewModel.Tickets.First().Release.Name, Is.EqualTo("12345"));
         }
 
-        public IEnumerable<Ticket> Get()
+        [Test]
+        public void CycleTimeQueryIsPassedToRepository()
         {
+            var query = new CycleTimeQuery();
+
+            IGetReleasedTicketsFromTheDatabase ticketRepository = this;
+
+            new CycleTimeViewModelFactory(ticketRepository, new CycleTimeReleaseViewModelFactory()).Build(query);
+
+            Assert.That(_queryPassedToRepository, Is.EqualTo(query));
+        }
+
+        public IEnumerable<Ticket> Get(CycleTimeQuery query)
+        {
+            _queryPassedToRepository = query;
             return new List<Ticket>
                 {
                     _ticketReturnedFromDb

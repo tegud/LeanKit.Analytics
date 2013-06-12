@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LeanKit.ReleaseManager.Models
+namespace LeanKit.Data
 {
     public class CycleTimeQuery
     {

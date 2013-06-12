@@ -56,6 +56,7 @@
     <Compile Include="ActivityIsLiveSpecification.cs" />
     <Compile Include="AllTicketsForBoard.cs" />
     <Compile Include="CurrentActivityFactory.cs" />
+    <Compile Include="CycleTimeQuery.cs" />
     <Compile Include="DataRegistry.cs" />
     <Compile Include="IActivitySpecification.cs" />
     <Compile Include="IAllBoardTicketsRepository.cs" />

@@ -20,7 +20,7 @@ namespace LeanKit.ReleaseManager.Models
 
         public CycleTimeViewModel Build(CycleTimeQuery query)
         {
-            var tickets = _ticketRepository.Get();
+            var tickets = _ticketRepository.Get(query);
 
             return new CycleTimeViewModel
             {

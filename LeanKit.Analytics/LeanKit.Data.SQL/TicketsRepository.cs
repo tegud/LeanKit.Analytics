@@ -8,7 +8,7 @@ namespace LeanKit.Data.SQL
 {
     public interface IGetReleasedTicketsFromTheDatabase
     {
-        IEnumerable<Ticket> Get();
+        IEnumerable<Ticket> Get(CycleTimeQuery query);
     }
 
     public class CompletedTicketsRepository : IGetReleasedTicketsFromTheDatabase
@@ -22,7 +22,7 @@ namespace LeanKit.Data.SQL
             _ticketFactory = ticketFactory;
         }
 
-        public IEnumerable<Ticket> Get()
+        public IEnumerable<Ticket> Get(CycleTimeQuery query)
         {
             var tickets = new List<TicketRecord>();
 
@@ -37,6 +37,8 @@ namespace LeanKit.Data.SQL
                                 LEFT OUTER JOIN ReleaseCard RC ON C.ID = RC.CardID
                                 LEFT OUTER JOIN Release R ON RC.ReleaseID = R.ID
                             WHERE C.Finished IS NOT NULL
+                            AND (@Started IS NULL OR C.Finished >= @Started)
+                            AND (@Finished IS NULL OR C.Finished <= @Finished)
                             ORDER BY C.Finished DESC",
                                                  (ticket, activity, release) =>
                                                  {
@@ -53,7 +55,12 @@ namespace LeanKit.Data.SQL
                                                      currentTicket.Activities.Add(activity);
 
                                                      return ticket;
-                                                 });
+                                                 },
+                                                 new
+                                                     {
+                                                         Started = query.Start > DateTime.MinValue ? (object)query.Start : null,
+                                                         Finished = query.End > DateTime.MinValue ? (object) query.End.AddDays(1).AddSeconds(-1) : null
+                                                     });
             }
 
             return tickets.Select(_ticketFactory.Build);

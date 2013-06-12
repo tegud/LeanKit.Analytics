@@ -16,7 +16,9 @@ namespace LeanKit.ReleaseManager.Controllers
 
         public ViewResult Index(string timePeriod)
         {
-            return View(_cycleTimeViewModelFactory.Build(_queryFactory.Build(timePeriod)));
+            var query = _queryFactory.Build(timePeriod);
+
+            return View(_cycleTimeViewModelFactory.Build(query));
         }
     }
 }
