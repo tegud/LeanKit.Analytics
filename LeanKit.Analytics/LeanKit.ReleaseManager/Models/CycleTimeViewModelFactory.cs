@@ -10,34 +10,39 @@ namespace LeanKit.ReleaseManager.Models
         private readonly IGetReleasedTicketsFromTheDatabase _ticketRepository;
         private readonly IMakeCycleTimeReleaseViewModels _cycleTimeReleaseViewModelFactory;
         private readonly IMakeTimePeriodViewModels _timePeriodViewModelFactory;
+        private readonly ISummariseTicketCycleTimeInformation _ticketSummaryFactory;
 
-        public CycleTimeViewModelFactory(IGetReleasedTicketsFromTheDatabase ticketRepository, 
-            IMakeCycleTimeReleaseViewModels cycleTimeReleaseViewModelFactory, 
-            IMakeTimePeriodViewModels timePeriodViewModelFactory)
+        public CycleTimeViewModelFactory(IGetReleasedTicketsFromTheDatabase ticketRepository, IMakeCycleTimeReleaseViewModels cycleTimeReleaseViewModelFactory, IMakeTimePeriodViewModels timePeriodViewModelFactory, 
+            ISummariseTicketCycleTimeInformation ticketSummaryFactory)
         {
             _cycleTimeReleaseViewModelFactory = cycleTimeReleaseViewModelFactory;
             _timePeriodViewModelFactory = timePeriodViewModelFactory;
+            _ticketSummaryFactory = ticketSummaryFactory;
             _ticketRepository = ticketRepository;
         }
 
         public CycleTimeViewModel Build(CycleTimeQuery query)
         {
-            var tickets = _ticketRepository.Get(query);
-            
+            var tickets = _ticketRepository.Get(query).ToArray();
+            var cycleTimeTicketItems = tickets.Select(t => new CycleTimeTicketItem
+                {
+                    Id = t.Id,
+                    ExternalId = t.ExternalId,
+                    Title = t.Title,
+                    StartedFriendlyText = t.Started.ToFriendlyText("dd MMM yyyy", " HH:mm"),
+                    Release = _cycleTimeReleaseViewModelFactory.Build(t.Release),
+                    FinishedFriendlyText = t.Finished.ToFriendlyText("dd MMM yyyy", " HH:mm"),
+                    Duration = GetDurationText(t),
+                    Size = GetSize(t)
+                });
+
+
+
             return new CycleTimeViewModel
             {
-                Tickets = tickets.Select(t => new CycleTimeTicketItem
-                    {
-                        Id = t.Id,
-                        ExternalId = t.ExternalId,
-                        Title = t.Title,
-                        StartedFriendlyText = t.Started.ToFriendlyText("dd MMM yyyy", " HH:mm"),
-                        Release = _cycleTimeReleaseViewModelFactory.Build(t.Release),
-                        FinishedFriendlyText = t.Finished.ToFriendlyText("dd MMM yyyy", " HH:mm"),
-                        Duration = GetDurationText(t),
-                        Size = GetSize(t)
-                    }),
-                CycleTimePeriods = _timePeriodViewModelFactory.Build(query.Period)
+                Tickets = cycleTimeTicketItems,
+                CycleTimePeriods = _timePeriodViewModelFactory.Build(query.Period),
+                Summary = _ticketSummaryFactory.Summarise(tickets)
             };
         }
 

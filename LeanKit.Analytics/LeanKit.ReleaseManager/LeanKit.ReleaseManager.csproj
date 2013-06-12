@@ -151,6 +151,7 @@
     <Compile Include="Models\IRotateThroughASetOfColours.cs" />
     <Compile Include="Models\IIdentifyWorkDays.cs" />
     <Compile Include="Models\IMakeListsOfDateOptions.cs" />
+    <Compile Include="Models\ISummariseTicketCycleTimeInformation.cs" />
     <Compile Include="Models\LaneColumn.cs" />
     <Compile Include="Models\NewReleaseIncludedTicketsBuilders.cs" />
     <Compile Include="Models\ReleaseInputModel.cs" />

@@ -22,6 +22,23 @@
     }
 </ul>
 
+<div id="cycle-time-summary">
+    <div class="cycle-time-summary-section">
+        <h2>Summary</h2>
+        <div>@Model.Summary.TicketCount Ticket@(Model.Summary.TicketCount != 1 ? "s" : "") Released</div>
+        <div>Average Cycle Time of @Model.Summary.AverageCycleTime Day@(Model.Summary.AverageCycleTime != 1 ? "s" : "")</div>
+        <div>Longest Cycle Time was @Model.Summary.MaximumCycleTime Day@(Model.Summary.MaximumCycleTime != 1 ? "s" : "")</div>
+        <div>@Model.Summary.NumberOfTicketsWithNoEstimate Ticket@(Model.Summary.NumberOfTicketsWithNoEstimate != 1 ? "s" : "") had no estimate</div>
+    </div>
+    <div class="cycle-time-summary-section">
+        <h2>Cycle Time by Size</h2>
+        @foreach(var size in Model.Summary.CycleTimeBySize)
+        {
+            <div>@size.Size Tickets took @size.CycleTime Day@(size.CycleTime != 1 ? "s" : "") on average</div>
+        }
+    </div>
+</div>
+
 <table id="ticket-cycle-time">
     <tr>
         <th class="ticket-id">ID</th>
