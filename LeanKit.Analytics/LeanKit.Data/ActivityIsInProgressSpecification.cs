@@ -7,7 +7,7 @@ namespace LeanKit.Data
     {
         private readonly IEnumerable<string> _inProgressActivities = new List<string>
             {
-                "DEV WIP", "DEV DONE", "READY TO TEST", "TEST WIP", "READY TO RELEASE", "LIVE"
+                "DEV WIP", "DEV DONE", "READY FOR TEST", "TEST WIP", "READY FOR RELEASE", "LIVE"
             };
 
         public bool IsSatisfiedBy(TicketActivity activity)

@@ -1,8 +1,6 @@
-﻿using System.Globalization;
-using System.Linq;
+﻿using System.Linq;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
-using LeanKit.ReleaseManager.Controllers;
 using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Models

@@ -18,9 +18,9 @@ namespace LeanKit.Data.Tests
 
         [TestCase("DEV WIP")]
         [TestCase("DEV DONE")]
-        [TestCase("READY TO TEST")]
+        [TestCase("READY FOR TEST")]
         [TestCase("TEST WIP")]
-        [TestCase("READY TO RELEASE")]
+        [TestCase("READY FOR RELEASE")]
         [TestCase("LIVE")]
         public void InProgressActivityReturnsTrue(string activity)
         {
