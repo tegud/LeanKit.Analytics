@@ -166,11 +166,11 @@ td.ticket-cycle-time { width: 90px;}
 
 .cycle-time-summary-section h2 { margin: 0 0 5px 0;padding: 0;font-size: 1.3em; }
 
-.right-hand-bar { float: right; }
+.right-hand-bar { float: right;vertical-align: top; }
 
 .right-hand-bar-section { width: 300px;background-color: #eee;min-height: 300px;border-radius: 4px;padding-bottom: 1px; }
 
-.right-hand-bar-section h3 { padding: 10px 5px 0 10px}
+.right-hand-bar-section h3 { color: #999; padding: 10px 5px 0 10px; margin: 0}
 
 .activity-list { list-style: none;margin: 20px 0 20px 30px; padding: 0 }
 
@@ -179,6 +179,19 @@ td.ticket-cycle-time { width: 90px;}
 #ticket-activity-breakdown .legend-block { top: 6px}
 
 .activity-time-detail { font-size: 0.8em; color: #888 }
+
+.ticket-detail-summary-item {display: inline-block; background-color: #f7f7f7;width: 280px;height: 200px;border-radius: 5px;padding: 10px; margin: 0 10px 14px 0;vertical-align: top; }
+
+.ticket-detail-summary-item h3 { margin-top: 0;color: #999; }
+
+.ticket-summary-cycle-time { font-size: 10em; }
+
+.ticket-summary-cycle-time-units { font-size: 2em; }
+
+.ticket-summary-cycle-time-container { text-align: center; }
+
+.summary-current-text { font-size: 1.4em; }
+.summary-current-text > div { margin-bottom: 10px; }
 
 @media (max-width: 800px)
 {

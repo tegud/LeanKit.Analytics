@@ -1,9 +1,16 @@
 ﻿@{
     Layout = "~/Views/Layouts/_Layout.cshtml";
 }
-@model LeanKit.Analytics.Models.ViewModels.WasteGraph
+@model LeanKit.ReleaseManager.Controllers.TicketViewModel
 
-<h2>R-12345 - This is an Example Ticket</h2>
+@if (string.IsNullOrWhiteSpace(Model.ExternalId))
+{
+    <h2>@Model.Title</h2>    
+}
+else
+{
+    <h2>@Model.ExternalId - @Model.Title</h2>    
+}
 
 <div class="right-hand-bar">
     <div class="right-hand-bar-section" id="ticket-activity-breakdown">
@@ -12,15 +19,52 @@
             <div id="main-graph-holder"></div>
         </div>
         <ul class="activity-list">
-            @foreach(var activity in Model.Activities)
+            @foreach(var activity in Model.ActivityBreakdown.Activities)
             {
                 <li class="waste-graph-activity @activity.ClassName" data-activity-class="@activity.ClassName">
                     <div class="legend-block"></div>
                     <span class="activity-name">@activity.Activity</span> - <span class="percent">@activity.FormattedPercent</span>%
-                    <div class="activity-time-detail">3 days, 8 hrs</div>
+                    <div class="activity-time-detail">@activity.TimeSummary</div>
                 </li>
             }
         </ul>
+    </div>
+</div>
+
+<div id="ticket-detail-summary">
+    <div class="ticket-detail-summary-item">
+        <h3>Status</h3>
+        <div class="summary-current-text">
+            <div class="summary-current-activity">Is currently @Model.CurrentStatus</div>
+            @if (string.IsNullOrWhiteSpace(@Model.Started))
+            {
+                <div>Not started yet</div>
+            }
+            else
+            {
+                <div>Started @Model.Started</div>
+            }
+            @if (string.IsNullOrWhiteSpace(@Model.Finished))
+            {
+                <div>Not released yet</div>
+            }
+            else
+            {
+                <div>Released @Model.Finished</div>
+            }
+        </div>
+    </div>
+    <div class="ticket-detail-summary-item">
+        <h3>Size</h3>
+        <div class="ticket-summary-cycle-time-container">
+            <span class="ticket-summary-cycle-time">?</span>
+        </div>
+    </div>
+    <div class="ticket-detail-summary-item">
+        <h3>Cycle Time</h3>
+        <div class="ticket-summary-cycle-time-container">
+            <span class="ticket-summary-cycle-time">6</span><span class="ticket-summary-cycle-time-units"> days</span>
+        </div>
     </div>
 </div>
 
