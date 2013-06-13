@@ -35,6 +35,13 @@ namespace LeanKit.ReleaseManager
             );
 
             routes.MapRoute(
+                name: "Ticket",
+                url: "Ticket/{id}",
+                defaults: new { controller = "Ticket", action = "Index" },
+                constraints: new { id = "[0-9]{1,9}" }
+            );
+
+            routes.MapRoute(
                 name: "NewRelease",
                 url: "NewRelease",
                 defaults: new { controller = "NewRelease", action = "Index" }

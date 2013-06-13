@@ -52,8 +52,8 @@
     @foreach (var ticket in Model.Tickets)
     {
     <tr class="ticket-row">
-        <td class="ticket-id">@ticket.ExternalId</td>
-        <td class="ticket-title">@ticket.Title</td>
+        <td class="ticket-id"><a href="/Ticket/@ticket.Id">@ticket.ExternalId</a></td>
+        <td class="ticket-title"><a href="/Ticket/@ticket.Id">@ticket.Title</a></td>
         <td class="ticket-started">@ticket.StartedFriendlyText</td>
         <td class="ticket-released">@ticket.FinishedFriendlyText</td>
         <td class="ticket-release"><a href="/Release/@ticket.Release.Id">@ticket.Release.Name</a></td>

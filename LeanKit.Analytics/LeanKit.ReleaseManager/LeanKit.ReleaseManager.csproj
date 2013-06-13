@@ -116,6 +116,7 @@
     <Compile Include="App_Start\MunqMvc3Startup.cs" />
     <Compile Include="Controllers\CycleTimeController.cs" />
     <Compile Include="Controllers\EditRelease.cs" />
+    <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\UpcomingReleasesController.cs" />
     <Compile Include="Controllers\NewReleaseController.cs" />
     <Compile Include="Controllers\ReleaseController.cs" />
@@ -128,15 +129,15 @@
     <Compile Include="Models\ColourPalette.cs" />
     <Compile Include="Models\CreateReleaseModel.cs" />
     <Compile Include="Models\CreateReleaseReleaseRecordFactory.cs" />
-    <Compile Include="Models\CycleTimePeriod.cs" />
-    <Compile Include="Models\CycleTimePeriodViewModel.cs" />
-    <Compile Include="Models\CycleTimePeriodViewModelFactory.cs" />
-    <Compile Include="Models\CycleTimeQueryFactory.cs" />
-    <Compile Include="Models\CycleTimeReleaseViewModel.cs" />
-    <Compile Include="Models\CycleTimeReleaseViewModelFactory.cs" />
-    <Compile Include="Models\CycleTimeTicketItem.cs" />
-    <Compile Include="Models\CycleTimeViewModel.cs" />
-    <Compile Include="Models\CycleTimeViewModelFactory.cs" />
+    <Compile Include="Models\CycleTime\CycleTimePeriod.cs" />
+    <Compile Include="Models\CycleTime\CycleTimePeriodViewModel.cs" />
+    <Compile Include="Models\CycleTime\CycleTimePeriodViewModelFactory.cs" />
+    <Compile Include="Models\CycleTime\CycleTimeQueryFactory.cs" />
+    <Compile Include="Models\CycleTime\CycleTimeReleaseViewModel.cs" />
+    <Compile Include="Models\CycleTime\CycleTimeReleaseViewModelFactory.cs" />
+    <Compile Include="Models\CycleTime\CycleTimeTicketItem.cs" />
+    <Compile Include="Models\CycleTime\CycleTimeViewModel.cs" />
+    <Compile Include="Models\CycleTime\CycleTimeViewModelFactory.cs" />
     <Compile Include="Models\DateIsWorkDaySpecification.cs" />
     <Compile Include="Models\DateOption.cs" />
     <Compile Include="Models\DateOptionsFactory.cs" />
@@ -153,20 +154,20 @@
     <Compile Include="Models\IMakeListsOfDateOptions.cs" />
     <Compile Include="Models\ISummariseTicketCycleTimeInformation.cs" />
     <Compile Include="Models\LaneColumn.cs" />
-    <Compile Include="Models\NewReleaseIncludedTicketsBuilders.cs" />
-    <Compile Include="Models\ReleaseInputModel.cs" />
     <Compile Include="Models\PlannedDateParser.cs" />
-    <Compile Include="Models\ReleaseActualTime.cs" />
-    <Compile Include="Models\ReleaseDetailIncludedTicketViewModel.cs" />
-    <Compile Include="Models\ReleaseDetailTicketApproval.cs" />
-    <Compile Include="Models\ReleaseDetailViewModel.cs" />
-    <Compile Include="Models\ReleaseDetailViewModelFactory.cs" />
-    <Compile Include="Models\ReleasePlannedTime.cs" />
-    <Compile Include="Models\ReleaseStatusViewModel.cs" />
-    <Compile Include="Models\ReleaseTicket.cs" />
-    <Compile Include="Models\ReleaseViewModel.cs" />
-    <Compile Include="Models\ReleaseViewModelFactory.cs" />
-    <Compile Include="Models\UpcomingReleasesViewModel.cs" />
+    <Compile Include="Models\Releases\NewReleaseIncludedTicketsBuilders.cs" />
+    <Compile Include="Models\Releases\ReleaseActualTime.cs" />
+    <Compile Include="Models\Releases\ReleaseDetailIncludedTicketViewModel.cs" />
+    <Compile Include="Models\Releases\ReleaseDetailTicketApproval.cs" />
+    <Compile Include="Models\Releases\ReleaseDetailViewModel.cs" />
+    <Compile Include="Models\Releases\ReleaseDetailViewModelFactory.cs" />
+    <Compile Include="Models\Releases\ReleaseInputModel.cs" />
+    <Compile Include="Models\Releases\ReleasePlannedTime.cs" />
+    <Compile Include="Models\Releases\ReleaseStatusViewModel.cs" />
+    <Compile Include="Models\Releases\ReleaseTicket.cs" />
+    <Compile Include="Models\Releases\ReleaseViewModel.cs" />
+    <Compile Include="Models\Releases\ReleaseViewModelFactory.cs" />
+    <Compile Include="Models\Releases\UpcomingReleasesViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -240,6 +241,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\CycleTime\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Ticket\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
