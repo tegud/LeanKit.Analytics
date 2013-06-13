@@ -53,7 +53,13 @@ namespace LeanKit.ReleaseManager.Controllers
 
             foreach (var ticketActivity in allTicketActivityDurations)
             {
-                var activity = activityBreakdownItems.FirstOrDefault(a => a.Activity == ticketActivity.Title);
+                var activityName = ticketActivity.Title;
+                if (activityName.Contains("Blocked"))
+                {
+                    activityName = "Blocked";
+                }
+
+                var activity = activityBreakdownItems.FirstOrDefault(a => a.Activity == activityName);
 
                 if (activity == null)
                 {
