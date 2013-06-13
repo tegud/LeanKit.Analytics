@@ -1,7 +1,6 @@
-﻿using System;
 using System.Collections.Generic;
 
-namespace LeanKit.ReleaseManager.Models
+namespace LeanKit.ReleaseManager.Models.CycleTime
 {
     public class CycleTimeViewModel
     {

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
+using LeanKit.ReleaseManager.Models.Releases;
 using NUnit.Framework;
 
 namespace LeanKit.ReleaseManager.Tests.Models

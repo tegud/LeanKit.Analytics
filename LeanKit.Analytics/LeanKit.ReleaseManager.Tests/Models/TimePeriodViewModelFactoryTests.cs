@@ -1,5 +1,6 @@
 using System.Linq;
 using LeanKit.ReleaseManager.Models;
+using LeanKit.ReleaseManager.Models.CycleTime;
 using NUnit.Framework;
 
 namespace LeanKit.ReleaseManager.Tests.Models

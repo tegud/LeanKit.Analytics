@@ -4,6 +4,7 @@ using System.Linq;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
+using LeanKit.ReleaseManager.Models.CycleTime;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 

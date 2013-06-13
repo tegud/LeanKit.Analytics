@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LeanKit.Data;
 using LeanKit.ReleaseManager.Controllers;
 using LeanKit.ReleaseManager.Models;
+using LeanKit.ReleaseManager.Models.CycleTime;
 using NUnit.Framework;
 
 namespace LeanKit.ReleaseManager.Tests

@@ -1,4 +1,5 @@
 using System;
+using LeanKit.ReleaseManager.Models.Releases;
 
 namespace LeanKit.ReleaseManager.Models
 {

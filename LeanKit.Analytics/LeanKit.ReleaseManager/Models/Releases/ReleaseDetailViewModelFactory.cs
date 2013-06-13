@@ -1,6 +1,6 @@
 using LeanKit.Data.SQL;
 
-namespace LeanKit.ReleaseManager.Models
+namespace LeanKit.ReleaseManager.Models.Releases
 {
     public class ReleaseDetailViewModelFactory
     {

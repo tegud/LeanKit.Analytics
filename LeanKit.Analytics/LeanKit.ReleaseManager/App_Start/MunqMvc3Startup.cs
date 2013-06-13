@@ -7,6 +7,8 @@ using LeanKit.Data.SQL;
 using LeanKit.IoC;
 using LeanKit.ReleaseManager.Controllers;
 using LeanKit.ReleaseManager.Models;
+using LeanKit.ReleaseManager.Models.CycleTime;
+using LeanKit.ReleaseManager.Models.Releases;
 using LeanKit.Utilities;
 using LeanKit.Utilities.Collections;
 using LeanKit.Utilities.DateAndTime;

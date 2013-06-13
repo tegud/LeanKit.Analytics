@@ -1,4 +1,4 @@
-namespace LeanKit.ReleaseManager.Models
+namespace LeanKit.ReleaseManager.Models.Releases
 {
     public class ReleaseDetailTicketApproval
     {

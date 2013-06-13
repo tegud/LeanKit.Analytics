@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using LeanKit.Data;
+using LeanKit.ReleaseManager.Models.CycleTime;
 
 namespace LeanKit.ReleaseManager.Models
 {

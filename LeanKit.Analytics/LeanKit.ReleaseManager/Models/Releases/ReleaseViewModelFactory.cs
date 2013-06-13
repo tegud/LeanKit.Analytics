@@ -2,7 +2,7 @@ using System.Linq;
 using LeanKit.Data.SQL;
 using LeanKit.Utilities.DateAndTime;
 
-namespace LeanKit.ReleaseManager.Models
+namespace LeanKit.ReleaseManager.Models.Releases
 {
     public class ReleaseViewModelFactory : IBuildReleaseViewModels
     {

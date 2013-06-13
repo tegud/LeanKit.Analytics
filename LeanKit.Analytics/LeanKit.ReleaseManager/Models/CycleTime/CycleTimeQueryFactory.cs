@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using LeanKit.Data;
 using LeanKit.Utilities.DateAndTime;
 
-namespace LeanKit.ReleaseManager.Models
+namespace LeanKit.ReleaseManager.Models.CycleTime
 {
     public class CycleTimeQueryFactory : IMakeCycleTimeQueries
     {

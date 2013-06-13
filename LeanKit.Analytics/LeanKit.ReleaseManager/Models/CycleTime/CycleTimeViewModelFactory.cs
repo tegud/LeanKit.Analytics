@@ -1,9 +1,9 @@
-﻿using System.Linq;
+using System.Linq;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.Utilities.DateAndTime;
 
-namespace LeanKit.ReleaseManager.Models
+namespace LeanKit.ReleaseManager.Models.CycleTime
 {
     public class CycleTimeViewModelFactory : IBuildCycleTimeViewModels
     {

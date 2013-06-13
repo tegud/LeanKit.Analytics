@@ -1,4 +1,5 @@
 ﻿using LeanKit.Data;
+using LeanKit.ReleaseManager.Models.CycleTime;
 
 namespace LeanKit.ReleaseManager.Models
 {

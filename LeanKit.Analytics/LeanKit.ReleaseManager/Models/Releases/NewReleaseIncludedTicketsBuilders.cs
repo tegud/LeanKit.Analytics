@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LeanKit.Data.SQL;
 
-namespace LeanKit.ReleaseManager.Models
+namespace LeanKit.ReleaseManager.Models.Releases
 {
     public class NewReleaseIncludedTicketsBuilders : IBuildIncludedTicketsForNewReleases
     {

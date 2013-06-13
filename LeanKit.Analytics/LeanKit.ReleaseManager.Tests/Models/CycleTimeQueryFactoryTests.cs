@@ -1,5 +1,6 @@
 ﻿using System;
 using LeanKit.ReleaseManager.Models;
+using LeanKit.ReleaseManager.Models.CycleTime;
 using LeanKit.Utilities.DateAndTime;
 using NUnit.Framework;
 

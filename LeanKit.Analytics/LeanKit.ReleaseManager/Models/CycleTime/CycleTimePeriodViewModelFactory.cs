@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LeanKit.ReleaseManager.Models
+namespace LeanKit.ReleaseManager.Models.CycleTime
 {
     public class CycleTimePeriodViewModelFactory : IMakeTimePeriodViewModels
     {

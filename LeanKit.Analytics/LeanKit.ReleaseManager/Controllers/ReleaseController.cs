@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
+using LeanKit.ReleaseManager.Models.Releases;
 using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Controllers
