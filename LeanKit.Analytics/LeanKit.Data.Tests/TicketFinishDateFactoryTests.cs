@@ -55,6 +55,30 @@ namespace LeanKit.Data.Tests
             Assert.That(new TicketFinishDateFactory(activityIsLiveSpecification).CalculateMilestone(ticketActivities), Is.EqualTo(expectedFinishDate));
         }
 
+        [Test]
+        public void ReturnsStartedDateTimeOfFirstActivityWhichMatchesSpecificationRegardlessOfOrder()
+        {
+            var expectedFinishDate = new DateTime(2013, 05, 02);
+            var activityIsLiveSpecification = this;
+
+            _titleToMatch = "LIVE";
+            var ticketActivities = new[]
+                {
+                    new TicketActivity
+                        {
+                            Title = "LIVE",
+                            Started = new DateTime(2013, 05, 04)
+                        },
+                    new TicketActivity
+                        {
+                            Title = "LIVE",
+                            Started = expectedFinishDate
+                        }
+                };
+
+            Assert.That(new TicketFinishDateFactory(activityIsLiveSpecification).CalculateMilestone(ticketActivities), Is.EqualTo(expectedFinishDate));
+        }
+
         public bool IsSatisfiedBy(TicketActivity activity)
         {
             return _titleToMatch == null || activity.Title == _titleToMatch;

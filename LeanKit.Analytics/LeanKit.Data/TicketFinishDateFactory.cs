@@ -15,7 +15,9 @@ namespace LeanKit.Data
 
         public DateTime CalculateMilestone(IEnumerable<TicketActivity> ticketActivities)
         {
-            var liveActivity = ticketActivities.Where(a => a.Started > DateTime.MinValue).OrderBy(a => a.Started).FirstOrDefault(_activityIsLiveSpecification.IsSatisfiedBy);
+            var startedActivities = ticketActivities.Where(a => a.Started > DateTime.MinValue).OrderBy(a => a.Started);
+
+            var liveActivity = startedActivities.FirstOrDefault(_activityIsLiveSpecification.IsSatisfiedBy);
             var finished = liveActivity != null ? liveActivity.Started : DateTime.MinValue;
             return finished;
         }
