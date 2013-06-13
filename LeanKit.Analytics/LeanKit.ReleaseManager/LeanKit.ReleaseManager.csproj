@@ -203,6 +203,10 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\LeanKit.Analytics\LeanKit.Analytics.csproj">
+      <Project>{E9F8AF93-CCE9-486D-A92B-A20DA88405A5}</Project>
+      <Name>LeanKit.Analytics</Name>
+    </ProjectReference>
     <ProjectReference Include="..\LeanKit.APIClient\LeanKit.APIClient.csproj">
       <Project>{E259085C-BCD0-44ED-8E53-B88500C0EE50}</Project>
       <Name>LeanKit.APIClient</Name>

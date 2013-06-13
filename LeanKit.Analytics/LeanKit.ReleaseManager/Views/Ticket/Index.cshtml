@@ -1,5 +1,92 @@
 ﻿@{
     Layout = "~/Views/Layouts/_Layout.cshtml";
 }
+@model LeanKit.Analytics.Models.ViewModels.WasteGraph
 
-<h2>R-12345 This is an Example Ticket</h2>
+<h2>R-12345 - This is an Example Ticket</h2>
+
+<div class="right-hand-bar">
+    <div class="right-hand-bar-section" id="ticket-activity-breakdown">
+        <h3>Activity Breakdown</h3>
+        <div>
+            <div id="main-graph-holder"></div>
+        </div>
+        <ul class="activity-list">
+            @foreach(var activity in Model.Activities)
+            {
+                <li class="waste-graph-activity @activity.ClassName" data-activity-class="@activity.ClassName">
+                    <div class="legend-block"></div>
+                    <span class="activity-name">@activity.Activity</span> - <span class="percent">@activity.FormattedPercent</span>%
+                    <div class="activity-time-detail">3 days, 8 hrs</div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+@section JavaScript
+{
+<script type="text/javascript" src="/Assets/js/lib/d3.min.js"></script>
+<script type="text/javascript">
+    (function WasteGraph(element) {
+        var width = 300,
+            height = 300,
+            radius = Math.min(width, height) / 2,
+            data = $.map($('.waste-graph-activity'), function (item) {
+                var activityElement = $(item);
+
+                return {
+                    className: activityElement.data('activityClass'),
+                    activity: $('.activity-name', activityElement).text(),
+                    percent: $('.percent', activityElement).text()
+                };
+            }),
+            colors = {
+                Developing: {
+                    color: '#7FC9FF'
+                },
+                Testing: {
+                    color: '#0094FF'
+                },
+                WaitingtoTest: {
+                    color: '#FFC700'
+                },
+                WaitingtoRelease: {
+                    color: '#C45200'
+                },
+                Blocked: {
+                    color: '#C40000'
+                }
+            };
+
+        var arc = d3.svg.arc()
+            .outerRadius(radius - 10)
+            .innerRadius(radius - 70);
+
+        var pie = d3.layout.pie()
+            .sort(null)
+            .value(function (d) { return d.percent; });
+
+        var svg = d3.select("#main-graph-holder").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+          .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        $('.legend-block', element).css('background-color', function () {
+            return colors[$(this).parent().data('activityClass')].color;
+        });
+
+        var g = svg.selectAll(".arc")
+                  .data(pie(data))
+                .enter().append("g")
+                  .attr("class", "arc");
+
+        g.append("path")
+            .attr("d", arc)
+            .style("fill", function (d) {
+                return colors[d.data.className].color;
+            });
+    })($('#ticket-activity-breakdown'));
+</script>
+}
