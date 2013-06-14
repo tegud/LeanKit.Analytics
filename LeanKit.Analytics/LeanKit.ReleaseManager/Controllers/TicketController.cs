@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data;
@@ -45,7 +46,12 @@ namespace LeanKit.ReleaseManager.Controllers
                     Started = DateFriendlyText(ticket.Started),
                     Finished = DateFriendlyText(ticket.Finished),
                     Size = ticket.Size == 0 ? "?" : ticket.Size.ToString(),
-                    IsCompleted = ticket.Finished > DateTime.MinValue
+                    IsCompleted = ticket.Finished > DateTime.MinValue,
+                    Contributors = ticket.Activities.Where(a => a.AssignedUser != TicketActivityAssignedUser.UnAssigned).Select(a => new TicketContributor
+                        {
+                            Name = a.AssignedUser.Name,
+                            Email = a.AssignedUser.Email.Address
+                        })
                 });
         }
 
@@ -70,6 +76,13 @@ namespace LeanKit.ReleaseManager.Controllers
         }
     }
 
+    public class TicketContributor
+    {
+        public string Name { get; set; }
+
+        public string Email { get; set; }
+    }
+
     public class TicketViewModel
     {
         public ActivityBreakdown ActivityBreakdown { get; set; }
@@ -87,5 +100,7 @@ namespace LeanKit.ReleaseManager.Controllers
         public string Size { get; set; }
 
         public bool IsCompleted { get; set; }
+
+        public IEnumerable<TicketContributor> Contributors { get; set; }
     }
 }

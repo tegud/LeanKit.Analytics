@@ -31,9 +31,10 @@ namespace LeanKit.Data.SQL
                 sqlConnection.Open();
 
                 sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketReleaseRecord, TicketRecord>(
-                        @"SELECT C.*, CA.*, R.*
+                        @"SELECT C.*, CA.*, U.Name AssignedUserName, U.Email AssignedUserEmail, R.*
                             FROM CardActivity CA 
                                 INNER JOIN Card C ON CA.CardID = C.ID
+                                LEFT OUTER JOIN LeanKitUser U ON CA.AssignedUserID = U.ID
                                 LEFT OUTER JOIN ReleaseCard RC ON C.ID = RC.CardID
                                 LEFT OUTER JOIN Release R ON RC.ReleaseID = R.ID
                             WHERE C.Finished IS NOT NULL

@@ -73,11 +73,19 @@ else
     {
         <div class="ticket-detail-summary-item">
             <h3>Assigned To</h3>
-            <div class="ticket-summary-assigned-to-gravatar"><img src="http://www.gravatar.com/avatar/f36467164c623115c366c2f19d4475ab.png?s=120" width="120" height="120" /></div>
+            <div class="ticket-summary-assigned-to-gravatar">@Html.Gravatar("steve.elliot@laterooms.com", 120)</div>
             <div class="ticket-summary-assigned-to-container">Steve</div>
         </div>
     }
 </div>
+
+<ul>
+@foreach(var contributor in Model.Contributors)
+{
+    <li>@Html.Gravatar(contributor.Email, 60) @contributor.Name</li>
+}
+</ul>
+
 
 @section JavaScript
 {
