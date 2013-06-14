@@ -27,7 +27,8 @@ namespace LeanKit.Data.API
                     Title = (historyItem.IsBlocked ? "Blocked: " : "") + historyItem.ToLaneTitle,
                     Started = started,
                     Finished = finished,
-                    Duration = _workDurationFactory.CalculateDuration(started, finished == DateTime.MinValue ? DateTime.Now : finished)
+                    Duration = _workDurationFactory.CalculateDuration(started, finished == DateTime.MinValue ? DateTime.Now : finished),
+                    AssignedUser = TicketActivityAssignedUser.UnAssigned
                 };
         }
 

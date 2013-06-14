@@ -114,6 +114,46 @@ namespace LeanKit.Data.API.Tests
             Assert.That(ticketActivityFactory.Build(currentHistoryItem, nextHistoryItem).Duration, Is.EqualTo(expectedWorkDuration));
         }
 
+        [Test]
+        public void SetTicketActivityAssignedUserToUnAssignedWhenUserNameAndEmailIsBlank()
+        {
+            var expectedWorkDuration = new WorkDuration();
+
+            _workDuration = expectedWorkDuration;
+
+            var currentHistoryItem = new LeanKitCardHistory
+            {
+                Type = "UserAssignmentEventDTO",
+                DateTime = "14/02/2013 at 2:23:11 PM",
+                ToLaneTitle = "READY FOR DEV"
+            };
+
+            var workDurationFactory = this;
+            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
+
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
+        }
+
+        [Test]
+        public void SetTicketActivityAssignedUserName()
+        {
+            var expectedWorkDuration = new WorkDuration();
+
+            _workDuration = expectedWorkDuration;
+
+            var currentHistoryItem = new LeanKitCardHistory
+            {
+                Type = "UserAssignmentEventDTO",
+                DateTime = "14/02/2013 at 2:23:11 PM",
+                ToLaneTitle = "READY FOR DEV"
+            };
+
+            var workDurationFactory = this;
+            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
+
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser.Name, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
+        }
+
         public WorkDuration CalculateDuration(DateTime start, DateTime end)
         {
             return _workDuration;
