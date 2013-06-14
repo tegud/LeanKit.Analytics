@@ -58,6 +58,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var releaseDetailIncludedTicketViewModels = releaseRecord.IncludedTickets.Any() ? releaseRecord.IncludedTickets.Select(rr => new ReleaseDetailIncludedTicketViewModel
                 {
+                    Id = rr.CardId,
                     ExternalId = rr.ExternalId,
                     Title = rr.Title,
                     Size = rr.Size > 0 ? rr.Size.ToString() : "?"

@@ -44,28 +44,39 @@ else
             {
                 <div>Started @Model.Started</div>
             }
-            @if (string.IsNullOrWhiteSpace(@Model.Finished))
+            @if (Model.IsCompleted)
             {
-                <div>Not released yet</div>
+                <div>Released @Model.Finished</div>
             }
             else
             {
-                <div>Released @Model.Finished</div>
+                <div>Not released yet</div>
             }
         </div>
     </div>
     <div class="ticket-detail-summary-item">
         <h3>Size</h3>
         <div class="ticket-summary-cycle-time-container">
-            <span class="ticket-summary-cycle-time">?</span>
+            <span class="ticket-summary-cycle-time">@Model.Size</span>
         </div>
     </div>
-    <div class="ticket-detail-summary-item">
-        <h3>Cycle Time</h3>
-        <div class="ticket-summary-cycle-time-container">
-            <span class="ticket-summary-cycle-time">6</span><span class="ticket-summary-cycle-time-units"> days</span>
+    @if (Model.IsCompleted)
+    {
+        <div class="ticket-detail-summary-item">
+            <h3>Cycle Time</h3>
+            <div class="ticket-summary-cycle-time-container">
+                <span class="ticket-summary-cycle-time">6</span><span class="ticket-summary-cycle-time-units"> days</span>
+            </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="ticket-detail-summary-item">
+            <h3>Assigned To</h3>
+            <div class="ticket-summary-assigned-to-gravatar"><img src="http://www.gravatar.com/avatar/f36467164c623115c366c2f19d4475ab.png?s=120" width="120" height="120" /></div>
+            <div class="ticket-summary-assigned-to-container">Steve</div>
+        </div>
+    }
 </div>
 
 @section JavaScript

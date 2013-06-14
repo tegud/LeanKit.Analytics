@@ -27,5 +27,13 @@ namespace LeanKit.APIClient.API
         public Int64 LastDate { get; set; }
 
         public bool IsBlocked { get; set; }
+
+        public string AssignedUserId { get; set; }
+
+        public string AssignedUserFullName { get; set; }
+
+        public string AssignedUserEmailAddres { get; set; }
+
+        public bool IsUnassigning { get; set; }
     }
 }

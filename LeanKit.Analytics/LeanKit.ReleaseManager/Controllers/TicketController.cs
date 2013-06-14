@@ -43,7 +43,9 @@ namespace LeanKit.ReleaseManager.Controllers
                     ExternalId = ticket.ExternalId,
                     CurrentStatus = GetTicketCurrentStatus(ticket),
                     Started = DateFriendlyText(ticket.Started),
-                    Finished = DateFriendlyText(ticket.Finished)
+                    Finished = DateFriendlyText(ticket.Finished),
+                    Size = ticket.Size == 0 ? "?" : ticket.Size.ToString(),
+                    IsCompleted = ticket.Finished > DateTime.MinValue
                 });
         }
 
@@ -81,5 +83,9 @@ namespace LeanKit.ReleaseManager.Controllers
         public string Started { get; set; }
 
         public string Finished { get; set; }
+
+        public string Size { get; set; }
+
+        public bool IsCompleted { get; set; }
     }
 }

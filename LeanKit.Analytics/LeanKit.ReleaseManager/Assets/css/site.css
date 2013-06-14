@@ -193,6 +193,10 @@ td.ticket-cycle-time { width: 90px;}
 .summary-current-text { font-size: 1.4em; }
 .summary-current-text > div { margin-bottom: 10px; }
 
+.ticket-summary-assigned-to-container { font-size: 1.4em;text-align: center;font-weight: bold; }
+
+.ticket-summary-assigned-to-gravatar { height: 120px;width: 120px;background-color: #ddd;margin: 0 auto 10px auto;border-radius: 60px;overflow: hidden; } 
+
 @media (max-width: 800px)
 {
     .actual-end-date,
