@@ -87,9 +87,10 @@ namespace LeanKit.Data.SQL
                 sqlConnection.Open();
 
                 sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketRecord>(
-                        @"SELECT C.*, CA.* 
+                        @"SELECT C.*, CA.*, U.Name AssignedUserName, U.Email AssignedUserEmail 
                             FROM CardActivity CA 
-                                INNER JOIN Card C ON CA.CardID = C.ID 
+                                INNER JOIN Card C ON CA.CardID = C.ID
+                                LEFT OUTER JOIN LeanKitUser U ON CA.AssignedUserID = U.ID
                             ORDER BY C.ID, CA.ID",
                                                  (ticket, activity) =>
                                                  {
@@ -148,10 +149,16 @@ namespace LeanKit.Data.SQL
 
                 foreach (var activity in ticket.Activities)
                 {
-                    const string activitySql = @"IF NOT EXISTS(SELECT ID FROM CardActivity WHERE CardID = @ID AND Activity = @Title AND Date = @Started)
+                    const string activitySql = @"IF @UserID IS NOT NULL AND NOT EXISTS (SELECT ID FROM LeanKitUser WHERE ID = @UserID)
                                         BEGIN
-                                            INSERT INTO CardActivity(CardID, Activity, Date) 
-                                            VALUES (@Id, @Title, @Started)
+                                            INSERT INTO LeanKitUser (ID, Name, Email)
+                                            VALUES (@UserID, @UserName, @UserEmail)
+                                        END
+                                        
+                                        IF NOT EXISTS(SELECT ID FROM CardActivity WHERE CardID = @ID AND Activity = @Title AND Date = @Started)
+                                        BEGIN
+                                            INSERT INTO CardActivity(CardID, Activity, Date, AssignedUserID) 
+                                            VALUES (@Id, @Title, @Started, @UserID)
                                         END";
 
                     sqlConnection.Execute(activitySql,
@@ -159,7 +166,13 @@ namespace LeanKit.Data.SQL
                                         {
                                             ticket.Id,
                                             activity.Title,
-                                            activity.Started
+                                            activity.Started,
+                                            UserId = activity.AssignedUser != TicketActivityAssignedUser.UnAssigned
+                                             ? (int?)activity.AssignedUser.Id : null,
+                                            UserName = activity.AssignedUser != TicketActivityAssignedUser.UnAssigned
+                                             ? activity.AssignedUser.Name : null,
+                                            UserEmail =  activity.AssignedUser != TicketActivityAssignedUser.UnAssigned
+                                             ? activity.AssignedUser.Email.Address : null
                                         });
                 }
             }

@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mail;
 
 namespace LeanKit.APIClient.API
 {
@@ -28,7 +29,7 @@ namespace LeanKit.APIClient.API
 
         public bool IsBlocked { get; set; }
 
-        public string AssignedUserId { get; set; }
+        public int AssignedUserId { get; set; }
 
         public string AssignedUserFullName { get; set; }
 

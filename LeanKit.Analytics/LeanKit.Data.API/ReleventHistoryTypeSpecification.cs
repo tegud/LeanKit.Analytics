@@ -9,7 +9,7 @@ namespace LeanKit.Data.API
         {
             var validHistoryTypes = new List<string>
                 {
-                    "CardCreationEventDTO", "CardMoveEventDTO", "CardBlockedEventDTO"
+                    "CardCreationEventDTO", "CardMoveEventDTO", "CardBlockedEventDTO", "UserAssignmentEventDTO"
                 };
 
             return validHistoryTypes.Contains(historyItem.Type);

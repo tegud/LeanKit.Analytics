@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mail;
 
 namespace LeanKit.Data.SQL
 {
@@ -21,12 +22,25 @@ namespace LeanKit.Data.SQL
                 finished = next.Date;
             }
 
+            var assignedUser = TicketActivityAssignedUser.UnAssigned;
+
+            if (current.AssignedUserId > 0)
+            {
+                assignedUser = new TicketActivityAssignedUser
+                    {
+                        Id = current.AssignedUserId,
+                        Name = current.AssignedUserName,
+                        Email = new MailAddress(current.AssignedUserEmail)
+                    };
+            }
+
             return new TicketActivity
                 {
                     Title = current.Activity,
                     Started = started,
                     Finished = finished,
-                    Duration = _workDurationFactory.CalculateDuration(started, finished)
+                    Duration = _workDurationFactory.CalculateDuration(started, finished),
+                    AssignedUser = assignedUser
                 };
         }
     }

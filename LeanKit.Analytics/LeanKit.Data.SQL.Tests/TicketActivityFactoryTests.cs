@@ -70,6 +70,38 @@ namespace LeanKit.Data.SQL.Tests
             Assert.That(new TicketActivityFactory(workDurationFactory).Build(current, next).Duration, Is.EqualTo(expectedDuration));
         }
 
+        [Test]
+        public void SetsAssignedUserToUnAssignedWhenUserIdIsZero()
+        {
+            var current = new TicketActivityRecord { AssignedUserId = 0 };
+
+            Assert.That(new TicketActivityFactory(this).Build(current, null).AssignedUser, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
+        }
+
+        [Test]
+        public void SetsAssignedUserId()
+        {
+            var current = new TicketActivityRecord { AssignedUserId = 12345, AssignedUserEmail = "mr.developer@example.com" };
+
+            Assert.That(new TicketActivityFactory(this).Build(current, null).AssignedUser.Id, Is.EqualTo(12345));
+        }
+
+        [Test]
+        public void SetsAssignedUserName()
+        {
+            var current = new TicketActivityRecord { AssignedUserId = 12345, AssignedUserName = "A Developer", AssignedUserEmail = "mr.developer@example.com" };
+
+            Assert.That(new TicketActivityFactory(this).Build(current, null).AssignedUser.Name, Is.EqualTo("A Developer"));
+        }
+
+        [Test]
+        public void SetsAssignedUserEmail()
+        {
+            var current = new TicketActivityRecord { AssignedUserId = 12345, AssignedUserEmail = "mr.developer@example.com" };
+
+            Assert.That(new TicketActivityFactory(this).Build(current, null).AssignedUser.Email.Address, Is.EqualTo("mr.developer@example.com"));
+        }
+
         public WorkDuration CalculateDuration(DateTime start, DateTime end)
         {
             return _workDuration;

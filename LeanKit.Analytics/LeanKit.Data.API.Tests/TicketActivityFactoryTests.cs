@@ -115,12 +115,8 @@ namespace LeanKit.Data.API.Tests
         }
 
         [Test]
-        public void SetTicketActivityAssignedUserToUnAssignedWhenUserNameAndEmailIsBlank()
+        public void SetTicketActivityAssignedUserToUnAssignedWhenUserIdIsNotSet()
         {
-            var expectedWorkDuration = new WorkDuration();
-
-            _workDuration = expectedWorkDuration;
-
             var currentHistoryItem = new LeanKitCardHistory
             {
                 Type = "UserAssignmentEventDTO",
@@ -137,21 +133,56 @@ namespace LeanKit.Data.API.Tests
         [Test]
         public void SetTicketActivityAssignedUserName()
         {
-            var expectedWorkDuration = new WorkDuration();
-
-            _workDuration = expectedWorkDuration;
-
             var currentHistoryItem = new LeanKitCardHistory
             {
                 Type = "UserAssignmentEventDTO",
                 DateTime = "14/02/2013 at 2:23:11 PM",
-                ToLaneTitle = "READY FOR DEV"
+                ToLaneTitle = "READY FOR DEV",
+                AssignedUserId = 1,
+                AssignedUserFullName = "Mr Developer",
+                AssignedUserEmailAddres = "developer@example.com"
             };
 
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser.Name, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser.Name, Is.EqualTo("Mr Developer"));
+        }
+
+        [Test]
+        public void SetTicketActivityAssignedUserId()
+        {
+            var currentHistoryItem = new LeanKitCardHistory
+            {
+                Type = "UserAssignmentEventDTO",
+                DateTime = "14/02/2013 at 2:23:11 PM",
+                ToLaneTitle = "READY FOR DEV",
+                AssignedUserId = 123423,
+                AssignedUserEmailAddres = "developer@example.com"
+            };
+
+            var workDurationFactory = this;
+            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
+
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser.Id, Is.EqualTo(123423));
+        }
+
+        [Test]
+        public void SetTicketActivityAssignedUserEmail()
+        {
+            var currentHistoryItem = new LeanKitCardHistory
+            {
+                Type = "UserAssignmentEventDTO",
+                DateTime = "14/02/2013 at 2:23:11 PM",
+                ToLaneTitle = "READY FOR DEV",
+                AssignedUserId = 1,
+                AssignedUserEmailAddres = "developer@example.com"
+            };
+
+            var workDurationFactory = this;
+            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
+
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser.Email.Address, Is.EqualTo("developer@example.com"));
         }
 
         public WorkDuration CalculateDuration(DateTime start, DateTime end)

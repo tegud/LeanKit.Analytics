@@ -1,4 +1,5 @@
 using System;
+using System.Net.Mail;
 using LeanKit.APIClient.API;
 
 namespace LeanKit.Data.API
@@ -28,8 +29,23 @@ namespace LeanKit.Data.API
                     Started = started,
                     Finished = finished,
                     Duration = _workDurationFactory.CalculateDuration(started, finished == DateTime.MinValue ? DateTime.Now : finished),
-                    AssignedUser = TicketActivityAssignedUser.UnAssigned
+                    AssignedUser = AssignedUser(historyItem)
                 };
+        }
+
+        private static TicketActivityAssignedUser AssignedUser(LeanKitCardHistory historyItem)
+        {
+            if (historyItem.AssignedUserId > 0)
+            {
+                return new TicketActivityAssignedUser
+                    {
+                        Id = historyItem.AssignedUserId,
+                        Name = historyItem.AssignedUserFullName,
+                        Email = new MailAddress(historyItem.AssignedUserEmailAddres)
+                    };
+            }
+
+            return TicketActivityAssignedUser.UnAssigned;
         }
 
         private static DateTime ParseLeanKitHistoryDateTime(string rawDateTime)
