@@ -12,7 +12,7 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         public ActionResult Index(int id)
         {
-            const string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=LeanKitSync;Persist Security Info=True;User ID=carduser;Password=password;MultipleActiveResultSets=True";
+            string connectionString = MvcApplication.ConnectionString.ConnectionString;
 
             var workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition
             {

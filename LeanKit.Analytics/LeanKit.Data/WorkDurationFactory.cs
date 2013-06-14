@@ -23,6 +23,12 @@ namespace LeanKit.Data
             {
                 days = 1;
                 hours = (int)(end - start).TotalHours;
+
+                if (start.Date != end.Date)
+                {
+                    hours -= 24 - _workDayDefinition.End;
+                    hours -= _workDayDefinition.Start;
+                }
             }
             else
             {

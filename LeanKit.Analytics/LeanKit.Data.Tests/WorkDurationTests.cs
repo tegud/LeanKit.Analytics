@@ -98,5 +98,18 @@ namespace LeanKit.Data.Tests
                     End = 17
                 }).CalculateDuration(start, end).Hours, Is.EqualTo(21));
         }
+
+        [Test]
+        public void DurationStartingInAfternoonOfOneDayAndFinishingTheFollowMorningCalculatesHours()
+        {
+            var start = new DateTime(2013, 5, 1, 15, 0, 0);
+            var end = new DateTime(2013, 5, 2, 10, 0, 0);
+
+            Assert.That(new WorkDurationFactory(new DateTime[0], new WorkDayDefinition
+            {
+                Start = 9,
+                End = 17
+            }).CalculateDuration(start, end).Hours, Is.EqualTo(3));
+        }
     }
 }
