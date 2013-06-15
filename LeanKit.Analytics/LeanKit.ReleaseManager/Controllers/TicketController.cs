@@ -47,12 +47,43 @@ namespace LeanKit.ReleaseManager.Controllers
                     Finished = DateFriendlyText(ticket.Finished),
                     Size = ticket.Size == 0 ? "?" : ticket.Size.ToString(),
                     IsCompleted = ticket.Finished > DateTime.MinValue,
-                    Contributors = ticket.Activities.Where(a => a.AssignedUser != TicketActivityAssignedUser.UnAssigned).Select(a => new TicketContributor
+                    Contributors = BuildTicketContributors(ticket),
+                    CycleTime = ticket.CycleTime.Days,
+                    AssignedTo = ticket.CurrentActivity.AssignedUser == TicketActivityAssignedUser.UnAssigned ? new TicketContributor() : new TicketContributor
                         {
-                            Name = a.AssignedUser.Name,
-                            Email = a.AssignedUser.Email.Address
-                        })
+                            Name = ticket.CurrentActivity.AssignedUser.Name,
+                            Email = ticket.CurrentActivity.AssignedUser.Email.Address,
+                            Role = GetRole(ticket.CurrentActivity.Title)
+                        }
                 });
+        }
+
+        private static IEnumerable<TicketContributor> BuildTicketContributors(Ticket ticket)
+        {
+            var releventActivities = ticket.Activities.Where(a => a.AssignedUser != TicketActivityAssignedUser.UnAssigned && (a.Title.ToUpper() == "DEV WIP" || a.Title.ToUpper() == "TEST WIP"));
+
+            var activitiesGroupedByUserAndActivity = releventActivities.GroupBy(a => new
+                TicketContributorGroupKey {
+                    Activity = a.Title, 
+                    AssignedUser = a.AssignedUser
+                }, a => a, new TicketContributorGroupKeyComparer());
+
+            var contributors = activitiesGroupedByUserAndActivity.Select(a =>
+                {
+                    var role = GetRole(a.Key.Activity);
+
+                    return new TicketContributor
+                        {
+                            Name = a.Key.AssignedUser.Name, Email = a.Key.AssignedUser.Email.Address, Role = role
+                        };
+                });
+
+            return contributors;
+        }
+
+        private static string GetRole(string activity)
+        {
+            return activity.Equals("dev wip", StringComparison.InvariantCultureIgnoreCase) ? "Developer" : "Tester";
         }
 
         private static string DateFriendlyText(DateTime date)
@@ -76,11 +107,38 @@ namespace LeanKit.ReleaseManager.Controllers
         }
     }
 
+    public class TicketContributorGroupKey
+    {
+        public TicketActivityAssignedUser AssignedUser { get; set; }
+
+        public string Activity { get; set; }
+    }
+
+    public class TicketContributorGroupKeyComparer : IEqualityComparer<TicketContributorGroupKey>
+    {
+        public bool Equals(TicketContributorGroupKey x, TicketContributorGroupKey y)
+        {
+            var activitiesMatch = x.Activity.Equals(y.Activity, StringComparison.InvariantCultureIgnoreCase);
+            var usersMatch = x.AssignedUser.Id == y.AssignedUser.Id;
+
+            return activitiesMatch && usersMatch;
+        }
+
+        public int GetHashCode(TicketContributorGroupKey key)
+        {
+            return key.Activity.GetHashCode() + key.AssignedUser.Id.GetHashCode();
+        }
+    }
+
     public class TicketContributor
     {
         public string Name { get; set; }
 
         public string Email { get; set; }
+
+        public int DurationInHours { get; set; }
+
+        public string Role { get; set; }
     }
 
     public class TicketViewModel
@@ -102,5 +160,9 @@ namespace LeanKit.ReleaseManager.Controllers
         public bool IsCompleted { get; set; }
 
         public IEnumerable<TicketContributor> Contributors { get; set; }
+
+        public TicketContributor AssignedTo { get; set; }
+
+        public int CycleTime { get; set; }
     }
 }

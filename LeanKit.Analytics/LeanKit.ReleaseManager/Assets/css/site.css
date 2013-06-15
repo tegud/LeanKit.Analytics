@@ -182,6 +182,8 @@ td.ticket-cycle-time { width: 90px;}
 
 .ticket-detail-summary-item {display: inline-block; background-color: #f7f7f7;width: 280px;height: 200px;border-radius: 5px;padding: 10px; margin: 0 10px 14px 0;vertical-align: top; }
 
+.ticket-detail-summary-item.double-width { width: 594px; }
+
 .ticket-detail-summary-item h3 { margin-top: 0;color: #999; }
 
 .ticket-summary-cycle-time { font-size: 10em; }
@@ -196,6 +198,14 @@ td.ticket-cycle-time { width: 90px;}
 .ticket-summary-assigned-to-container { font-size: 1.4em;text-align: center;font-weight: bold; }
 
 .ticket-summary-assigned-to-gravatar { height: 120px;width: 120px;background-color: #ddd;margin: 0 auto 10px auto;border-radius: 60px;overflow: hidden; } 
+
+.ticket-contributors-list { list-style: none;margin: 0; padding: 0 }
+
+.ticket-contributors-list-item { padding-left: 65px;height: 48px;position: relative;font-size: 1.4em;padding-top: 17px; }
+
+.ticket-contributors-list-item .gravatar { position: absolute;top: 0;left: 0;width: 60px;height: 60px;border-radius: 30px;overflow: hidden; }
+
+#ticket-contributors { height: auto; }
 
 @media (max-width: 800px)
 {

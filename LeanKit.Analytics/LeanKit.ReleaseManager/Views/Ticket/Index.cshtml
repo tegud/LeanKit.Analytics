@@ -65,7 +65,7 @@ else
         <div class="ticket-detail-summary-item">
             <h3>Cycle Time</h3>
             <div class="ticket-summary-cycle-time-container">
-                <span class="ticket-summary-cycle-time">6</span><span class="ticket-summary-cycle-time-units"> days</span>
+                <span class="ticket-summary-cycle-time">@Model.CycleTime</span><span class="ticket-summary-cycle-time-units"> day@(Model.CycleTime != 1 ? "s" : "")</span>
             </div>
         </div>
     }
@@ -73,18 +73,26 @@ else
     {
         <div class="ticket-detail-summary-item">
             <h3>Assigned To</h3>
-            <div class="ticket-summary-assigned-to-gravatar">@Html.Gravatar("steve.elliot@laterooms.com", 120)</div>
-            <div class="ticket-summary-assigned-to-container">Steve</div>
+            <div class="ticket-summary-assigned-to-gravatar">@Html.Gravatar(Model.AssignedTo.Email, 120)</div>
+            <div class="ticket-summary-assigned-to-container">@Model.AssignedTo.Name</div>
+        </div>
+    }
+    @if (Model.Contributors.Any())
+    {
+        <div class="ticket-detail-summary-item double-width" id="ticket-contributors">
+            <h3>Contributors</h3>
+            <ul class="ticket-contributors-list">
+                @foreach (var contributor in Model.Contributors)
+                {
+                    <li class="ticket-contributors-list-item">
+                        <div class="gravatar">@Html.Gravatar(contributor.Email, 60)</div>@contributor.Name (@contributor.Role)
+                    </li>
+                }
+            </ul>
         </div>
     }
 </div>
 
-<ul>
-@foreach(var contributor in Model.Contributors)
-{
-    <li>@Html.Gravatar(contributor.Email, 60) @contributor.Name</li>
-}
-</ul>
 
 
 @section JavaScript
