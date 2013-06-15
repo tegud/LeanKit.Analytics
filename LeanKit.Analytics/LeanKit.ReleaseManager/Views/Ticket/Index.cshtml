@@ -71,10 +71,34 @@ else
     }
     else
     {
-        <div class="ticket-detail-summary-item">
+        <div class="ticket-detail-summary-item ticket-detail-assigned-users-container">
             <h3>Assigned To</h3>
-            <div class="ticket-summary-assigned-to-gravatar">@Html.Gravatar(Model.AssignedTo.Email, 120)</div>
-            <div class="ticket-summary-assigned-to-container">@Model.AssignedTo.Name</div>
+            <div class="ticket-detail-assigned-users@(
+                Model.AssignedUsers.Count() <= 1 ? ""
+                : Model.AssignedUsers.Count() == 2 ? " pairing" 
+                : " multiple")">
+                @if (!Model.AssignedUsers.Any())
+                {
+                    
+                }
+                
+                @{
+                    var x = 0;
+                    foreach (var user in Model.AssignedUsers)
+                    {
+                        <div class="ticket-detail-assigned-user">
+                            <div class="ticket-summary-assigned-to-gravatar">@Html.Gravatar(user.Email, Model.AssignedUsers.Count() == 1 ? 120 : 
+                            Model.AssignedUsers.Count() == 2 ? 90 : 40)</div>
+                            <div class="ticket-summary-assigned-to-container">@user.Name</div>
+                        </div>
+                        if (x == 0 && Model.AssignedUsers.Count() == 2)
+                        {
+                            <div class="ticket-detail-assigned-user-ampersand">&amp;</div>
+                        }
+                        x++;
+                    }
+                }
+            </div>
         </div>
     }
     @if (Model.Contributors.Any())

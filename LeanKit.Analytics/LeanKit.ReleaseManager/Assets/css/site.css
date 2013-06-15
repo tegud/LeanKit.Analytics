@@ -195,8 +195,21 @@ td.ticket-cycle-time { width: 90px;}
 .summary-current-text { font-size: 1.4em; }
 .summary-current-text > div { margin-bottom: 10px; }
 
-.ticket-summary-assigned-to-container { font-size: 1.4em;text-align: center;font-weight: bold; }
+.ticket-detail-assigned-users-container { height: auto; }
 
+.ticket-detail-assigned-users.pairing { margin: 30px auto 0 auto;width: 200px; }
+
+.ticket-detail-assigned-users.pairing .ticket-summary-assigned-to-gravatar { width: 90px;height: 90px; }
+
+.ticket-detail-assigned-users.multiple .ticket-summary-assigned-to-gravatar { width: 40px;height: 40px;top: 0;left: 0; position: absolute }
+
+.ticket-detail-assigned-users.multiple .ticket-detail-assigned-user { position: relative;height: 33px;margin-bottom: 3px; padding: 7px 0 0 50px; }
+.ticket-detail-assigned-users.multiple .ticket-summary-assigned-to-container { text-align: left; }
+.ticket-detail-assigned-users.pairing .ticket-detail-assigned-user { display: inline-block; }
+
+.ticket-detail-assigned-user-ampersand { display: inline-block }
+
+.ticket-summary-assigned-to-container { font-size: 1.4em;text-align: center;font-weight: bold; }
 .ticket-summary-assigned-to-gravatar { height: 120px;width: 120px;background-color: #ddd;margin: 0 auto 10px auto;border-radius: 60px;overflow: hidden; } 
 
 .ticket-contributors-list { list-style: none;margin: 0; padding: 0 }

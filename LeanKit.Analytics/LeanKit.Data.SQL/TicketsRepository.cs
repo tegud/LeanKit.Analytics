@@ -87,13 +87,15 @@ namespace LeanKit.Data.SQL
             {
                 sqlConnection.Open();
 
-                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketRecord>(
-                        @"SELECT C.*, CA.*, U.Name AssignedUserName, U.Email AssignedUserEmail 
+                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketAssignedUserRecord, TicketRecord>(
+                        @"SELECT C.*, CA.*, U.Name AssignedUserName, U.Email AssignedUserEmail , AU.*
                             FROM CardActivity CA 
                                 INNER JOIN Card C ON CA.CardID = C.ID
                                 LEFT OUTER JOIN LeanKitUser U ON CA.AssignedUserID = U.ID
+                                LEFT OUTER JOIN CardAssignedUsers CAU ON C.ID = CAU.CardID
+                                LEFT OUTER JOIN LeanKitUser AU ON CAU.LeanKitUserID = AU.ID
                             ORDER BY C.ID, CA.ID",
-                                                 (ticket, activity) =>
+                                                 (ticket, activity, assignedUser) =>
                                                  {
                                                      var existingTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id);
 
@@ -104,7 +106,15 @@ namespace LeanKit.Data.SQL
                                                          tickets.Add(ticket);
                                                      }
 
-                                                     currentTicket.Activities.Add(activity);
+                                                     if (activity != null && !currentTicket.Activities.Any(a => a.Date == activity.Date && a.Activity == activity.Activity))
+                                                     {
+                                                         currentTicket.Activities.Add(activity);
+                                                     }
+
+                                                     if (assignedUser != null && !currentTicket.AssignedUsers.Any(u => u.Id == assignedUser.Id))
+                                                     {
+                                                         currentTicket.AssignedUsers.Add(assignedUser);
+                                                     }
 
                                                      return ticket;
                                                  });
@@ -192,5 +202,14 @@ namespace LeanKit.Data.SQL
                 }
             }
         }
+    }
+
+    public class TicketAssignedUserRecord
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+
+        public string Email { get; set; }
     }
 }

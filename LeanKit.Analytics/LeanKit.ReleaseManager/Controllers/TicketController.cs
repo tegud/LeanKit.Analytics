@@ -37,6 +37,11 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var activityBreakdown = new ActivityBreakDownFactory().Build(ticket);
 
+            var assignedUsers = ticket.AssignedUsers.Select(u => new TicketContributor
+                {
+                    Name = GetFirstName(u.Name), Email = u.Email.Address
+                }).ToList();
+
             return View(new TicketViewModel
                 {
                     ActivityBreakdown = activityBreakdown,
@@ -49,13 +54,13 @@ namespace LeanKit.ReleaseManager.Controllers
                     IsCompleted = ticket.Finished > DateTime.MinValue,
                     Contributors = BuildTicketContributors(ticket),
                     CycleTime = ticket.CycleTime.Days,
-                    AssignedTo = ticket.CurrentActivity.AssignedUser == TicketAssignedUser.UnAssigned ? new TicketContributor() : new TicketContributor
-                        {
-                            Name = ticket.CurrentActivity.AssignedUser.Name,
-                            Email = ticket.CurrentActivity.AssignedUser.Email.Address,
-                            Role = GetRole(ticket.CurrentActivity.Title)
-                        }
+                    AssignedUsers = assignedUsers
                 });
+        }
+
+        private static string GetFirstName(string name)
+        {
+            return !name.Contains(" ") ? name : name.Split(' ')[0];
         }
 
         private static IEnumerable<TicketContributor> BuildTicketContributors(Ticket ticket)
@@ -164,5 +169,7 @@ namespace LeanKit.ReleaseManager.Controllers
         public TicketContributor AssignedTo { get; set; }
 
         public int CycleTime { get; set; }
+
+        public IEnumerable<TicketContributor> AssignedUsers { get; set; }
     }
 }

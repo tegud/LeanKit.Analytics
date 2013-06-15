@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net.Mail;
 using LeanKit.Utilities.Collections;
 
 namespace LeanKit.Data.SQL
@@ -44,6 +45,12 @@ namespace LeanKit.Data.SQL
                     Size = ticket.Size,
                     Activities = activities,
                     CurrentActivity = currentActivity,
+                    AssignedUsers = ticket.AssignedUsers.Select(u => new TicketAssignedUser
+                        {
+                            Id = u.Id,
+                            Name = u.Name,
+                            Email = new MailAddress(u.Email)
+                        }),
                     Release = new TicketReleaseInfo
                         {
                             Id = ticket.Release == null ? 0 : ticket.Release.Id,

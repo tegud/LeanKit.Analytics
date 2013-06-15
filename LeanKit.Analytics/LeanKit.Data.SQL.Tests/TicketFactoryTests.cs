@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 
 namespace LeanKit.Data.SQL.Tests
@@ -199,6 +200,66 @@ namespace LeanKit.Data.SQL.Tests
             {
                 Release = new TicketReleaseRecord { ServiceNowId = expectedServiceNowId }
             }).Release.ServiceNowId, Is.EqualTo(expectedServiceNowId));
+        }
+
+        [Test]
+        public void SetsAssignedUsersId()
+        {
+            var ticketActivityFactory = this;
+            var ticketMilestoneFactory = this;
+            var ticketCycleTimeDurationFactory = this;
+            var ticketCurrentActivityFactory = this;
+
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+
+            Assert.That(ticketFactory.Build(new TicketRecord
+            {
+                Release = new TicketReleaseRecord(),
+                AssignedUsers = new List<TicketAssignedUserRecord>
+                    {
+                        new TicketAssignedUserRecord { Id = 12345, Email = "developer@example.com" }
+                    }
+            }).AssignedUsers.First().Id, Is.EqualTo(12345));
+        }
+
+        [Test]
+        public void SetsAssignedUsersName()
+        {
+            var ticketActivityFactory = this;
+            var ticketMilestoneFactory = this;
+            var ticketCycleTimeDurationFactory = this;
+            var ticketCurrentActivityFactory = this;
+
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+
+            Assert.That(ticketFactory.Build(new TicketRecord
+            {
+                Release = new TicketReleaseRecord(),
+                AssignedUsers = new List<TicketAssignedUserRecord>
+                    {
+                        new TicketAssignedUserRecord { Name = "Mr Developer", Email = "developer@example.com" }
+                    }
+            }).AssignedUsers.First().Name, Is.EqualTo("Mr Developer"));
+        }
+
+        [Test]
+        public void SetsAssignedUsersEmail()
+        {
+            var ticketActivityFactory = this;
+            var ticketMilestoneFactory = this;
+            var ticketCycleTimeDurationFactory = this;
+            var ticketCurrentActivityFactory = this;
+
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+
+            Assert.That(ticketFactory.Build(new TicketRecord
+            {
+                Release = new TicketReleaseRecord(),
+                AssignedUsers = new List<TicketAssignedUserRecord>
+                    {
+                        new TicketAssignedUserRecord { Email = "developer@example.com" }
+                    }
+            }).AssignedUsers.First().Email.Address, Is.EqualTo("developer@example.com"));
         }
 
         public WorkDuration CalculateDuration(DateTime start, DateTime end)
