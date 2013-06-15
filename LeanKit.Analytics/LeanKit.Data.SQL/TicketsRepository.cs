@@ -131,6 +131,8 @@ namespace LeanKit.Data.SQL
                                         Started = @Started,
                                         Finished = @Finished
                                     WHERE ID = @Id;
+                                    
+                                    DELETE FROM CardAssignedUsers WHERE CardID = @ID
                                 END
                                 ELSE
                                 BEGIN
@@ -175,6 +177,18 @@ namespace LeanKit.Data.SQL
                                             UserEmail =  activity.AssignedUser != TicketAssignedUser.UnAssigned
                                              ? activity.AssignedUser.Email.Address : null
                                         });
+                }
+
+                foreach(var userId in ticket.AssignedUsers.Select(u => u.Id).Distinct())
+                {
+                    sqlConnection.Execute(@"INSERT INTO CardAssignedUsers(CardID, LeanKitUserID)
+                                            VALUES (@CardID, @UserID)",
+                                          new
+                                              {
+                                                  CardId = ticket.Id,
+                                                  UserID = userId
+                                              });
+
                 }
             }
         }
