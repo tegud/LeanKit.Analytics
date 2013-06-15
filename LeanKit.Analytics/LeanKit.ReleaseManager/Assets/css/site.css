@@ -180,7 +180,7 @@ td.ticket-cycle-time { width: 90px;}
 
 .activity-time-detail { font-size: 0.8em; color: #888 }
 
-.ticket-detail-summary-item {display: inline-block; background-color: #f7f7f7;width: 280px;height: 200px;border-radius: 5px;padding: 10px; margin: 0 10px 14px 0;vertical-align: top; }
+.ticket-detail-summary-item {display: inline-block; background-color: #f7f7f7;width: 280px;min-height: 200px;height: 200px;border-radius: 5px;padding: 10px; margin: 0 10px 14px 0;vertical-align: top; }
 
 .ticket-detail-summary-item.double-width { width: 594px; }
 
