@@ -22,11 +22,11 @@ namespace LeanKit.Data.SQL
                 finished = next.Date;
             }
 
-            var assignedUser = TicketActivityAssignedUser.UnAssigned;
+            var assignedUser = TicketAssignedUser.UnAssigned;
 
             if (current.AssignedUserId > 0)
             {
-                assignedUser = new TicketActivityAssignedUser
+                assignedUser = new TicketAssignedUser
                     {
                         Id = current.AssignedUserId,
                         Name = current.AssignedUserName,

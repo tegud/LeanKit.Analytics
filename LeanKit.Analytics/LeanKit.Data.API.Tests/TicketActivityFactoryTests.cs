@@ -127,7 +127,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null, null).AssignedUser, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null, null).AssignedUser, Is.EqualTo(TicketAssignedUser.UnAssigned));
         }
 
         [Test]
@@ -231,7 +231,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(currentHistoryItem, previousHistoryItem, null).AssignedUser, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, previousHistoryItem, null).AssignedUser, Is.EqualTo(TicketAssignedUser.UnAssigned));
         }
 
         public WorkDuration CalculateDuration(DateTime start, DateTime end)

@@ -29,6 +29,10 @@ namespace LeanKit.Data.API
             var finished = _ticketFinishDateFactory.CalculateMilestone(ticketActivities);
             var duration = _ticketCycleTimeDurationFactory.CalculateDuration(started, finished);
 
+            var allUsersForTicket = ticketActivities.Where(a => a.AssignedUser != TicketAssignedUser.UnAssigned).Select(a => a.AssignedUser);
+
+            var ticketAssignedUsers = card.AssignedUsers.Select(user => allUsersForTicket.First(u => u.Id == user.AssignedUserId));
+
             return new Ticket
                 {
                     Id = card.Id,
@@ -38,7 +42,8 @@ namespace LeanKit.Data.API
                     Finished = finished,
                     Activities = ticketActivities,
                     CycleTime = duration,
-                    Size = card.Size
+                    Size = card.Size,
+                    AssignedUsers = ticketAssignedUsers
                 };
         }
     }

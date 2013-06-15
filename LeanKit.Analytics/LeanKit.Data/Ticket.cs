@@ -24,6 +24,8 @@ namespace LeanKit.Data
         public int Size { get; set; }
 
         public TicketReleaseInfo Release { get; set; }
+
+        public IEnumerable<TicketAssignedUser> AssignedUsers { get; set; }
     }
 
     public class TicketReleaseInfo

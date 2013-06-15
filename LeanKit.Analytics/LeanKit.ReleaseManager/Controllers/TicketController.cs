@@ -49,7 +49,7 @@ namespace LeanKit.ReleaseManager.Controllers
                     IsCompleted = ticket.Finished > DateTime.MinValue,
                     Contributors = BuildTicketContributors(ticket),
                     CycleTime = ticket.CycleTime.Days,
-                    AssignedTo = ticket.CurrentActivity.AssignedUser == TicketActivityAssignedUser.UnAssigned ? new TicketContributor() : new TicketContributor
+                    AssignedTo = ticket.CurrentActivity.AssignedUser == TicketAssignedUser.UnAssigned ? new TicketContributor() : new TicketContributor
                         {
                             Name = ticket.CurrentActivity.AssignedUser.Name,
                             Email = ticket.CurrentActivity.AssignedUser.Email.Address,
@@ -60,7 +60,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
         private static IEnumerable<TicketContributor> BuildTicketContributors(Ticket ticket)
         {
-            var releventActivities = ticket.Activities.Where(a => a.AssignedUser != TicketActivityAssignedUser.UnAssigned && (a.Title.ToUpper() == "DEV WIP" || a.Title.ToUpper() == "TEST WIP"));
+            var releventActivities = ticket.Activities.Where(a => a.AssignedUser != TicketAssignedUser.UnAssigned && (a.Title.ToUpper() == "DEV WIP" || a.Title.ToUpper() == "TEST WIP"));
 
             var activitiesGroupedByUserAndActivity = releventActivities.GroupBy(a => new
                 TicketContributorGroupKey {
@@ -109,7 +109,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
     public class TicketContributorGroupKey
     {
-        public TicketActivityAssignedUser AssignedUser { get; set; }
+        public TicketAssignedUser AssignedUser { get; set; }
 
         public string Activity { get; set; }
     }

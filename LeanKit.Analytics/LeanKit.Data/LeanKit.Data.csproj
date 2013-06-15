@@ -65,7 +65,7 @@
     <Compile Include="IFindTheCurrentActivity.cs" />
     <Compile Include="Ticket.cs" />
     <Compile Include="TicketActivity.cs" />
-    <Compile Include="TicketActivityAssignedUser.cs" />
+    <Compile Include="TicketAssignedUser.cs" />
     <Compile Include="TicketCycleTimeDurationFactory.cs" />
     <Compile Include="TicketFinishDateFactory.cs" />
     <Compile Include="TicketStartDateFactory.cs" />

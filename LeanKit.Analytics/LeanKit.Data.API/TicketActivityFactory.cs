@@ -30,7 +30,7 @@ namespace LeanKit.Data.API
 
             var ticketActivityAssignedUser = AssignedUser(historyItem);
 
-            if (ticketActivityAssignedUser == TicketActivityAssignedUser.UnAssigned 
+            if (ticketActivityAssignedUser == TicketAssignedUser.UnAssigned 
                 && previousHistoryItem != null 
                 && !historyItem.IsUnassigning)
             {
@@ -47,11 +47,11 @@ namespace LeanKit.Data.API
                 };
         }
 
-        private static TicketActivityAssignedUser AssignedUser(LeanKitCardHistory historyItem)
+        private static TicketAssignedUser AssignedUser(LeanKitCardHistory historyItem)
         {
             if (historyItem.AssignedUserId > 0 && !historyItem.IsUnassigning)
             {
-                return new TicketActivityAssignedUser
+                return new TicketAssignedUser
                     {
                         Id = historyItem.AssignedUserId,
                         Name = historyItem.AssignedUserFullName,
@@ -59,7 +59,7 @@ namespace LeanKit.Data.API
                     };
             }
 
-            return TicketActivityAssignedUser.UnAssigned;
+            return TicketAssignedUser.UnAssigned;
         }
 
         private static DateTime ParseLeanKitHistoryDateTime(string rawDateTime)

@@ -168,11 +168,11 @@ namespace LeanKit.Data.SQL
                                             ticket.Id,
                                             activity.Title,
                                             activity.Started,
-                                            UserId = activity.AssignedUser != TicketActivityAssignedUser.UnAssigned
+                                            UserId = activity.AssignedUser != TicketAssignedUser.UnAssigned
                                              ? (int?)activity.AssignedUser.Id : null,
-                                            UserName = activity.AssignedUser != TicketActivityAssignedUser.UnAssigned
+                                            UserName = activity.AssignedUser != TicketAssignedUser.UnAssigned
                                              ? activity.AssignedUser.Name : null,
-                                            UserEmail =  activity.AssignedUser != TicketActivityAssignedUser.UnAssigned
+                                            UserEmail =  activity.AssignedUser != TicketAssignedUser.UnAssigned
                                              ? activity.AssignedUser.Email.Address : null
                                         });
                 }

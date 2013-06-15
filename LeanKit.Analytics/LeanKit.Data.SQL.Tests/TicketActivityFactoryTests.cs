@@ -75,7 +75,7 @@ namespace LeanKit.Data.SQL.Tests
         {
             var current = new TicketActivityRecord { AssignedUserId = 0 };
 
-            Assert.That(new TicketActivityFactory(this).Build(current, null).AssignedUser, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
+            Assert.That(new TicketActivityFactory(this).Build(current, null).AssignedUser, Is.EqualTo(TicketAssignedUser.UnAssigned));
         }
 
         [Test]

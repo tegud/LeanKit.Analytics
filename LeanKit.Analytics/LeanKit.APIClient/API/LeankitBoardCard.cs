@@ -23,5 +23,12 @@ namespace LeanKit.APIClient.API
         public string LastMove { get; set; }
 
         public string Tags { get; set; }
+
+        public LeanKitAssignedUser[] AssignedUsers { get; set; }
+    }
+
+    public class LeanKitAssignedUser
+    {
+        public int AssignedUserId { get; set; }
     }
 }

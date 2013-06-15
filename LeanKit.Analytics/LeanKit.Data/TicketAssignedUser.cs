@@ -2,9 +2,9 @@ using System.Net.Mail;
 
 namespace LeanKit.Data
 {
-    public class TicketActivityAssignedUser
+    public class TicketAssignedUser
     {
-        public static TicketActivityAssignedUser UnAssigned = new TicketActivityAssignedUser();
+        public static TicketAssignedUser UnAssigned = new TicketAssignedUser();
 
         public int Id { get; set; }
 

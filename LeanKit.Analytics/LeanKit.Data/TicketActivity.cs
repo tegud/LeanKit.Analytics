@@ -12,6 +12,6 @@ namespace LeanKit.Data
 
         public WorkDuration Duration { get; set; }
 
-        public TicketActivityAssignedUser AssignedUser { get; set; }
+        public TicketAssignedUser AssignedUser { get; set; }
     }
 }
