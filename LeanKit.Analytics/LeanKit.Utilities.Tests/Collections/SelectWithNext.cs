@@ -17,7 +17,7 @@ namespace LeanKit.Utilities.Tests.Collections
                     1
                 };
 
-            var selectedItems = listOfItems.SelectWithNext((current, next) =>
+            var selectedItems = listOfItems.SelectWithPreviousAndNext((current, previous, next) =>
             {
                 actualCurrent = current;
                 return 0;
@@ -35,7 +35,7 @@ namespace LeanKit.Utilities.Tests.Collections
                     1, 2
                 };
 
-            var selectedItems = listOfItems.SelectWithNext((current, next) =>
+            var selectedItems = listOfItems.SelectWithPreviousAndNext((current, previous, next) =>
             {
                 actualCurrent = current;
                 return 0;
@@ -53,7 +53,7 @@ namespace LeanKit.Utilities.Tests.Collections
                     1, 2
                 };
 
-            var selectedItems = listOfItems.SelectWithNext((current, next) =>
+            var selectedItems = listOfItems.SelectWithPreviousAndNext((current, previous, next) =>
             {
                 if (actualNext == 0)
                 {
@@ -74,7 +74,7 @@ namespace LeanKit.Utilities.Tests.Collections
                     1, 2
                 };
 
-            listOfItems.SelectWithNext((current, next) =>
+            listOfItems.SelectWithPreviousAndNext((current, previous, next) =>
                 {
                     actualNext = next;
                     return 0;
@@ -92,13 +92,50 @@ namespace LeanKit.Utilities.Tests.Collections
                     new AClass(), new AClass()
                 };
 
-            listOfItems.SelectWithNext((current, next) =>
-                {
-                    actualNext = next;
-                    return 0;
-                }).ToArray();
+            listOfItems.SelectWithPreviousAndNext((current, previous, next) =>
+            {
+                actualNext = next;
+                return 0;
+            }).ToArray();
 
             Assert.That(actualNext, Is.Null);
+        }
+
+        [Test]
+        public void FirstItemSelectsPreviousAsNull()
+        {
+            AClass actualPrevious = null;
+            var listOfItems = new List<AClass>
+                {
+                    new AClass()
+                };
+
+            listOfItems.SelectWithPreviousAndNext((current, previous, next) =>
+            {
+                actualPrevious = previous;
+                return 0;
+            }).ToArray();
+
+            Assert.That(actualPrevious, Is.Null);
+        }
+
+        [Test]
+        public void SecondItemSelectsPrevious()
+        {
+            AClass actualPrevious = null;
+            var expectedPrevous = new AClass() { DT = "12345" };
+            var listOfItems = new List<AClass>
+                {
+                    expectedPrevous, new AClass()
+                };
+
+            listOfItems.SelectWithPreviousAndNext((current, previous, next) =>
+            {
+                actualPrevious = previous;
+                return 0;
+            }).ToArray();
+
+            Assert.That(actualPrevious, Is.EqualTo(expectedPrevous));
         }
 
         public class AClass

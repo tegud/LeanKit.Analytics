@@ -24,7 +24,7 @@ namespace LeanKit.Data.API
 
             var cardMoveEvents = cardHistory.Where(_releventHistoryTypeSpecification.IsSpecified);
 
-            var ticketActivities = cardMoveEvents.SelectWithNext(_ticketActivityFactory.Build);
+            var ticketActivities = cardMoveEvents.SelectWithPreviousAndNext(_ticketActivityFactory.Build);
 
             return ticketActivities;
         }

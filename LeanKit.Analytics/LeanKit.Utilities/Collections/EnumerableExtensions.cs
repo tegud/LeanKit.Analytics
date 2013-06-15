@@ -20,7 +20,7 @@ namespace LeanKit.Utilities.Collections
             }
         }
 
-        public static IEnumerable<T1> SelectWithNext<T, T1>(this IEnumerable<T> enumerable, Func<T, T, T1> selectAction)
+        public static IEnumerable<T1> SelectWithPreviousAndNext<T, T1>(this IEnumerable<T> enumerable, Func<T, T, T, T1> selectAction)
         {
             using (var iterator = enumerable.GetEnumerator())
             {
@@ -30,20 +30,23 @@ namespace LeanKit.Utilities.Collections
 
                 if(!iterator.MoveNext())
                 {
-                    yield return selectAction(current, default(T));
+                    yield return selectAction(current, default(T), default(T));
                     yield break;
                 }
+
+                T previous = current;
 
                 do
                 {
                     var next = iterator.Current;
 
-                    yield return selectAction(current, next);
+                    yield return selectAction(current, previous, next);
 
+                    previous = current;
                     current = next;
                 } while (iterator.MoveNext());
 
-                yield return selectAction(current, default(T));
+                yield return selectAction(current, previous, default(T));
             }
         }
     }

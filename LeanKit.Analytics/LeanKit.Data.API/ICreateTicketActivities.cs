@@ -4,6 +4,6 @@ namespace LeanKit.Data.API
 {
     public interface ICreateTicketActivities
     {
-        TicketActivity Build(LeanKitCardHistory historyItem, LeanKitCardHistory nextItem);
+        TicketActivity Build(LeanKitCardHistory historyItem, LeanKitCardHistory previousItem, LeanKitCardHistory nextItem);
     }
 }

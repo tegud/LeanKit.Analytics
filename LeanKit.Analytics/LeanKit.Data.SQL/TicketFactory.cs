@@ -26,7 +26,7 @@ namespace LeanKit.Data.SQL
 
         public Ticket Build(TicketRecord ticket)
         {
-            var activities = ticket.Activities.SelectWithNext((current, next) => _ticketActivityFactory.Build(current, next)).ToArray();
+            var activities = ticket.Activities.SelectWithPreviousAndNext((current, previous, next) => _ticketActivityFactory.Build(current, next)).ToArray();
 
             var started = _ticketStartDateFactory.CalculateMilestone(activities);
             var finished = _ticketFinishDateFactory.CalculateMilestone(activities);

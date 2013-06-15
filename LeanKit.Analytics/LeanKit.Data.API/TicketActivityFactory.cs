@@ -15,6 +15,11 @@ namespace LeanKit.Data.API
 
         public TicketActivity Build(LeanKitCardHistory historyItem, LeanKitCardHistory nextItem)
         {
+            throw new NotImplementedException();
+        }
+
+        public TicketActivity Build(LeanKitCardHistory historyItem, LeanKitCardHistory previousHistoryItem, LeanKitCardHistory nextItem)
+        {
             var started = ParseLeanKitHistoryDateTime(historyItem.DateTime);
             var finished = DateTime.MinValue;
 
@@ -23,19 +28,28 @@ namespace LeanKit.Data.API
                 finished = ParseLeanKitHistoryDateTime(nextItem.DateTime);
             }
 
+            var ticketActivityAssignedUser = AssignedUser(historyItem);
+
+            if (ticketActivityAssignedUser == TicketActivityAssignedUser.UnAssigned 
+                && previousHistoryItem != null 
+                && !historyItem.IsUnassigning)
+            {
+                ticketActivityAssignedUser = AssignedUser(previousHistoryItem);
+            }
+
             return new TicketActivity
                 {
                     Title = (historyItem.IsBlocked ? "Blocked: " : "") + historyItem.ToLaneTitle,
                     Started = started,
                     Finished = finished,
                     Duration = _workDurationFactory.CalculateDuration(started, finished == DateTime.MinValue ? DateTime.Now : finished),
-                    AssignedUser = AssignedUser(historyItem)
+                    AssignedUser = ticketActivityAssignedUser
                 };
         }
 
         private static TicketActivityAssignedUser AssignedUser(LeanKitCardHistory historyItem)
         {
-            if (historyItem.AssignedUserId > 0)
+            if (historyItem.AssignedUserId > 0 && !historyItem.IsUnassigning)
             {
                 return new TicketActivityAssignedUser
                     {

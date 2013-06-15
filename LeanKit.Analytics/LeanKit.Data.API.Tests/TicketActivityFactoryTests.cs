@@ -22,7 +22,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(leanKitCardHistory, null).Title, Is.EqualTo("Ready for DEV"));
+            Assert.That(ticketActivityFactory.Build(leanKitCardHistory, null, null).Title, Is.EqualTo("Ready for DEV"));
         }
 
         [Test]
@@ -39,7 +39,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(leanKitCardHistory, null).Title, Is.EqualTo("Blocked: Ready for DEV"));
+            Assert.That(ticketActivityFactory.Build(leanKitCardHistory, null, null).Title, Is.EqualTo("Blocked: Ready for DEV"));
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(leanKitCardHistory, null).Started, Is.EqualTo(new DateTime(2013, 02, 14, 14, 23, 11)));
+            Assert.That(ticketActivityFactory.Build(leanKitCardHistory, null, null).Started, Is.EqualTo(new DateTime(2013, 02, 14, 14, 23, 11)));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(leanKitCardHistory, null).Finished, Is.EqualTo(DateTime.MinValue));
+            Assert.That(ticketActivityFactory.Build(leanKitCardHistory, null, null).Finished, Is.EqualTo(DateTime.MinValue));
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(currentHistoryItem, nextHistoryItem).Finished, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null, nextHistoryItem).Finished, Is.EqualTo(new DateTime(2013, 02, 15, 10, 50, 35)));
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(currentHistoryItem, nextHistoryItem).Duration, Is.EqualTo(expectedWorkDuration));
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null, nextHistoryItem).Duration, Is.EqualTo(expectedWorkDuration));
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null, null).AssignedUser, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser.Name, Is.EqualTo("Mr Developer"));
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null, null).AssignedUser.Name, Is.EqualTo("Mr Developer"));
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser.Id, Is.EqualTo(123423));
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null, null).AssignedUser.Id, Is.EqualTo(123423));
         }
 
         [Test]
@@ -182,7 +182,56 @@ namespace LeanKit.Data.API.Tests
             var workDurationFactory = this;
             var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
 
-            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null).AssignedUser.Email.Address, Is.EqualTo("developer@example.com"));
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, null, null).AssignedUser.Email.Address, Is.EqualTo("developer@example.com"));
+        }
+
+        [Test]
+        public void SetTicketActivityAssignedUserToPreviousItemsUserIfCurrentIsUnassigned()
+        {
+            var currentHistoryItem = new LeanKitCardHistory
+            {
+                Type = "UserAssignmentEventDTO",
+                DateTime = "14/02/2013 at 2:23:11 PM",
+                ToLaneTitle = "READY FOR DEV"
+            };
+            var previousHistoryItem = new LeanKitCardHistory
+            {
+                Type = "UserAssignmentEventDTO",
+                DateTime = "14/02/2013 at 2:23:11 PM",
+                ToLaneTitle = "READY FOR DEV",
+                AssignedUserId = 1,
+                AssignedUserEmailAddres = "developer@example.com"
+            };
+
+            var workDurationFactory = this;
+            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
+
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, previousHistoryItem, null).AssignedUser.Email.Address, Is.EqualTo("developer@example.com"));
+        }
+
+        [Test]
+        public void SetTicketActivityAssignedUserToUnassignedIfCurrentHistoryItemIsUnassignment()
+        {
+            var currentHistoryItem = new LeanKitCardHistory
+            {
+                Type = "UserAssignmentEventDTO",
+                DateTime = "14/02/2013 at 2:23:11 PM",
+                ToLaneTitle = "READY FOR DEV", 
+                IsUnassigning = true
+            };
+            var previousHistoryItem = new LeanKitCardHistory
+            {
+                Type = "UserAssignmentEventDTO",
+                DateTime = "14/02/2013 at 2:23:11 PM",
+                ToLaneTitle = "READY FOR DEV",
+                AssignedUserId = 1,
+                AssignedUserEmailAddres = "developer@example.com"
+            };
+
+            var workDurationFactory = this;
+            var ticketActivityFactory = new TicketActivityFactory(workDurationFactory);
+
+            Assert.That(ticketActivityFactory.Build(currentHistoryItem, previousHistoryItem, null).AssignedUser, Is.EqualTo(TicketActivityAssignedUser.UnAssigned));
         }
 
         public WorkDuration CalculateDuration(DateTime start, DateTime end)
