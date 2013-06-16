@@ -3,7 +3,7 @@ using LeanKit.APIClient.API;
 
 namespace LeanKit.Data.API
 {
-    public class ReleventHistoryTypeSpecification : IHistoryTypeSpecification
+    public class HistoryIsReleventToActivitiesSpecification : IHistoryTypeSpecification
     {
         public bool IsSpecified(LeanKitCardHistory historyItem)
         {

@@ -55,7 +55,7 @@
     <Compile Include="ICreateTicketActivities.cs" />
     <Compile Include="ICreateTickets.cs" />
     <Compile Include="IValidateLeankitCards.cs" />
-    <Compile Include="ReleventHistoryTypeSpecification.cs" />
+    <Compile Include="HistoryIsReleventToActivitiesSpecification.cs" />
     <Compile Include="TicketActivitiesFactory.cs" />
     <Compile Include="TicketActivityFactory.cs" />
     <Compile Include="TicketFactory.cs" />

@@ -5,6 +5,6 @@ namespace LeanKit.Data.API
 {
     public interface ITicketActivitiesFactory
     {
-        IEnumerable<TicketActivity> Build(LeankitBoardCard card);
+        IEnumerable<TicketActivity> Build(IEnumerable<LeanKitCardHistory> cardHistory);
     }
 }

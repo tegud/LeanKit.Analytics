@@ -7,22 +7,18 @@ namespace LeanKit.Data.API
 {
     public class TicketActivitiesFactory : ITicketActivitiesFactory
     {
-        private readonly IApiCaller _apiCaller;
         private readonly ICreateTicketActivities _ticketActivityFactory;
-        private readonly ReleventHistoryTypeSpecification _releventHistoryTypeSpecification;
+        private readonly HistoryIsReleventToActivitiesSpecification _historyIsReleventToActivitiesSpecification;
 
-        public TicketActivitiesFactory(IApiCaller apiCaller, ICreateTicketActivities ticketActivityFactory)
+        public TicketActivitiesFactory(ICreateTicketActivities ticketActivityFactory, HistoryIsReleventToActivitiesSpecification historyIsReleventToActivitiesSpecification)
         {
-            _apiCaller = apiCaller;
             _ticketActivityFactory = ticketActivityFactory;
-            _releventHistoryTypeSpecification = new ReleventHistoryTypeSpecification();
+            _historyIsReleventToActivitiesSpecification = historyIsReleventToActivitiesSpecification;
         }
 
-        public IEnumerable<TicketActivity> Build(LeankitBoardCard card)
+        public IEnumerable<TicketActivity> Build(IEnumerable<LeanKitCardHistory> cardHistory)
         {
-            var cardHistory = _apiCaller.GetCardHistory(card.Id).ToArray();
-
-            var cardMoveEvents = cardHistory.Where(_releventHistoryTypeSpecification.IsSpecified);
+            var cardMoveEvents = cardHistory.Where(_historyIsReleventToActivitiesSpecification.IsSpecified);
 
             var ticketActivities = cardMoveEvents.SelectWithPreviousAndNext(_ticketActivityFactory.Build);
 
