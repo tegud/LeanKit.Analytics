@@ -36,5 +36,7 @@ namespace LeanKit.APIClient.API
         public string AssignedUserEmailAddres { get; set; }
 
         public bool IsUnassigning { get; set; }
+
+        public string Comment { get; set; }
     }
 }

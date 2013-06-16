@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="AllBoardTicketsFromApi.cs" />
     <Compile Include="IHistoryTypeSpecification.cs" />
+    <Compile Include="IMakeTicketBlockages.cs" />
     <Compile Include="ITicketActivitiesFactory.cs" />
     <Compile Include="ICreateTicketActivities.cs" />
     <Compile Include="ICreateTickets.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="HistoryIsReleventToActivitiesSpecification.cs" />
     <Compile Include="TicketActivitiesFactory.cs" />
     <Compile Include="TicketActivityFactory.cs" />
+    <Compile Include="TicketBlockagesFactory.cs" />
     <Compile Include="TicketFactory.cs" />
     <Compile Include="ValidArchiveCardSpecification.cs" />
   </ItemGroup>

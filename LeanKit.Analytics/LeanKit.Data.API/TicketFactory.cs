@@ -1,22 +1,8 @@
-using System.Collections.Generic;
 using System.Linq;
 using LeanKit.APIClient.API;
 
 namespace LeanKit.Data.API
 {
-    public interface IMakeTicketBlockages
-    {
-        IEnumerable<TicketBlockage> Build(IEnumerable<LeanKitCardHistory> cardHistory);
-    }
-
-    public class TicketBlockagesFactory : IMakeTicketBlockages
-    {
-        public IEnumerable<TicketBlockage> Build(IEnumerable<LeanKitCardHistory> cardHistory)
-        {
-            throw new System.NotImplementedException();
-        }
-    }
-
     public class TicketFactory : ICreateTickets
     {
         private readonly ITicketActivitiesFactory _ticketActivitiesFactory;
@@ -41,7 +27,7 @@ namespace LeanKit.Data.API
             var cardHistory = _apiCaller.GetCardHistory(card.Id).ToArray();
 
             var ticketActivities = _ticketActivitiesFactory.Build(cardHistory).ToArray();
-            var ticketBlockages = _ticketBlockagesFactory.Build(cardHistory);
+            var ticketBlockages = _ticketBlockagesFactory.Build(cardHistory).ToArray();
 
             var started = _ticketStartDateFactory.CalculateMilestone(ticketActivities);
             var finished = _ticketFinishDateFactory.CalculateMilestone(ticketActivities);

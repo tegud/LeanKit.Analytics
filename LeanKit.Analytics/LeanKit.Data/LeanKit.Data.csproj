@@ -66,8 +66,10 @@
     <Compile Include="Ticket.cs" />
     <Compile Include="TicketActivity.cs" />
     <Compile Include="TicketAssignedUser.cs" />
+    <Compile Include="TicketBlockage.cs" />
     <Compile Include="TicketCycleTimeDurationFactory.cs" />
     <Compile Include="TicketFinishDateFactory.cs" />
+    <Compile Include="TicketReleaseInfo.cs" />
     <Compile Include="TicketStartDateFactory.cs" />
     <Compile Include="WorkDayDefinition.cs" />
     <Compile Include="WorkDuration.cs" />

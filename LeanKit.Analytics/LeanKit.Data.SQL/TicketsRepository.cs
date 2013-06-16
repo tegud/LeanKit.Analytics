@@ -189,6 +189,31 @@ namespace LeanKit.Data.SQL
                                         });
                 }
 
+                foreach(var blockage in ticket.Blockages)
+                {
+                    sqlConnection.Execute(@"IF EXISTS(SELECT * FROM CardBlockage WHERE CardID = @CardID AND Started = @Started )
+                                            BEGIN
+                                                IF(@Finished IS NOT NULL)
+                                                BEGIN
+                                                    UPDATE  CardBlockage
+                                                    SET     Finished = @Finished
+                                                    WHERE   CardID = @CardID AND Started = @Started 
+                                                END
+                                            END
+                                            ELSE
+                                            BEGIN
+                                                INSERT INTO CardBlockage (CardID, Reason, Started, Finished)
+                                                VALUES (@CardID, @Reason, @Started, @Finished)
+                                            END",
+                                        new
+                                        {
+                                            CardID = ticket.Id,
+                                            blockage.Reason,
+                                            blockage.Started,
+                                            Finished = blockage.Finished > DateTime.MinValue ? (DateTime?)blockage.Finished : null
+                                        });
+                }
+
                 foreach(var userId in ticket.AssignedUsers.Select(u => u.Id).Distinct())
                 {
                     sqlConnection.Execute(@"INSERT INTO CardAssignedUsers(CardID, LeanKitUserID)

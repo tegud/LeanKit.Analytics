@@ -29,17 +29,4 @@ namespace LeanKit.Data
 
         public IEnumerable<TicketBlockage> Blockages { get; set; }
     }
-
-    public class TicketBlockage
-    {
-    }
-
-    public class TicketReleaseInfo
-    {
-        public int Id { get; set; }
-
-        public string SvnRevision { get; set; }
-
-        public string ServiceNowId { get; set; }
-    }
 }
