@@ -11,30 +11,16 @@ namespace LeanKit.ReleaseManager.Controllers
 {
     public class TicketController : Controller
     {
+        private readonly IGetAllTicketInformation _ticketRepository;
+
+        public TicketController(IGetAllTicketInformation ticketRepository)
+        {
+            _ticketRepository = ticketRepository;
+        }
+
         public ActionResult Index(int id)
         {
-            string connectionString = MvcApplication.ConnectionString.ConnectionString;
-
-            var workDurationFactory = new WorkDurationFactory(new DateTime[0], new WorkDayDefinition
-            {
-                Start = 9,
-                End = 17
-            });
-            var activityIsInProgressSpecification = new ActivityIsInProgressSpecification();
-            IActivitySpecification activityIsLiveSpecification = new ActivityIsLiveSpecification();
-
-            var dateTimeWrapper = new DateTimeWrapper();
-            var ticketCycleTimeDurationFactory = new TicketCycleTimeDurationFactory(workDurationFactory, dateTimeWrapper);
-            var ticketStartDateFactory = new TicketStartDateFactory(activityIsInProgressSpecification);
-            var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
-            var sqlTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var sqlTicketCurrentActivityFactory = new CurrentActivityFactory();
-            var ticketBlockagesFactory = new TicketBlockageFactory(workDurationFactory);
-
-            var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory, ticketBlockagesFactory);
-            var ticketRepository = new TicketsRepository(new DbConnectionString(connectionString), sqlTicketFactory);
-
-            var ticket = ticketRepository.GetAll().Tickets.First(t => t.Id == id);
+            var ticket = _ticketRepository.Get(id);
 
             var activityBreakdown = new ActivityBreakDownFactory().Build(ticket);
 
@@ -56,13 +42,18 @@ namespace LeanKit.ReleaseManager.Controllers
                     Contributors = BuildTicketContributors(ticket),
                     CycleTime = ticket.CycleTime.Days,
                     AssignedUsers = assignedUsers,
-                    Blockages = ticket.Blockages.Select(b => new BlockageViewModel
-                        {
-                            Reason = b.Reason,
-                            DurationInHours = b.Duration.Hours > 0 
-                                ? string.Format("{0} hour{1}", b.Duration.Hours, b.Duration.Hours != 1 ? "s" : "")
-                                : "Under an hour"
-                        })
+                    Blockages = BuildBlockages(ticket)
+                });
+        }
+
+        private static IEnumerable<BlockageViewModel> BuildBlockages(Ticket ticket)
+        {
+            return ticket.Blockages.Select(b => new BlockageViewModel
+                {
+                    Reason = b.Reason,
+                    DurationInHours = b.Duration.Hours > 0 
+                                          ? string.Format("{0} hour{1}", b.Duration.Hours, b.Duration.Hours != 1 ? "s" : "")
+                                          : "Under an hour"
                 });
         }
 

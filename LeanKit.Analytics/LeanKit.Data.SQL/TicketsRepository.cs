@@ -6,68 +6,6 @@ using Dapper;
 
 namespace LeanKit.Data.SQL
 {
-    public interface IGetReleasedTicketsFromTheDatabase
-    {
-        IEnumerable<Ticket> Get(CycleTimeQuery query);
-    }
-
-    public class CompletedTicketsRepository : IGetReleasedTicketsFromTheDatabase
-    {
-        private readonly string _connectionString;
-        private readonly ICreateTickets _ticketFactory;
-
-        public CompletedTicketsRepository(DbConnectionString connectionString, ICreateTickets ticketFactory)
-        {
-            _connectionString = connectionString.ConnectionString;
-            _ticketFactory = ticketFactory;
-        }
-
-        public IEnumerable<Ticket> Get(CycleTimeQuery query)
-        {
-            var tickets = new List<TicketRecord>();
-
-            using (var sqlConnection = new SqlConnection(_connectionString))
-            {
-                sqlConnection.Open();
-
-                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketReleaseRecord, TicketRecord>(
-                        @"SELECT C.*, CA.*, U.Name AssignedUserName, U.Email AssignedUserEmail, R.*
-                            FROM CardActivity CA 
-                                INNER JOIN Card C ON CA.CardID = C.ID
-                                LEFT OUTER JOIN LeanKitUser U ON CA.AssignedUserID = U.ID
-                                LEFT OUTER JOIN ReleaseCard RC ON C.ID = RC.CardID
-                                LEFT OUTER JOIN Release R ON RC.ReleaseID = R.ID
-                            WHERE C.Finished IS NOT NULL
-                            AND (@Started IS NULL OR C.Finished >= @Started)
-                            AND (@Finished IS NULL OR C.Finished <= @Finished)
-                            ORDER BY C.Finished DESC",
-                                                 (ticket, activity, release) =>
-                                                 {
-                                                     var existingTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id);
-
-                                                     var currentTicket = existingTicket ?? ticket;
-
-                                                     if (existingTicket == null)
-                                                     {
-                                                         ticket.Release = release;
-                                                         tickets.Add(ticket);
-                                                     }
-
-                                                     currentTicket.Activities.Add(activity);
-
-                                                     return ticket;
-                                                 },
-                                                 new
-                                                     {
-                                                         Started = query.Start > DateTime.MinValue ? (object)query.Start : null,
-                                                         Finished = query.End > DateTime.MinValue ? (object) query.End.AddDays(1).AddSeconds(-1) : null
-                                                     });
-            }
-
-            return tickets.Select(_ticketFactory.Build);
-        }
-    }
-
     public class TicketsRepository : ITicketRepository
     {
         private readonly string _connectionString;
@@ -161,7 +99,7 @@ namespace LeanKit.Data.SQL
                                         ticket.Id,
                                         ticket.Title,
                                         ticket.ExternalId,
-                                        Size = ticket.Size > 0 ? (int?) ticket.Size : null,
+                                        Size = ticket.Size > 0 ? (int?)ticket.Size : null,
                                         Started = ticket.Started > DateTime.MinValue ? (DateTime?)ticket.Started : null,
                                         Finished = ticket.Finished > DateTime.MinValue ? (DateTime?)ticket.Finished : null
                                     });
@@ -190,12 +128,12 @@ namespace LeanKit.Data.SQL
                                              ? (int?)activity.AssignedUser.Id : null,
                                             UserName = activity.AssignedUser != TicketAssignedUser.UnAssigned
                                              ? activity.AssignedUser.Name : null,
-                                            UserEmail =  activity.AssignedUser != TicketAssignedUser.UnAssigned
+                                            UserEmail = activity.AssignedUser != TicketAssignedUser.UnAssigned
                                              ? activity.AssignedUser.Email.Address : null
                                         });
                 }
 
-                foreach(var blockage in ticket.Blockages)
+                foreach (var blockage in ticket.Blockages)
                 {
                     sqlConnection.Execute(@"IF EXISTS(SELECT * FROM CardBlockage WHERE CardID = @CardID AND Started = @Started )
                                             BEGIN
@@ -220,7 +158,7 @@ namespace LeanKit.Data.SQL
                                         });
                 }
 
-                foreach(var userId in ticket.AssignedUsers.Select(u => u.Id).Distinct())
+                foreach (var userId in ticket.AssignedUsers.Select(u => u.Id).Distinct())
                 {
                     sqlConnection.Execute(@"INSERT INTO CardAssignedUsers(CardID, LeanKitUserID)
                                             VALUES (@CardID, @UserID)",
@@ -233,14 +171,5 @@ namespace LeanKit.Data.SQL
                 }
             }
         }
-    }
-
-    public class TicketAssignedUserRecord
-    {
-        public int Id { get; set; }
-
-        public string Name { get; set; }
-
-        public string Email { get; set; }
     }
 }

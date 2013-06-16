@@ -101,6 +101,18 @@ else
             </div>
         </div>
     }
+    @if (Model.Blockages.Any())
+    {
+        <div class="ticket-detail-summary-item">
+            <h3>Blockages</h3>
+            <ul class="ticket-blockages">
+                @foreach (var blockage in Model.Blockages)
+                {
+                    <li>@blockage.Reason (@blockage.DurationInHours)</li>
+                }
+            </ul>
+        </div>
+    }
     @if (Model.Contributors.Any())
     {
         <div class="ticket-detail-summary-item double-width" id="ticket-contributors">
@@ -111,18 +123,6 @@ else
                     <li class="ticket-contributors-list-item">
                         <div class="gravatar">@Html.Gravatar(contributor.Email, 60)</div>@contributor.Name (@contributor.Role)
                     </li>
-                }
-            </ul>
-        </div>
-    }
-    @if (Model.Blockages.Any())
-    {
-        <div class="ticket-detail-summary-item double-width">
-            <h3>Blockages</h3>
-            <ul class="ticket-blockages">
-                @foreach (var blockage in Model.Blockages)
-                {
-                    <li>@blockage.Reason (@blockage.DurationInHours)</li>
                 }
             </ul>
         </div>

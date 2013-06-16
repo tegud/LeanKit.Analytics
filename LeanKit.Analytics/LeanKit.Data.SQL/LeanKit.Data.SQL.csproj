@@ -53,15 +53,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivityRepository.cs" />
+    <Compile Include="CompletedTicketsRepository.cs" />
     <Compile Include="DataSqlRegistry.cs" />
     <Compile Include="DbConnectionString.cs" />
+    <Compile Include="ErrorHandling\TicketNotFoundInDatabaseException.cs" />
+    <Compile Include="FullTicketInformationRepository.cs" />
     <Compile Include="ICreateTicketActivities.cs" />
     <Compile Include="ICreateTickets.cs" />
+    <Compile Include="IGetAllTicketInformation.cs" />
+    <Compile Include="IGetReleasedTicketsFromTheDatabase.cs" />
     <Compile Include="IMakeTicketBlockages.cs" />
     <Compile Include="ITicketRepository.cs" />
     <Compile Include="ReleaseRepository.cs" />
     <Compile Include="TicketActivityFactory.cs" />
     <Compile Include="TicketActivityRecord.cs" />
+    <Compile Include="TicketAssignedUserRecord.cs" />
     <Compile Include="TicketBlockedRecord.cs" />
     <Compile Include="TicketFactory.cs" />
     <Compile Include="TicketRecord.cs" />

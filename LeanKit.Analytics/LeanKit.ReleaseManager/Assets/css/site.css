@@ -222,7 +222,7 @@ td.ticket-cycle-time { width: 90px;}
 
 .ticket-blockages { font-size: 1.4em;list-style: none;margin: 0; padding: 0 } 
 
-.ticket-blockages li { margin-bottom: 4px; }
+.ticket-blockages li { margin-bottom:8px; }
 
 @media (max-width: 800px)
 {
