@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using LeanKit.Utilities.Collections;
@@ -33,7 +34,7 @@ namespace LeanKit.Data.SQL
             var finished = _ticketFinishDateFactory.CalculateMilestone(activities);
             var duration = _ticketCycleTimeDurationFactory.CalculateDuration(started, finished);
             var currentActivity = _ticketCurrentActivityFactory.Build(activities);
-
+            
             return new Ticket
                 {
                     Id = ticket.Id,
@@ -45,18 +46,28 @@ namespace LeanKit.Data.SQL
                     Size = ticket.Size,
                     Activities = activities,
                     CurrentActivity = currentActivity,
-                    AssignedUsers = ticket.AssignedUsers.Select(u => new TicketAssignedUser
-                        {
-                            Id = u.Id,
-                            Name = u.Name,
-                            Email = new MailAddress(u.Email)
-                        }),
-                    Release = new TicketReleaseInfo
-                        {
-                            Id = ticket.Release == null ? 0 : ticket.Release.Id,
-                            SvnRevision = ticket.Release == null ? "" : ticket.Release.SvnRevision,
-                            ServiceNowId = ticket.Release == null ? "" : ticket.Release.ServiceNowId
-                        }
+                    AssignedUsers = BuildAssignedUsers(ticket),
+                    Release = BuildReleaseInfo(ticket)
+                };
+        }
+
+        private static IEnumerable<TicketAssignedUser> BuildAssignedUsers(TicketRecord ticket)
+        {
+            return ticket.AssignedUsers.Select(u => new TicketAssignedUser
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Email = new MailAddress(u.Email)
+                });
+        }
+
+        private static TicketReleaseInfo BuildReleaseInfo(TicketRecord ticket)
+        {
+            return new TicketReleaseInfo
+                {
+                    Id = ticket.Release == null ? 0 : ticket.Release.Id,
+                    SvnRevision = ticket.Release == null ? "" : ticket.Release.SvnRevision,
+                    ServiceNowId = ticket.Release == null ? "" : ticket.Release.ServiceNowId
                 };
         }
     }
