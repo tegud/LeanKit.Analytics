@@ -6,8 +6,10 @@ using NUnit.Framework;
 namespace LeanKit.Data.SQL.Tests
 {
     [TestFixture]
-    public class MakeTicketBlockagesTests
+    public class MakeTicketBlockagesTests : ICalculateWorkDuration
     {
+        private WorkDuration _durationOfBlockage;
+
         [Test]
         public void SetsBlockageReason()
         {
@@ -15,7 +17,10 @@ namespace LeanKit.Data.SQL.Tests
                 {
                     new TicketBlockedRecord { Reason = "Reason" }
                 };
-            Assert.That(new MakeTicketBlockages().Build(ticketActivityRecords).First().Reason, Is.EqualTo("Reason"));
+
+            ICalculateWorkDuration workDurationFactory = this;
+
+            Assert.That(new TicketBlockageFactory(workDurationFactory).Build(ticketActivityRecords).First().Reason, Is.EqualTo("Reason"));
         }
 
         [Test]
@@ -25,7 +30,10 @@ namespace LeanKit.Data.SQL.Tests
                 {
                     new TicketBlockedRecord { Started = new DateTime(2013, 1, 1) }
                 };
-            Assert.That(new MakeTicketBlockages().Build(ticketActivityRecords).First().Started, Is.EqualTo(new DateTime(2013, 1, 1)));
+
+            ICalculateWorkDuration workDurationFactory = this;
+
+            Assert.That(new TicketBlockageFactory(workDurationFactory).Build(ticketActivityRecords).First().Started, Is.EqualTo(new DateTime(2013, 1, 1)));
         }
 
         [Test]
@@ -35,7 +43,32 @@ namespace LeanKit.Data.SQL.Tests
                 {
                     new TicketBlockedRecord { Finished = new DateTime(2013, 1, 1) }
                 };
-            Assert.That(new MakeTicketBlockages().Build(ticketActivityRecords).First().Finished, Is.EqualTo(new DateTime(2013, 1, 1)));
+
+            ICalculateWorkDuration workDurationFactory = this;
+
+            Assert.That(new TicketBlockageFactory(workDurationFactory).Build(ticketActivityRecords).First().Finished, Is.EqualTo(new DateTime(2013, 1, 1)));
+        }
+
+        [Test]
+        public void SetsBlockageDuration()
+        {
+            var expectedDuration = new WorkDuration();
+
+            _durationOfBlockage = expectedDuration;
+
+            var ticketActivityRecords = new List<TicketBlockedRecord>
+                {
+                    new TicketBlockedRecord()
+                };
+
+            ICalculateWorkDuration workDurationFactory = this;
+
+            Assert.That(new TicketBlockageFactory(workDurationFactory).Build(ticketActivityRecords).First().Duration, Is.EqualTo(expectedDuration));
+        }
+
+        public WorkDuration CalculateDuration(DateTime start, DateTime end)
+        {
+            return _durationOfBlockage;
         }
     }
 }

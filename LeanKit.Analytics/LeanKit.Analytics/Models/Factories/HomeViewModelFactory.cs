@@ -29,8 +29,9 @@ namespace LeanKit.Analytics.Models.Factories
             var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
             var sqlTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var sqlTicketCurrentActivityFactory = new CurrentActivityFactory();
+            var ticketBlockagesFactory = new TicketBlockageFactory(workDurationFactory);
 
-            var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory, new MakeTicketBlockages());
+            var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory, ticketBlockagesFactory);
             var ticketRepository = new TicketsRepository(new DbConnectionString(connectionString), sqlTicketFactory);
             var allTickets = ticketRepository.GetAll();
 

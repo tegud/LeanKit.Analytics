@@ -29,7 +29,7 @@ namespace LeanKit.ReleaseManager.Controllers
             var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
             var sqlTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var sqlTicketCurrentActivityFactory = new CurrentActivityFactory();
-            var ticketBlockagesFactory = new MakeTicketBlockages();
+            var ticketBlockagesFactory = new TicketBlockageFactory(workDurationFactory);
 
             var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory, ticketBlockagesFactory);
             var ticketRepository = new TicketsRepository(new DbConnectionString(connectionString), sqlTicketFactory);
@@ -58,7 +58,10 @@ namespace LeanKit.ReleaseManager.Controllers
                     AssignedUsers = assignedUsers,
                     Blockages = ticket.Blockages.Select(b => new BlockageViewModel
                         {
-                            Reason = b.Reason
+                            Reason = b.Reason,
+                            DurationInHours = b.Duration.Hours > 0 
+                                ? string.Format("{0} hour{1}", b.Duration.Hours, b.Duration.Hours != 1 ? "s" : "")
+                                : "Under an hour"
                         })
                 });
         }
@@ -120,6 +123,8 @@ namespace LeanKit.ReleaseManager.Controllers
     public class BlockageViewModel
     {
         public string Reason { get; set; }
+
+        public string DurationInHours { get; set; }
     }
 
     public class TicketContributorGroupKey

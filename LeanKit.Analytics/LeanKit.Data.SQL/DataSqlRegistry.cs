@@ -13,7 +13,7 @@ namespace LeanKit.Data.SQL
             ioc.Register<IGetReleasedTicketsFromTheDatabase>(
                 i => new CompletedTicketsRepository(i.Resolve<DbConnectionString>(), i.Resolve<ICreateTickets>()));
             ioc.Register<ICreateTicketActivities>(i => new TicketActivityFactory(i.Resolve<ICalculateWorkDuration>()));
-            ioc.Register<IMakeTicketBlockages>(i => new MakeTicketBlockages());
+            ioc.Register<IMakeTicketBlockages>(i => new TicketBlockageFactory(i.Resolve<ICalculateWorkDuration>()));
 
             ioc.Register<ICreateTickets>(i =>
                 {

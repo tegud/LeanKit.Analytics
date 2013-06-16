@@ -58,8 +58,9 @@ namespace LeanKit.SyncToDatabase
 
             var sqlTicketActivityFactory = new Data.SQL.TicketActivityFactory(workDurationFactory);
             var ticketCurrentActivityFactory = new CurrentActivityFactory();
+            var makeTicketBlockages = new TicketBlockageFactory(workDurationFactory);
 
-            var sqlTicketFactory = new Data.SQL.TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, new MakeTicketBlockages());
+            var sqlTicketFactory = new Data.SQL.TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, makeTicketBlockages);
             var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
             var activityRepository = new ActivityRepository(connectionString);
 

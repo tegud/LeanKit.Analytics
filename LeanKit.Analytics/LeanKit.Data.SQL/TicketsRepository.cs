@@ -117,7 +117,7 @@ namespace LeanKit.Data.SQL
                                                          currentTicket.AssignedUsers.Add(assignedUser);
                                                      }
 
-                                                     if(blockage != null && !currentTicket.Blockages.Any(b => b.Started == blockage.Started))
+                                                     if (blockage != null && !string.IsNullOrWhiteSpace(blockage.Reason) && !currentTicket.Blockages.Any(b => b.Started == blockage.Started))
                                                      {
                                                          currentTicket.Blockages.Add(blockage);
                                                      }

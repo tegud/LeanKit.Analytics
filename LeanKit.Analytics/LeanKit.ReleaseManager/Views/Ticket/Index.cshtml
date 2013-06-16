@@ -115,15 +115,18 @@ else
             </ul>
         </div>
     }
-    <div class="ticket-detail-summary-item double-width">
-        <h3>Blockages</h3>
-        <ul class="ticket-blockages">
-            @foreach(var blockage in Model.Blockages)
-            {
-                <li>@blockage.Reason</li>
-            }
-        </ul>
-    </div>
+    @if (Model.Blockages.Any())
+    {
+        <div class="ticket-detail-summary-item double-width">
+            <h3>Blockages</h3>
+            <ul class="ticket-blockages">
+                @foreach (var blockage in Model.Blockages)
+                {
+                    <li>@blockage.Reason (@blockage.DurationInHours)</li>
+                }
+            </ul>
+        </div>
+    }
 </div>
 
 
