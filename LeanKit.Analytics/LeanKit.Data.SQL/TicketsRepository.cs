@@ -87,15 +87,16 @@ namespace LeanKit.Data.SQL
             {
                 sqlConnection.Open();
 
-                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketAssignedUserRecord, TicketRecord>(
-                        @"SELECT C.*, CA.*, U.Name AssignedUserName, U.Email AssignedUserEmail , AU.*
+                sqlConnection.Query<TicketRecord, TicketActivityRecord, TicketAssignedUserRecord, TicketBlockedRecord, TicketRecord>(
+                        @"SELECT C.*, CA.*, U.Name AssignedUserName, U.Email AssignedUserEmail , AU.*, B.*
                             FROM CardActivity CA 
                                 INNER JOIN Card C ON CA.CardID = C.ID
                                 LEFT OUTER JOIN LeanKitUser U ON CA.AssignedUserID = U.ID
                                 LEFT OUTER JOIN CardAssignedUsers CAU ON C.ID = CAU.CardID
                                 LEFT OUTER JOIN LeanKitUser AU ON CAU.LeanKitUserID = AU.ID
+                                LEFT OUTER JOIN CardBlockage B ON B.CardID = C.ID
                             ORDER BY C.ID, CA.ID",
-                                                 (ticket, activity, assignedUser) =>
+                                                 (ticket, activity, assignedUser, blockage) =>
                                                  {
                                                      var existingTicket = tickets.FirstOrDefault(t => t.Id == ticket.Id);
 
@@ -114,6 +115,11 @@ namespace LeanKit.Data.SQL
                                                      if (assignedUser != null && !currentTicket.AssignedUsers.Any(u => u.Id == assignedUser.Id))
                                                      {
                                                          currentTicket.AssignedUsers.Add(assignedUser);
+                                                     }
+
+                                                     if(blockage != null && !currentTicket.Blockages.Any(b => b.Started == blockage.Started))
+                                                     {
+                                                         currentTicket.Blockages.Add(blockage);
                                                      }
 
                                                      return ticket;

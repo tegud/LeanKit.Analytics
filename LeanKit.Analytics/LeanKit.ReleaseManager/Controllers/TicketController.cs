@@ -55,7 +55,11 @@ namespace LeanKit.ReleaseManager.Controllers
                     IsCompleted = ticket.Finished > DateTime.MinValue,
                     Contributors = BuildTicketContributors(ticket),
                     CycleTime = ticket.CycleTime.Days,
-                    AssignedUsers = assignedUsers
+                    AssignedUsers = assignedUsers,
+                    Blockages = ticket.Blockages.Select(b => new BlockageViewModel
+                        {
+                            Reason = b.Reason
+                        })
                 });
         }
 
@@ -111,6 +115,11 @@ namespace LeanKit.ReleaseManager.Controllers
 
             return ticket.CurrentActivity.Title;
         }
+    }
+
+    public class BlockageViewModel
+    {
+        public string Reason { get; set; }
     }
 
     public class TicketContributorGroupKey
@@ -172,5 +181,7 @@ namespace LeanKit.ReleaseManager.Controllers
         public int CycleTime { get; set; }
 
         public IEnumerable<TicketContributor> AssignedUsers { get; set; }
+
+        public IEnumerable<BlockageViewModel> Blockages { get; set; }
     }
 }

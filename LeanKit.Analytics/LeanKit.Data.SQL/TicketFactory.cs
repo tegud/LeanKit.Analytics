@@ -51,7 +51,7 @@ namespace LeanKit.Data.SQL
                     CurrentActivity = currentActivity,
                     AssignedUsers = BuildAssignedUsers(ticket),
                     Release = BuildReleaseInfo(ticket),
-                    Blockages = _ticketBlockagesFactory.Build(ticket.Activities)
+                    Blockages = _ticketBlockagesFactory.Build(ticket.Blockages)
                 };
         }
 

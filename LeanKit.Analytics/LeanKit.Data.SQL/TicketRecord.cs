@@ -18,10 +18,13 @@ namespace LeanKit.Data.SQL
 
         public List<TicketAssignedUserRecord> AssignedUsers { get; set; }
 
+        public List<TicketBlockedRecord> Blockages { get; set; }
+
         public TicketRecord()
         {
             Activities = new List<TicketActivityRecord>();
             AssignedUsers = new List<TicketAssignedUserRecord>();
+            Blockages = new List<TicketBlockedRecord>();
         }
     }
 }

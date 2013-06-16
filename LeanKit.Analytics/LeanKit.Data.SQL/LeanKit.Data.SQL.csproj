@@ -62,6 +62,7 @@
     <Compile Include="ReleaseRepository.cs" />
     <Compile Include="TicketActivityFactory.cs" />
     <Compile Include="TicketActivityRecord.cs" />
+    <Compile Include="TicketBlockedRecord.cs" />
     <Compile Include="TicketFactory.cs" />
     <Compile Include="TicketRecord.cs" />
     <Compile Include="TicketReleaseRecord.cs" />

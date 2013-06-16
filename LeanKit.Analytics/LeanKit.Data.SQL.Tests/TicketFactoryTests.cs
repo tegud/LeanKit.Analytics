@@ -314,7 +314,7 @@ namespace LeanKit.Data.SQL.Tests
             return _currentActivity;
         }
 
-        public IEnumerable<TicketBlockage> Build(IEnumerable<TicketActivityRecord> activityRecords)
+        public IEnumerable<TicketBlockage> Build(IEnumerable<TicketBlockedRecord> activityRecords)
         {
             return _blockages;
         }

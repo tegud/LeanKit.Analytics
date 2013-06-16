@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MakeTicketBlockagesTests.cs" />
     <Compile Include="TicketActivityFactoryTests.cs" />
     <Compile Include="TicketFactoryTests.cs" />
   </ItemGroup>
