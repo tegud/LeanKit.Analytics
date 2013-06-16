@@ -6,11 +6,12 @@ using NUnit.Framework;
 namespace LeanKit.Data.SQL.Tests
 {
     [TestFixture]
-    public class TicketFactoryTests : ICalculateWorkDuration, ICreateTicketActivities, ICalculateTicketMilestone, IFindTheCurrentActivity
+    public class TicketFactoryTests : ICalculateWorkDuration, ICreateTicketActivities, ICalculateTicketMilestone, IFindTheCurrentActivity, IMakeTicketBlockages
     {
         private WorkDuration _cycleTime;
         private DateTime _mileStoneDate;
         private TicketActivity _currentActivity;
+        private IEnumerable<TicketBlockage> _blockages;
 
         [Test]
         public void SetsTicketTitle()
@@ -21,8 +22,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord
                 {
@@ -39,8 +41,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            Assert.That(new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory).Build(new TicketRecord
+            Assert.That(new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory).Build(new TicketRecord
             {
                 Id = expectedId
             }).Id, Is.EqualTo(expectedId));
@@ -55,8 +58,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            Assert.That(new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory).Build(new TicketRecord
+            Assert.That(new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory).Build(new TicketRecord
             {
                 Size = expectedSize
             }).Size, Is.EqualTo(expectedSize));
@@ -73,8 +77,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, cycleTimeFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, cycleTimeFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord()).Started, Is.EqualTo(expectedStarted));
         }
@@ -90,8 +95,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, cycleTimeFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, cycleTimeFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord()).Finished, Is.EqualTo(expectedFinished));
         }
@@ -107,8 +113,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, cycleTimeFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, cycleTimeFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord()).CycleTime, Is.EqualTo(expectedCycleTime));
         }
@@ -124,8 +131,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, cycleTimeFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, cycleTimeFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord()).CurrentActivity, Is.EqualTo(expectedCurrentActivity));
         }
@@ -139,8 +147,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord
             {
@@ -157,8 +166,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord
             {
@@ -175,8 +185,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord
             {
@@ -193,8 +204,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord
             {
@@ -209,8 +221,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord
             {
@@ -229,8 +242,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord
             {
@@ -249,8 +263,9 @@ namespace LeanKit.Data.SQL.Tests
             var ticketMilestoneFactory = this;
             var ticketCycleTimeDurationFactory = this;
             var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
 
-            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
 
             Assert.That(ticketFactory.Build(new TicketRecord
             {
@@ -260,6 +275,23 @@ namespace LeanKit.Data.SQL.Tests
                         new TicketAssignedUserRecord { Email = "developer@example.com" }
                     }
             }).AssignedUsers.First().Email.Address, Is.EqualTo("developer@example.com"));
+        }
+
+        [Test]
+        public void SetsBlockages()
+        {
+            _blockages = new List<TicketBlockage>();
+            var ticketRecord = new TicketRecord();
+
+            var ticketActivityFactory = this;
+            var ticketMilestoneFactory = this;
+            var ticketCycleTimeDurationFactory = this;
+            var ticketCurrentActivityFactory = this;
+            var ticketBlockagesFactory = this;
+
+            var ticketFactory = new TicketFactory(ticketMilestoneFactory, ticketMilestoneFactory, ticketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, ticketBlockagesFactory);
+
+            Assert.That(ticketFactory.Build(ticketRecord).Blockages, Is.EqualTo(_blockages));
         }
 
         public WorkDuration CalculateDuration(DateTime start, DateTime end)
@@ -280,6 +312,11 @@ namespace LeanKit.Data.SQL.Tests
         public TicketActivity Build(IEnumerable<TicketActivity> activities)
         {
             return _currentActivity;
+        }
+
+        public IEnumerable<TicketBlockage> Build(IEnumerable<TicketActivityRecord> activityRecords)
+        {
+            return _blockages;
         }
     }
 }

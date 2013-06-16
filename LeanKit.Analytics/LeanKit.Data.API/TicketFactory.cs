@@ -1,29 +1,47 @@
+using System.Collections.Generic;
 using System.Linq;
 using LeanKit.APIClient.API;
 
 namespace LeanKit.Data.API
 {
+    public interface IMakeTicketBlockages
+    {
+        IEnumerable<TicketBlockage> Build(IEnumerable<LeanKitCardHistory> cardHistory);
+    }
+
+    public class TicketBlockagesFactory : IMakeTicketBlockages
+    {
+        public IEnumerable<TicketBlockage> Build(IEnumerable<LeanKitCardHistory> cardHistory)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+
     public class TicketFactory : ICreateTickets
     {
         private readonly ITicketActivitiesFactory _ticketActivitiesFactory;
         private readonly ICalculateWorkDuration _ticketCycleTimeDurationFactory;
         private readonly ICalculateTicketMilestone _ticketStartDateFactory;
         private readonly ICalculateTicketMilestone _ticketFinishDateFactory;
+        private readonly IMakeTicketBlockages _ticketBlockagesFactory;
+        private readonly IApiCaller _apiCaller;
 
-        public TicketFactory(ITicketActivitiesFactory ticketActivitiesFactory,
-                             ICalculateWorkDuration ticketCycleTimeDurationFactory,
-                             ICalculateTicketMilestone ticketStartDateFactory,
-                             ICalculateTicketMilestone ticketFinishDateFactory)
+        public TicketFactory(ITicketActivitiesFactory ticketActivitiesFactory, ICalculateWorkDuration ticketCycleTimeDurationFactory, ICalculateTicketMilestone ticketStartDateFactory, ICalculateTicketMilestone ticketFinishDateFactory, IMakeTicketBlockages ticketBlockagesFactory, IApiCaller apiCaller)
         {
+            _apiCaller = apiCaller;
             _ticketActivitiesFactory = ticketActivitiesFactory;
             _ticketCycleTimeDurationFactory = ticketCycleTimeDurationFactory;
             _ticketStartDateFactory = ticketStartDateFactory;
             _ticketFinishDateFactory = ticketFinishDateFactory;
+            _ticketBlockagesFactory = ticketBlockagesFactory;
         }
 
         public Ticket Build(LeankitBoardCard card)
         {
-            var ticketActivities = _ticketActivitiesFactory.Build(card).ToArray();
+            var cardHistory = _apiCaller.GetCardHistory(card.Id).ToArray();
+
+            var ticketActivities = _ticketActivitiesFactory.Build(cardHistory).ToArray();
+            var ticketBlockages = _ticketBlockagesFactory.Build(cardHistory);
 
             var started = _ticketStartDateFactory.CalculateMilestone(ticketActivities);
             var finished = _ticketFinishDateFactory.CalculateMilestone(ticketActivities);
@@ -43,7 +61,8 @@ namespace LeanKit.Data.API
                     Activities = ticketActivities,
                     CycleTime = duration,
                     Size = card.Size,
-                    AssignedUsers = ticketAssignedUsers
+                    AssignedUsers = ticketAssignedUsers,
+                    Blockages = ticketBlockages
                 };
         }
     }

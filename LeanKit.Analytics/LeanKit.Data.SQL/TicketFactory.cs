@@ -12,18 +12,21 @@ namespace LeanKit.Data.SQL
         private readonly ICalculateTicketMilestone _ticketStartDateFactory;
         private readonly ICalculateTicketMilestone _ticketFinishDateFactory;
         private readonly ICreateTicketActivities _ticketActivityFactory;
+        private readonly IMakeTicketBlockages _ticketBlockagesFactory;
 
         public TicketFactory(ICalculateTicketMilestone ticketStartDateFactory, 
             ICalculateTicketMilestone ticketFinishDateFactory, 
             ICreateTicketActivities ticketActivityFactory, 
             ICalculateWorkDuration ticketCycleTimeDurationFactory, 
-            IFindTheCurrentActivity ticketCurrentActivityFactory)
+            IFindTheCurrentActivity ticketCurrentActivityFactory, 
+            IMakeTicketBlockages ticketBlockagesFactory)
         {
             _ticketStartDateFactory = ticketStartDateFactory;
             _ticketFinishDateFactory = ticketFinishDateFactory;
             _ticketActivityFactory = ticketActivityFactory;
             _ticketCycleTimeDurationFactory = ticketCycleTimeDurationFactory;
             _ticketCurrentActivityFactory = ticketCurrentActivityFactory;
+            _ticketBlockagesFactory = ticketBlockagesFactory;
         }
 
         public Ticket Build(TicketRecord ticket)
@@ -47,7 +50,8 @@ namespace LeanKit.Data.SQL
                     Activities = activities,
                     CurrentActivity = currentActivity,
                     AssignedUsers = BuildAssignedUsers(ticket),
-                    Release = BuildReleaseInfo(ticket)
+                    Release = BuildReleaseInfo(ticket),
+                    Blockages = _ticketBlockagesFactory.Build(ticket.Activities)
                 };
         }
 

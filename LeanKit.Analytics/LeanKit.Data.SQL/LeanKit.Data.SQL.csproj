@@ -57,6 +57,7 @@
     <Compile Include="DbConnectionString.cs" />
     <Compile Include="ICreateTicketActivities.cs" />
     <Compile Include="ICreateTickets.cs" />
+    <Compile Include="IMakeTicketBlockages.cs" />
     <Compile Include="ITicketRepository.cs" />
     <Compile Include="ReleaseRepository.cs" />
     <Compile Include="TicketActivityFactory.cs" />

@@ -29,8 +29,9 @@ namespace LeanKit.ReleaseManager.Controllers
             var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
             var sqlTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
             var sqlTicketCurrentActivityFactory = new CurrentActivityFactory();
+            var ticketBlockagesFactory = new MakeTicketBlockages();
 
-            var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory);
+            var sqlTicketFactory = new TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, sqlTicketCurrentActivityFactory, ticketBlockagesFactory);
             var ticketRepository = new TicketsRepository(new DbConnectionString(connectionString), sqlTicketFactory);
 
             var ticket = ticketRepository.GetAll().Tickets.First(t => t.Id == id);

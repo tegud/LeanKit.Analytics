@@ -26,6 +26,12 @@ namespace LeanKit.Data
         public TicketReleaseInfo Release { get; set; }
 
         public IEnumerable<TicketAssignedUser> AssignedUsers { get; set; }
+
+        public IEnumerable<TicketBlockage> Blockages { get; set; }
+    }
+
+    public class TicketBlockage
+    {
     }
 
     public class TicketReleaseInfo

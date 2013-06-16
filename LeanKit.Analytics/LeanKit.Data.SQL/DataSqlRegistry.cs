@@ -12,8 +12,8 @@ namespace LeanKit.Data.SQL
             ioc.Register<ITicketRepository>(i => new TicketsRepository(i.Resolve<DbConnectionString>(), i.Resolve<ICreateTickets>()));
             ioc.Register<IGetReleasedTicketsFromTheDatabase>(
                 i => new CompletedTicketsRepository(i.Resolve<DbConnectionString>(), i.Resolve<ICreateTickets>()));
-
             ioc.Register<ICreateTicketActivities>(i => new TicketActivityFactory(i.Resolve<ICalculateWorkDuration>()));
+            ioc.Register<IMakeTicketBlockages>(i => new MakeTicketBlockages());
 
             ioc.Register<ICreateTickets>(i =>
                 {
@@ -22,12 +22,14 @@ namespace LeanKit.Data.SQL
                     var ticketCycleTimeDurationFactory = i.Resolve<ICalculateWorkDuration>(Module.TicketCycleTimeDuration);
                     var ticketActivityFactory = i.Resolve<ICreateTicketActivities>();
                     var ticketCurrentActivityFactory = new CurrentActivityFactory();
+                    var ticketBlockagesFactory = i.Resolve<IMakeTicketBlockages>();
 
                     return new TicketFactory(ticketStartDateFactory,
                                              ticketFinishDateFactory,
                                              ticketActivityFactory,
                                              ticketCycleTimeDurationFactory,
-                                             ticketCurrentActivityFactory);
+                                             ticketCurrentActivityFactory,
+                                             ticketBlockagesFactory);
                 });
         }
     }

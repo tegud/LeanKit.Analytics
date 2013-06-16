@@ -47,13 +47,19 @@ namespace LeanKit.SyncToDatabase
             var ticketFinishDateFactory = new TicketFinishDateFactory(activityIsLiveSpecification);
 
             var apiTicketActivityFactory = new TicketActivityFactory(workDurationFactory);
-            var apiTicketActivitiesFactory = new TicketActivitiesFactory(apiCaller, apiTicketActivityFactory);
-            var apiTicketFactory = new Data.API.TicketFactory(apiTicketActivitiesFactory, ticketCycleTimeDurationFactory, ticketStartDateFactory, ticketFinishDateFactory);
+            var apiTicketActivitiesFactory = new TicketActivitiesFactory(apiTicketActivityFactory, new HistoryIsReleventToActivitiesSpecification());
+            var ticketBlockagesFactory = new TicketBlockagesFactory();
+
+            var apiTicketFactory = new Data.API.TicketFactory(apiTicketActivitiesFactory, 
+                ticketCycleTimeDurationFactory, 
+                ticketStartDateFactory, 
+                ticketFinishDateFactory, 
+                ticketBlockagesFactory, apiCaller);
 
             var sqlTicketActivityFactory = new Data.SQL.TicketActivityFactory(workDurationFactory);
             var ticketCurrentActivityFactory = new CurrentActivityFactory();
 
-            var sqlTicketFactory = new Data.SQL.TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory);
+            var sqlTicketFactory = new Data.SQL.TicketFactory(ticketStartDateFactory, ticketFinishDateFactory, sqlTicketActivityFactory, ticketCycleTimeDurationFactory, ticketCurrentActivityFactory, new MakeTicketBlockages());
             var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
             var activityRepository = new ActivityRepository(connectionString);
 

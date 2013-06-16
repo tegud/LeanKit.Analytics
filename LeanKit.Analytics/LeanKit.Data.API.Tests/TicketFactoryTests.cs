@@ -9,20 +9,26 @@ using NUnit.Framework;
 namespace LeanKit.Data.API.Tests
 {
     [TestFixture]
-    public class TicketFactoryTests : ITicketActivitiesFactory, ICalculateWorkDuration
+    public class TicketFactoryTests : ITicketActivitiesFactory, ICalculateWorkDuration, IMakeTicketBlockages, IApiCaller
     {
         private WorkDuration _workDuration;
         private List<TicketActivity> _ticketActivities = new List<TicketActivity>(0);
+        private IEnumerable<TicketBlockage> _blockages;
+        private IEnumerable<LeanKitCardHistory> _cardHistory;
+        private IEnumerable<LeanKitCardHistory> _cardHistoryPassedToBlockagesFactory;
+        private IEnumerable<LeanKitCardHistory> _cardHistoryPassedToActivitiesFactory;
 
         [Test]
         public void SetsId()
         {
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard { Id = 12345, AssignedUsers = new LeanKitAssignedUser[0] }).Id, Is.EqualTo(12345));
         }
@@ -32,10 +38,12 @@ namespace LeanKit.Data.API.Tests
         {
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard { Title = "Test Title", AssignedUsers = new LeanKitAssignedUser[0] }).Title, Is.EqualTo("Test Title"));
         }
@@ -45,10 +53,12 @@ namespace LeanKit.Data.API.Tests
         {
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard { ExternalCardID = "R-12345", AssignedUsers = new LeanKitAssignedUser[0] }).ExternalId, Is.EqualTo("R-12345"));
         }
@@ -58,10 +68,12 @@ namespace LeanKit.Data.API.Tests
         {
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard { Size = 1, AssignedUsers = new LeanKitAssignedUser[0] }).Size, Is.EqualTo(1));
         }
@@ -73,10 +85,12 @@ namespace LeanKit.Data.API.Tests
 
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new FakeMileStoneFactory(expectedStartDate), fakeMileStoneFactory);
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, new FakeMileStoneFactory(expectedStartDate), fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard { AssignedUsers = new LeanKitAssignedUser[0] }).Started, Is.EqualTo(expectedStartDate));
         }
@@ -88,10 +102,12 @@ namespace LeanKit.Data.API.Tests
 
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, new FakeMileStoneFactory(expectedFinished));
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, new FakeMileStoneFactory(expectedFinished), ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard { AssignedUsers = new LeanKitAssignedUser[0] }).Finished, Is.EqualTo(expectedFinished));
         }
@@ -105,10 +121,12 @@ namespace LeanKit.Data.API.Tests
 
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard { AssignedUsers = new LeanKitAssignedUser[0]  }).CycleTime, Is.EqualTo(expectedDuration));
         }
@@ -128,10 +146,12 @@ namespace LeanKit.Data.API.Tests
 
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard { AssignedUsers = new[] { new LeanKitAssignedUser { AssignedUserId = 12345 } } }).AssignedUsers.First().Id, Is.EqualTo(expectedId));
         }
@@ -153,10 +173,12 @@ namespace LeanKit.Data.API.Tests
 
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard
             {
@@ -184,10 +206,12 @@ namespace LeanKit.Data.API.Tests
 
             ITicketActivitiesFactory ticketActivitiesFactory = this;
             ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
 
             var fakeMileStoneFactory = new FakeMileStoneFactory();
 
-            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory);
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
 
             Assert.That(ticketFactory.Build(new LeankitBoardCard
             {
@@ -198,15 +222,95 @@ namespace LeanKit.Data.API.Tests
             }).AssignedUsers.First().Email.Address, Is.EqualTo(expectedEmail));
         }
 
-        public IEnumerable<TicketActivity> Build(LeankitBoardCard card)
+        [Test]
+        public void SetsBlockages()
         {
-            
-            return _ticketActivities;
+            _blockages = new List<TicketBlockage>(0);
+
+            var leankitBoardCard = new LeankitBoardCard { AssignedUsers = new LeanKitAssignedUser[0] };
+
+            ITicketActivitiesFactory ticketActivitiesFactory = this;
+            ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
+
+            var fakeMileStoneFactory = new FakeMileStoneFactory();
+
+            var ticketFactory = new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller);
+
+            Assert.That(ticketFactory.Build(leankitBoardCard).Blockages, Is.EqualTo(_blockages));
+        }
+
+        [Test]
+        public void CardHistoryFromApiPassedToBlockagesFactory()
+        {
+            _blockages = new List<TicketBlockage>(0);
+            _cardHistory = new LeanKitCardHistory[0];
+
+            var leankitBoardCard = new LeankitBoardCard { AssignedUsers = new LeanKitAssignedUser[0] };
+
+            ITicketActivitiesFactory ticketActivitiesFactory = this;
+            ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
+
+            var fakeMileStoneFactory = new FakeMileStoneFactory();
+
+            new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller).Build(leankitBoardCard);
+
+            Assert.That(_cardHistoryPassedToBlockagesFactory, Is.EqualTo(_cardHistory));
+        }
+
+        [Test]
+        public void CardHistoryFromApiPassedToActivitiesFactory()
+        {
+            _blockages = new List<TicketBlockage>(0);
+            _cardHistory = new LeanKitCardHistory[0];
+
+            var leankitBoardCard = new LeankitBoardCard { AssignedUsers = new LeanKitAssignedUser[0] };
+
+            ITicketActivitiesFactory ticketActivitiesFactory = this;
+            ICalculateWorkDuration ticketCycleTimeDurationFactory = this;
+            IMakeTicketBlockages ticketBlockagesFactory = this;
+            IApiCaller apiCaller = this;
+
+            var fakeMileStoneFactory = new FakeMileStoneFactory();
+
+            new TicketFactory(ticketActivitiesFactory, ticketCycleTimeDurationFactory, fakeMileStoneFactory, fakeMileStoneFactory, ticketBlockagesFactory, apiCaller).Build(leankitBoardCard);
+
+            Assert.That(_cardHistoryPassedToActivitiesFactory, Is.EqualTo(_cardHistory));
         }
 
         public WorkDuration CalculateDuration(DateTime start, DateTime end)
         {
             return _workDuration;
+        }
+
+        public LeankitBoard GetBoard()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<LeanKitCardHistory> GetCardHistory(int cardId)
+        {
+            return _cardHistory;
+        }
+
+        public LeankitBoardLaneWrapper GetBoardArchive()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<TicketActivity> ITicketActivitiesFactory.Build(IEnumerable<LeanKitCardHistory> cardHistory)
+        {
+            _cardHistoryPassedToActivitiesFactory = cardHistory;
+            return _ticketActivities;
+        }
+
+        IEnumerable<TicketBlockage> IMakeTicketBlockages.Build(IEnumerable<LeanKitCardHistory> cardHistory)
+        {
+            _cardHistoryPassedToBlockagesFactory = cardHistory;
+            return _blockages;
         }
     }
 }
