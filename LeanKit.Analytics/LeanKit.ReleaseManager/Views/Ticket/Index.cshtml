@@ -117,7 +117,7 @@ else
     }
     <div class="ticket-detail-summary-item double-width">
         <h3>Blockages</h3>
-        <ul>
+        <ul class="ticket-blockages">
             @foreach(var blockage in Model.Blockages)
             {
                 <li>@blockage.Reason</li>
