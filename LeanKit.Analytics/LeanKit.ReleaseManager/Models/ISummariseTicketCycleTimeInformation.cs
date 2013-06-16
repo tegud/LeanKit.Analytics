@@ -15,6 +15,11 @@ namespace LeanKit.ReleaseManager.Models
     {
         public TicketCycleTimeSummary Summarise(IEnumerable<Ticket> tickets)
         {
+            if(!tickets.Any())
+            {
+                return new TicketCycleTimeSummary { CycleTimeBySize = new CycleTimeBySize[0] };
+            }
+
             var ticketCount = tickets.Count();
 
             IEnumerable<CycleTimeBySize> cycleTimesBySize =

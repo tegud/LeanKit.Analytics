@@ -13,6 +13,15 @@ namespace LeanKit.ReleaseManager.Tests.Models
     [TestFixture]
     public class SummariseTicketCycleTimeInformationTests
     {
+
+        [Test]
+        public void NoTicketsSetsEmptySummary()
+        {
+            var tickets = new Ticket[0];
+
+            Assert.That(new SummariseTicketCycleTimeInformation().Summarise(tickets).TicketCount, Is.EqualTo(0));
+        }
+
         [Test]
         public void SetsNumberOfTickets()
         {
