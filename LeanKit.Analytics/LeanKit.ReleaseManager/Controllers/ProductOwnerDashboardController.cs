@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
+using LeanKit.ReleaseManager.Models.TimePeriods;
 
 namespace LeanKit.ReleaseManager.Controllers
 {

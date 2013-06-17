@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using LeanKit.ReleaseManager.Models.TimePeriods;
 
 namespace LeanKit.ReleaseManager.Models.CycleTime
 {

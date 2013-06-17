@@ -144,7 +144,6 @@
     <Compile Include="Models\CycleTime\CycleTimeViewModel.cs" />
     <Compile Include="Models\CycleTime\CycleTimeViewModelFactory.cs" />
     <Compile Include="Models\CycleTime\IBuildListOfCycleTimeItems.cs" />
-    <Compile Include="Models\CycleTime\TimePeriodViewModelFactory.cs" />
     <Compile Include="Models\DateIsWorkDaySpecification.cs" />
     <Compile Include="Models\DateOption.cs" />
     <Compile Include="Models\DateOptionsFactory.cs" />
@@ -178,6 +177,11 @@
     <Compile Include="Models\Releases\ReleaseViewModel.cs" />
     <Compile Include="Models\Releases\ReleaseViewModelFactory.cs" />
     <Compile Include="Models\Releases\UpcomingReleasesViewModel.cs" />
+    <Compile Include="Models\TimePeriods\IDefineATimePeriodItem.cs" />
+    <Compile Include="Models\TimePeriods\LastXDaysPeriodItem.cs" />
+    <Compile Include="Models\TimePeriods\StaticPeriodItem.cs" />
+    <Compile Include="Models\TimePeriods\TimePeriodViewModelFactory.cs" />
+    <Compile Include="Models\TimePeriods\WeekCommencingPeriodItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />
