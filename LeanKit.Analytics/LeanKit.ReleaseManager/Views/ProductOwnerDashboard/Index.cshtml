@@ -2,6 +2,7 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Layouts/_Layout.cshtml";
 }
+@model LeanKit.ReleaseManager.Controllers.ProductOwnerDashboardViewModel
 
 <h2>Product Owner Dashboard</h2>
 
@@ -9,31 +10,31 @@
     <div class="dashboard-item">
         <h3>Releases</h3>
         <div class="dashboard-bigtext-container">
-            <span class="dashboard-bigtext">4</span>
+            <span class="dashboard-bigtext">@Model.ReleaseCount</span>
         </div>
     </div>
     <div class="dashboard-item">
-        <h3>Tickets Released</h3>
+        <h3>Tickets Completed</h3>
         <div class="dashboard-bigtext-container">
-            <span class="dashboard-bigtext">9</span>
+            <span class="dashboard-bigtext">@Model.TicketsCompletedCount</span>
         </div>
     </div>
     <div class="dashboard-item">
         <h3>Complexity Points Released</h3>
         <div class="dashboard-bigtext-container">
-            <span class="dashboard-bigtext">7</span>
+            <span class="dashboard-bigtext">@Model.ComplexityPointsReleased</span>
         </div>
     </div>
     <div class="dashboard-item">
         <h3>Average Cycle Time</h3>
         <div class="dashboard-bigtext-container">
-            <span class="dashboard-bigtext">3</span><span class="dashboard-bigtext-units"> days</span>
+            <span class="dashboard-bigtext">@Model.AverageCycleTime</span><span class="dashboard-bigtext-units"> day@(Model.AverageCycleTime != 1 ? "s" : "")</span>
         </div>
     </div>
     <div class="dashboard-item double-width">
-        <h3>Releases this week</h3>
+        <h3>Releases @Model.SelectedTimePeriodFriendlyName</h3>
     </div>
     <div class="dashboard-item double-width">
-        <h3>Blockages this week</h3>
+        <h3>Blockages @Model.SelectedTimePeriodFriendlyName</h3>
     </div>
 </div>
