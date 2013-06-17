@@ -224,6 +224,8 @@ td.ticket-cycle-time { width: 90px;}
 
 .ticket-blockages li { margin-bottom:8px; }
 
+.po-dashboard-chg-id { font-size: 0.8em;font-style: italic;color: #888; }
+
 @media (max-width: 800px)
 {
     .actual-end-date,
