@@ -68,6 +68,12 @@ namespace LeanKit.ReleaseManager
             );
 
             routes.MapRoute(
+                name: "ProductOwnerDashboard",
+                url: "ProductOwnerDashboard",
+                defaults: new { controller = "ProductOwnerDashboard", action = "Index" }
+            );
+
+            routes.MapRoute(
                 name: "Home",
                 url: "",
                 defaults: new { controller = "Home", action = "Index" }
