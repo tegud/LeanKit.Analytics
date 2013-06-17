@@ -119,6 +119,7 @@
     <Compile Include="App_Start\MunqMvc3Startup.cs" />
     <Compile Include="Controllers\CycleTimeController.cs" />
     <Compile Include="Controllers\EditRelease.cs" />
+    <Compile Include="Controllers\ProductOwnerDashboardController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\UpcomingReleasesController.cs" />
     <Compile Include="Controllers\NewReleaseController.cs" />
@@ -250,6 +251,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Ticket\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\ProductOwnerDashboard\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
