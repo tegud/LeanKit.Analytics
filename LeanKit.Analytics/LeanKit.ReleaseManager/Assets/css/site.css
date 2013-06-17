@@ -180,17 +180,17 @@ td.ticket-cycle-time { width: 90px;}
 
 .activity-time-detail { font-size: 0.8em; color: #888 }
 
-.ticket-detail-summary-item {display: inline-block; background-color: #f7f7f7;width: 280px;min-height: 200px;height: 200px;border-radius: 5px;padding: 10px; margin: 0 10px 14px 0;vertical-align: top; }
+.dashboard-item {display: inline-block; background-color: #f7f7f7;width: 280px;min-height: 200px;height: 200px;border-radius: 5px;padding: 10px; margin: 0 10px 14px 0;vertical-align: top; }
 
-.ticket-detail-summary-item.double-width { width: 594px; }
+.dashboard-item.double-width { width: 594px; }
 
-.ticket-detail-summary-item h3 { margin-top: 0;color: #999; }
+.dashboard-item h3 { margin-top: 0;color: #999; }
 
-.ticket-summary-cycle-time { font-size: 10em; }
+.dashboard-bigtext { font-size: 10em; }
 
-.ticket-summary-cycle-time-units { font-size: 2em; }
+.dashboard-bigtext-units { font-size: 2em; }
 
-.ticket-summary-cycle-time-container { text-align: center; }
+.dashboard-bigtext-container { text-align: center; }
 
 .summary-current-text { font-size: 1.4em; }
 .summary-current-text > div { margin-bottom: 10px; }
