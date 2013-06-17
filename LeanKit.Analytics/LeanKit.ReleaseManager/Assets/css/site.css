@@ -152,9 +152,9 @@ td.ticket-started { width: 160px;}
 td.ticket-released { width: 160px;}
 td.ticket-cycle-time { width: 90px;}
 
-#cycle-time-period-options { margin: 0 0 10px 0;padding: 0;list-style: none; }
+#time-period-options { margin: 0 0 10px 0;padding: 0;list-style: none; }
 
-#cycle-time-period-options li { display: inline-block;padding: 5px; }
+#time-period-options li { display: inline-block;padding: 5px; }
 
 .time-option { background-color: #eee;border-radius: 3px; }
 
@@ -223,6 +223,10 @@ td.ticket-cycle-time { width: 90px;}
 .ticket-blockages { font-size: 1.4em;list-style: none;margin: 0; padding: 0 } 
 
 .ticket-blockages li { margin-bottom:8px; }
+
+.po-dashboard-release-list { margin: 0;padding: 0;font-size: 1.4em; list-style: none;}
+
+.po-dashboard-release-list li { padding: 5px 0;  }
 
 .po-dashboard-chg-id { font-size: 0.8em;font-style: italic;color: #888; }
 

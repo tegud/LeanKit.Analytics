@@ -69,8 +69,8 @@ namespace LeanKit.ReleaseManager.Tests.Models
         }
 
         [TestCase("", 30)]
-        [TestCase("30", 30)]
-        [TestCase("90", 90)]
+        [TestCase("0,30", 30)]
+        [TestCase("0,90", 90)]
         public void NumberSetsStartDateToThatNumberOfDaysBeforeCurrentDate(string timePeriod, int numberOfDays)
         {
             _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);

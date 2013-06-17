@@ -19,7 +19,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
 
         [TestCase(0, "this-week")]
         [TestCase(1, "last-week")]
-        [TestCase(2, "30")]
+        [TestCase(2, "0,30")]
         [TestCase(3, "all-time")]
         public void SetsValue(int index, string expectedValue)
         {

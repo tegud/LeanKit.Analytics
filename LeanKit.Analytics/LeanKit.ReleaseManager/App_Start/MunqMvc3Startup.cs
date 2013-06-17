@@ -58,7 +58,7 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IMakeCycleTimeQueries>(i => new CycleTimeQueryFactory(i.Resolve<IKnowTheCurrentDateAndTime>()));
             ioc.Register<IMakeTimePeriodViewModels, CycleTimePeriodViewModelFactory>();
             ioc.Register<ISummariseTicketCycleTimeInformation, SummariseTicketCycleTimeInformation>();
- 
+            ioc.Register<IBuildListOfCycleTimeItems, CycleTimeListOfTicketsViewModelFactory>();
 
             DataRegistry.Register(ioc);
             DataSqlRegistry.Register(ioc);

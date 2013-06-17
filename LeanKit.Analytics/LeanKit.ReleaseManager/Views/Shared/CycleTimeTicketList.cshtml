@@ -1,0 +1,13 @@
+﻿@model IEnumerable<LeanKit.ReleaseManager.Models.CycleTime.CycleTimeTicketItem>
+
+@foreach (var ticket in Model)
+{
+<tr class="ticket-row">
+    <td class="ticket-title"><a href="/Ticket/@ticket.Id">@string.Format("{0}{1}{2}", ticket.ExternalId, string.IsNullOrWhiteSpace(ticket.ExternalId) ? "" : " - ", ticket.Title)</a></td>
+    <td class="ticket-started">@ticket.StartedFriendlyText</td>
+    <td class="ticket-released">@ticket.FinishedFriendlyText</td>
+    <td class="ticket-release"><a href="/Release/@ticket.Release.Id">@ticket.Release.Name</a></td>
+    <td class="ticket-estimate">@ticket.Size</td>
+    <td class="ticket-cycle-time">@ticket.Duration</td>
+</tr>
+}

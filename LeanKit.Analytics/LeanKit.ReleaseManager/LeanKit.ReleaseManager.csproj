@@ -133,6 +133,7 @@
     <Compile Include="Models\ColourPalette.cs" />
     <Compile Include="Models\CreateReleaseModel.cs" />
     <Compile Include="Models\CreateReleaseReleaseRecordFactory.cs" />
+    <Compile Include="Models\CycleTime\CycleTimeListOfTicketsViewModelFactory.cs" />
     <Compile Include="Models\CycleTime\CycleTimePeriod.cs" />
     <Compile Include="Models\CycleTime\CycleTimePeriodViewModel.cs" />
     <Compile Include="Models\CycleTime\CycleTimePeriodViewModelFactory.cs" />
@@ -142,6 +143,8 @@
     <Compile Include="Models\CycleTime\CycleTimeTicketItem.cs" />
     <Compile Include="Models\CycleTime\CycleTimeViewModel.cs" />
     <Compile Include="Models\CycleTime\CycleTimeViewModelFactory.cs" />
+    <Compile Include="Models\CycleTime\IBuildListOfCycleTimeItems.cs" />
+    <Compile Include="Models\CycleTime\TimePeriodViewModelFactory.cs" />
     <Compile Include="Models\DateIsWorkDaySpecification.cs" />
     <Compile Include="Models\DateOption.cs" />
     <Compile Include="Models\DateOptionsFactory.cs" />
@@ -254,6 +257,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ProductOwnerDashboard\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\CycleTimeTicketList.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

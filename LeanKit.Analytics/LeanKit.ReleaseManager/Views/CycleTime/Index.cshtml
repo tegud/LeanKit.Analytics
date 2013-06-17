@@ -5,7 +5,7 @@
 
 <h2>Ticket Cycle Time</h2>
 
-<ul id="cycle-time-period-options">
+<ul id="time-period-options">
     <li><strong>Select Period:</strong></li>
     @foreach(var period in Model.CycleTimePeriods) 
     {
@@ -48,15 +48,5 @@
         <th class="ticket-estimate">Size</th>
         <th class="ticket-cycle-time">Cycle Time</th>
     </tr>
-    @foreach (var ticket in Model.Tickets)
-    {
-    <tr class="ticket-row">
-        <td class="ticket-title"><a href="/Ticket/@ticket.Id">@string.Format("{0}{1}{2}", ticket.ExternalId, string.IsNullOrWhiteSpace(ticket.ExternalId) ? "" : " - ", ticket.Title)</a></td>
-        <td class="ticket-started">@ticket.StartedFriendlyText</td>
-        <td class="ticket-released">@ticket.FinishedFriendlyText</td>
-        <td class="ticket-release"><a href="/Release/@ticket.Release.Id">@ticket.Release.Name</a></td>
-        <td class="ticket-estimate">@ticket.Size</td>
-        <td class="ticket-cycle-time">@ticket.Duration</td>
-    </tr>
-    }
+    @Html.Partial("CycleTimeTicketList", Model.Tickets)
 </table>

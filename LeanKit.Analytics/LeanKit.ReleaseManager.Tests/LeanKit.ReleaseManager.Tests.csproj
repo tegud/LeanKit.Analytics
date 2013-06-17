@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CycleTimeControllerTests.cs" />
+    <Compile Include="Models\CycleTimeListOfTicketsViewModelFactoryTests.cs" />
     <Compile Include="Models\CycleTimeQueryFactoryTests.cs" />
     <Compile Include="Models\CycleTimeReleaseViewModelFactoryTests.cs" />
     <Compile Include="Models\CycleTimeViewModelFactoryTests.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Models\DateOptionsFactoryTests.cs" />
     <Compile Include="Models\Graphs\ActivityBreakDownFactoryTests.cs" />
     <Compile Include="Models\ReleaseDetailViewModelFactoryTests.cs" />
+    <Compile Include="Models\SummariseTicketCycleTimeInformationTests.cs" />
     <Compile Include="Models\TimePeriodViewModelFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>

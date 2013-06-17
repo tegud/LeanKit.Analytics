@@ -17,7 +17,7 @@ namespace LeanKit.ReleaseManager.Models.CycleTime
         {
             if (string.IsNullOrWhiteSpace(timePeriod))
             {
-                timePeriod = "30";
+                timePeriod = "0,30";
             }
 
             if (timePeriod == "all-time")
@@ -47,7 +47,8 @@ namespace LeanKit.ReleaseManager.Models.CycleTime
             }
             else
             {
-                start = currentDate.AddDays(-int.Parse(timePeriod));
+                var daysBefore = timePeriod.Split(',')[1];
+                start = currentDate.AddDays(-int.Parse(daysBefore));
                 end = currentDate;
             }
 

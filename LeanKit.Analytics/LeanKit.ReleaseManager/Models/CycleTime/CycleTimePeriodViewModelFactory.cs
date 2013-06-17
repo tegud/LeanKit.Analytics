@@ -5,32 +5,28 @@ namespace LeanKit.ReleaseManager.Models.CycleTime
 {
     public class CycleTimePeriodViewModelFactory : IMakeTimePeriodViewModels
     {
-        private const string DAYS_FORMAT_STRING = "Last {0} Days";
-
-        private readonly IEnumerable<string> _periodOrder = new[] { "this-week", "last-week", "30", "all-time" };
-
-        private readonly Dictionary<string, string> _periods = new Dictionary<string, string>
+        private readonly IEnumerable<IDefineATimePeriodItem> _periods = new IDefineATimePeriodItem[]
             {
-                {"last-week", "Last Week"},
-                {"this-week", "This Week"},
-                {"all-time", "All Time"}
+                new StaticPeriodItem("This Week", "this-week"),
+                new StaticPeriodItem("Last Week", "last-week"),
+                new LastXDaysPeriodItem(30), 
+                new StaticPeriodItem("All Time", "all-time")
             };
 
         public CycleTimePeriodViewModel Build(string selectedPeriod)
         {
-            var periods = _periodOrder.Select(p => new CycleTimePeriod
+            var periods = _periods.Select(p =>
+            {
+                var value = p.GetValue();
+                return new CycleTimePeriod
                 {
-                    Label = GetLabel(p),
-                    Value = p,
-                    Selected = p == selectedPeriod
-                });
+                    Label = p.GetLabel(),
+                    Value = value,
+                    Selected = value == selectedPeriod
+                };
+            });
 
             return new CycleTimePeriodViewModel(periods);
-        }
-
-        private string GetLabel(string p)
-        {
-            return _periods.ContainsKey(p) ? _periods[p] : string.Format(DAYS_FORMAT_STRING, p);
         }
     }
 }

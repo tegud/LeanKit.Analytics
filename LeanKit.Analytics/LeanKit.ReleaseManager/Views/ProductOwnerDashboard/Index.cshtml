@@ -6,6 +6,23 @@
 
 <h2>Product Owner Dashboard</h2>
 
+<ul id="time-period-options">
+    <li><strong>Select Period:</strong></li>
+    @foreach(var period in Model.TimePeriods) 
+    {
+        <li class="time-option@(period.Selected ? " selected" : "")">
+            @if(period.Selected)
+            {
+                @period.Label
+            }
+            else
+            {
+                <a href="?timePeriod=@period.Value">@period.Label</a>
+            }
+        </li>
+    }
+</ul>
+
 <div>
     <div class="dashboard-item">
         <h3>Releases</h3>
@@ -20,7 +37,7 @@
         </div>
     </div>
     <div class="dashboard-item">
-        <h3>Complexity Points Released</h3>
+        <h3>Complexity Points Completed</h3>
         <div class="dashboard-bigtext-container">
             <span class="dashboard-bigtext">@Model.ComplexityPointsReleased</span>
         </div>
@@ -34,15 +51,26 @@
     <div class="dashboard-item double-width">
         <h3>Releases @Model.SelectedTimePeriodFriendlyName</h3>
         
-        <ul>
-            <li><a href="/Release/1">Tues (11 Jun 2013 at 14:30) included 3 tickets</a> <span class="po-dashboard-chg-id">CHG0006063</span></li>
-            <li><a href="/Release/1">Weds (12 Jun 2013 at 15:26) included 2 tickets</a> <span class="po-dashboard-chg-id">CHG0006093</span></li>
-            <li><a href="/Release/1">Thurs (13 Jun 2013 at 16:07) included 1 ticket</a> <span class="po-dashboard-chg-id">CHG0006102</span></li>
-            <li><a href="/Release/1">Fri (14 Jun 2013 at 15:25) included 3 tickets</a> <span class="po-dashboard-chg-id">CHG0006114</span></li>
+        <ul class="po-dashboard-release-list">
+            @foreach(var release in @Model.Releases)
+            {
+                <li><a href="/Release/@release.Id">@release.Day (@release.FormattedDate) included @release.TicketCount ticket@(@release.TicketCount != 1 ? "s" : "")</a> <span class="po-dashboard-chg-id">@release.ServiceNowId</span></li>
+            }
         </ul>
     </div>
     <div class="dashboard-item double-width">
         <h3>Blockages @Model.SelectedTimePeriodFriendlyName</h3>
-
     </div>
 </div>
+
+<table id="ticket-cycle-time">
+    <tr>
+        <th class="ticket-title">Ticket</th>
+        <th class="ticket-started">Started</th>
+        <th class="ticket-released">Finished</th>
+        <th class="ticket-release">Release</th>
+        <th class="ticket-estimate">Size</th>
+        <th class="ticket-cycle-time">Cycle Time</th>
+    </tr>
+    @Html.Partial("CycleTimeTicketList", Model.Tickets)
+</table>
