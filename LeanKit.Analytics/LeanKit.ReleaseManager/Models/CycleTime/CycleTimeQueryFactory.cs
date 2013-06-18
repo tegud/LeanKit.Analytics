@@ -1,39 +1,33 @@
 using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using LeanKit.Data;
+using LeanKit.ReleaseManager.ErrorHandling;
 using LeanKit.ReleaseManager.Models.TimePeriods;
-using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Models.CycleTime
 {
     public class CycleTimeQueryFactory : IMakeCycleTimeQueries
     {
-        private readonly IKnowTheCurrentDateAndTime _dateTimeWrapper;
+        private readonly IMatchATimePeriod[] _matchers;
+        private readonly string _defaultValue;
 
-        public CycleTimeQueryFactory(IKnowTheCurrentDateAndTime dateTimeWrapper)
+        public CycleTimeQueryFactory(IMatchATimePeriod[] matchers, string defaultValue)
         {
-            _dateTimeWrapper = dateTimeWrapper;
+            _matchers = matchers;
+            _defaultValue = defaultValue;
         }
 
         public CycleTimeQuery Build(string timePeriod)
         {
             if (string.IsNullOrWhiteSpace(timePeriod))
             {
-                timePeriod = "30";
+                timePeriod = _defaultValue;
             }
 
             var start = DateTime.MinValue;
             var end = DateTime.MinValue;
+            var matchFound = false;
 
-            var matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(_dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(_dateTimeWrapper),
-                    new MatchKeywordTimePeriod(_dateTimeWrapper)
-                };
-
-            foreach (var matcher in matchers)
+            foreach (var matcher in _matchers)
             {
                 var match = matcher.GetTimeSpanIfMatch(timePeriod);
 
@@ -41,8 +35,14 @@ namespace LeanKit.ReleaseManager.Models.CycleTime
                 {
                     start = match.Start;
                     end = match.End;
+                    matchFound = true;
                     break;
                 }
+            }
+
+            if(!matchFound)
+            {
+                throw new UnknownTimePeriodException();
             }
 
             return new CycleTimeQuery

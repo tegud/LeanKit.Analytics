@@ -59,6 +59,28 @@ namespace LeanKit.ReleaseManager.Tests.Models
             Assert.That(daysBeforeTimePeriod.GetTimeSpanIfMatch(timePeriod).End, Is.EqualTo(expectedEndDate));
         }
 
+        [Test]
+        public void AllTimeSetsStartToDateTimeMin()
+        {
+            DateTime expectedEndDate = DateTime.MinValue;
+
+            var dateTimeWrapper = this;
+
+            var daysBeforeTimePeriod = new MatchKeywordTimePeriod(dateTimeWrapper);
+            Assert.That(daysBeforeTimePeriod.GetTimeSpanIfMatch("all-time").Start, Is.EqualTo(expectedEndDate));
+        }
+
+        [Test]
+        public void AllTimeSetsEndToDateTimeMax()
+        {
+            DateTime expectedEndDate = DateTime.MaxValue;
+
+            var dateTimeWrapper = this;
+
+            var daysBeforeTimePeriod = new MatchKeywordTimePeriod(dateTimeWrapper);
+            Assert.That(daysBeforeTimePeriod.GetTimeSpanIfMatch("all-time").End, Is.EqualTo(expectedEndDate));
+        }
+
         public DateTime Now()
         {
             return _currentDateTime;

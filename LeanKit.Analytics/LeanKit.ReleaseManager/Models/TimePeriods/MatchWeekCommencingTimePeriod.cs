@@ -48,6 +48,11 @@ namespace LeanKit.ReleaseManager.Models.TimePeriods
 
         public TimePeriodMatch GetTimeSpanIfMatch(string timePeriod)
         {
+            if(timePeriod == "all-time")
+            {
+                return new TimePeriodMatch(DateTime.MinValue, DateTime.MaxValue);
+            }
+
             var match = new Regex("(this|last)-week").Match(timePeriod);
             if(!match.Success)
             {

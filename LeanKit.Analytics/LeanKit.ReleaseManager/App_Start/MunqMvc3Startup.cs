@@ -62,7 +62,18 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IBuildReleaseViewModels, ReleaseViewModelFactory>();
             ioc.Register<IBuildCycleTimeViewModels, CycleTimeViewModelFactory>();
             ioc.Register<IMakeCycleTimeReleaseViewModels, CycleTimeReleaseViewModelFactory>();
-            ioc.Register<IMakeCycleTimeQueries>(i => new CycleTimeQueryFactory(i.Resolve<IKnowTheCurrentDateAndTime>()));
+
+            ioc.Register<IMatchATimePeriod>("MatchWeekCommencing", i => new MatchWeekCommencingTimePeriod(i.Resolve<IKnowTheCurrentDateAndTime>()));
+            ioc.Register<IMatchATimePeriod>("MatchDaysBefore", i => new MatchDaysBeforeTimePeriod(i.Resolve<IKnowTheCurrentDateAndTime>()));
+            ioc.Register<IMatchATimePeriod>("MatchKeyword", i => new MatchKeywordTimePeriod(i.Resolve<IKnowTheCurrentDateAndTime>()));
+
+            ioc.Register<IMakeCycleTimeQueries>(i => new CycleTimeQueryFactory(new[]
+                {
+                    i.Resolve<IMatchATimePeriod>("MatchWeekCommencing"),
+                    i.Resolve<IMatchATimePeriod>("MatchDaysBefore"),
+                    i.Resolve<IMatchATimePeriod>("MatchKeyword")
+                }, "30"));
+
             ioc.Register<IMakeTimePeriodViewModels, CycleTimePeriodViewModelFactory>();
             ioc.Register<ISummariseTicketCycleTimeInformation, SummariseTicketCycleTimeInformation>();
             ioc.Register<IBuildListOfCycleTimeItems, CycleTimeListOfTicketsViewModelFactory>();
