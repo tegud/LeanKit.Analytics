@@ -178,8 +178,11 @@
     <Compile Include="Models\Releases\ReleaseViewModelFactory.cs" />
     <Compile Include="Models\Releases\UpcomingReleasesViewModel.cs" />
     <Compile Include="Models\TimePeriods\IDefineATimePeriodItem.cs" />
+    <Compile Include="Models\TimePeriods\IMatchATimePeriod.cs" />
     <Compile Include="Models\TimePeriods\LastXDaysPeriodItem.cs" />
+    <Compile Include="Models\TimePeriods\MatchWeekCommencingTimePeriod.cs" />
     <Compile Include="Models\TimePeriods\StaticPeriodItem.cs" />
+    <Compile Include="Models\TimePeriods\TimePeriodMatch.cs" />
     <Compile Include="Models\TimePeriods\TimePeriodViewModelFactory.cs" />
     <Compile Include="Models\TimePeriods\WeekCommencingPeriodItem.cs" />
   </ItemGroup>

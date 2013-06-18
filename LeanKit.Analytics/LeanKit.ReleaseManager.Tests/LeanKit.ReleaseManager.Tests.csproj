@@ -53,7 +53,10 @@
     <Compile Include="Models\CycleTimeViewModelFactoryTests.cs" />
     <Compile Include="Models\DateIsWorkDaySpecificationTests.cs" />
     <Compile Include="Models\DateOptionsFactoryTests.cs" />
+    <Compile Include="Models\DaysBeforeTimePeriodTests.cs" />
     <Compile Include="Models\Graphs\ActivityBreakDownFactoryTests.cs" />
+    <Compile Include="Models\MatchKeywordTimePeriodTests.cs" />
+    <Compile Include="Models\MatchWeekCommencingTimePeriodTests.cs" />
     <Compile Include="Models\ReleaseDetailViewModelFactoryTests.cs" />
     <Compile Include="Models\SummariseTicketCycleTimeInformationTests.cs" />
     <Compile Include="Models\TimePeriodViewModelFactoryTests.cs" />

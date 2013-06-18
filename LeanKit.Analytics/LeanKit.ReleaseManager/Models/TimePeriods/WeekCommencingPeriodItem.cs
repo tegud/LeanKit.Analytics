@@ -22,7 +22,7 @@ namespace LeanKit.ReleaseManager.Models.TimePeriods
 
         public string GetValue()
         {
-            return string.Format("{0},7", -_weeksBefore);
+            return string.Format("wc-{0}", -_weeksBefore);
         }
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
@@ -9,6 +11,7 @@ using LeanKit.ReleaseManager.Controllers;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
 using LeanKit.ReleaseManager.Models.Releases;
+using LeanKit.ReleaseManager.Models.TimePeriods;
 using LeanKit.Utilities;
 using LeanKit.Utilities.Collections;
 using LeanKit.Utilities.DateAndTime;
@@ -45,6 +48,10 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register(i => MvcApplication.ConnectionString);
 
             UtilitiesRegistry.Register(ioc);
+            ioc.Register(i => new IDefineATimePeriodItem[]
+                {
+                    new LastXDaysPeriodItem(0)
+                });
 
             ioc.Register<IIdentifyWorkDays, DateIsWorkDaySpecification>();
             ioc.Register<IMakeListsOfDateOptions, DateOptionsFactory>();

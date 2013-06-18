@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using LeanKit.Data;
+using LeanKit.ReleaseManager.Models.TimePeriods;
 using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Models.CycleTime
@@ -20,35 +23,26 @@ namespace LeanKit.ReleaseManager.Models.CycleTime
                 timePeriod = "30";
             }
 
-            if (timePeriod == "all-time")
-            {
-                return new CycleTimeQuery
-                    {
-                        Period = timePeriod
-                    };
-            }
+            var start = DateTime.MinValue;
+            var end = DateTime.MinValue;
 
-            var currentDate = _dateTimeWrapper.Now().Date;
-
-            DateTime start;
-            DateTime end;
-
-            if (timePeriod.Contains("-week"))
-            {
-                var dayOfWeekOffset = -(int) currentDate.DayOfWeek;
-                start = currentDate.AddDays(dayOfWeekOffset);
-
-                if (timePeriod == "last-week")
+            var matchers = new IMatchATimePeriod[]
                 {
-                    start = start.AddDays(-7);
-                }
+                    new MatchWeekCommencingTimePeriod(_dateTimeWrapper),
+                    new MatchDaysBeforeTimePeriod(_dateTimeWrapper),
+                    new MatchKeywordTimePeriod(_dateTimeWrapper)
+                };
 
-                end = start.AddDays(6);
-            }
-            else
+            foreach (var matcher in matchers)
             {
-                start = currentDate.AddDays(-int.Parse(timePeriod));
-                end = currentDate;
+                var match = matcher.GetTimeSpanIfMatch(timePeriod);
+
+                if (match.IsMatch)
+                {
+                    start = match.Start;
+                    end = match.End;
+                    break;
+                }
             }
 
             return new CycleTimeQuery

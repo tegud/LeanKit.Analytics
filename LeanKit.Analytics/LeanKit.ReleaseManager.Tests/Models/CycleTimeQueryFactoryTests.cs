@@ -83,6 +83,30 @@ namespace LeanKit.ReleaseManager.Tests.Models
         }
 
         [Test]
+        public void WeekCommencingSetsStartDateToThatNumberOfWeeksBeforeCurrentDate()
+        {
+            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
+
+            var expectedStartDate = new DateTime(2013, 5, 19);
+
+            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
+
+            Assert.That(new CycleTimeQueryFactory(dateTimeWrapper).Build("wc-2").Start, Is.EqualTo(expectedStartDate));
+        }
+
+        [Test]
+        public void WeekCommencingSetsEndDateToThatNumberOfWeeksBeforeCurrentDate()
+        {
+            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
+
+            var expectedStartDate = new DateTime(2013, 5, 25);
+
+            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
+
+            Assert.That(new CycleTimeQueryFactory(dateTimeWrapper).Build("wc-2").End, Is.EqualTo(expectedStartDate));
+        }
+
+        [Test]
         public void NumberSetsEndDateToCurrentDate()
         {
             _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
