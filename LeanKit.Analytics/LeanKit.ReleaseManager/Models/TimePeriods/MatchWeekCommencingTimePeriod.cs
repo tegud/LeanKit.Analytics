@@ -8,7 +8,7 @@ namespace LeanKit.ReleaseManager.Models.TimePeriods
     {
         private readonly IKnowTheCurrentDateAndTime _dateTimeWrapper;
 
-        private readonly Regex _regex = new Regex("wc-(?<week>[0-9])+");
+        private readonly Regex _regex = new Regex("wc-(?<week>[0-9]+)");
 
         public MatchWeekCommencingTimePeriod(IKnowTheCurrentDateAndTime dateTimeWrapper)
         {

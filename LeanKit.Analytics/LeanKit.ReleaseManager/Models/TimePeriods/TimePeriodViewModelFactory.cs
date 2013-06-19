@@ -10,10 +10,10 @@ namespace LeanKit.ReleaseManager.Models.TimePeriods
             {
                 new StaticPeriodItem("This Week", "this-week"),
                 new StaticPeriodItem("Last Week", "last-week"),
-                new WeekCommencingPeriodItem(-14), 
-                new WeekCommencingPeriodItem(-21), 
-                new WeekCommencingPeriodItem(-28), 
-                new WeekCommencingPeriodItem(-35), 
+                new WeekCommencingPeriodItem(-2), 
+                new WeekCommencingPeriodItem(-3), 
+                new WeekCommencingPeriodItem(-4), 
+                new WeekCommencingPeriodItem(-5), 
                 new StaticPeriodItem("All Time", "all-time")
             };
 

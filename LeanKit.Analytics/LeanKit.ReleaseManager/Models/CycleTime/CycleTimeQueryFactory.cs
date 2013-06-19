@@ -1,19 +1,26 @@
 using System;
+using System.Collections.Generic;
 using LeanKit.Data;
 using LeanKit.ReleaseManager.ErrorHandling;
 using LeanKit.ReleaseManager.Models.TimePeriods;
 
 namespace LeanKit.ReleaseManager.Models.CycleTime
 {
+    public class TimePeriodConfiguration
+    {
+        public IEnumerable<IMatchATimePeriod> Matchers { get; set; }
+        public string DefaultValue { get; set; }
+    }
+
     public class CycleTimeQueryFactory : IMakeCycleTimeQueries
     {
-        private readonly IMatchATimePeriod[] _matchers;
+        private readonly IEnumerable<IMatchATimePeriod> _matchers;
         private readonly string _defaultValue;
 
-        public CycleTimeQueryFactory(IMatchATimePeriod[] matchers, string defaultValue)
+        public CycleTimeQueryFactory(TimePeriodConfiguration configuration)
         {
-            _matchers = matchers;
-            _defaultValue = defaultValue;
+            _matchers = configuration.Matchers;
+            _defaultValue = configuration.DefaultValue;
         }
 
         public CycleTimeQuery Build(string timePeriod)

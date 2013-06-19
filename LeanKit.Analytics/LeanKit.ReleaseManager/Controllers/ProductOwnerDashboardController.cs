@@ -81,7 +81,7 @@ namespace LeanKit.ReleaseManager.Controllers
                     SelectedTimePeriodFriendlyName = "this week",
                     Tickets = cycleTimeTicketsList,
                     Releases = releases,
-                    TimePeriods = _timePeriodViewModelFactory.Build(timePeriod)
+                    TimePeriods = _timePeriodViewModelFactory.Build(cycleTimeQuery.Period)
                 });
         }
     }

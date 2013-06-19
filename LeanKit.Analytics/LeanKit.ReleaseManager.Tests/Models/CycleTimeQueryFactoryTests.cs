@@ -1,6 +1,5 @@
 ﻿using System;
 using LeanKit.ReleaseManager.ErrorHandling;
-using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
 using LeanKit.ReleaseManager.Models.TimePeriods;
 using LeanKit.Utilities.DateAndTime;
@@ -19,12 +18,16 @@ namespace LeanKit.ReleaseManager.Tests.Models
         {
             _currentDateTime = new DateTime(2013, 6, 5);
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-            Assert.That(new CycleTimeQueryFactory(new IMatchATimePeriod[]
+            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
+                    {
+                        Matchers = new IMatchATimePeriod[]
                 {
                     new MatchWeekCommencingTimePeriod(dateTimeWrapper),
                     new MatchDaysBeforeTimePeriod(dateTimeWrapper),
                     new MatchKeywordTimePeriod(dateTimeWrapper)
-                }, "30").Build(period).Period, Is.EqualTo(period));
+                },
+                        DefaultValue = "30"
+                    }).Build(period).Period, Is.EqualTo(period));
         }
 
         [TestCase(-3)]
@@ -42,12 +45,16 @@ namespace LeanKit.ReleaseManager.Tests.Models
 
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
 
-            Assert.That(new CycleTimeQueryFactory(new IMatchATimePeriod[]
+            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
+            {
+                Matchers = new IMatchATimePeriod[]
                 {
                     new MatchWeekCommencingTimePeriod(dateTimeWrapper),
                     new MatchDaysBeforeTimePeriod(dateTimeWrapper),
                     new MatchKeywordTimePeriod(dateTimeWrapper)
-                }, "30").Build("this-week").Start, Is.EqualTo(expectedStartDate));
+                },
+                DefaultValue = "30"
+            }).Build("this-week").Start, Is.EqualTo(expectedStartDate));
         }
 
         [TestCase(-3)]
@@ -65,12 +72,16 @@ namespace LeanKit.ReleaseManager.Tests.Models
 
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
 
-            Assert.That(new CycleTimeQueryFactory(new IMatchATimePeriod[]
+            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
+            {
+                Matchers = new IMatchATimePeriod[]
                 {
                     new MatchWeekCommencingTimePeriod(dateTimeWrapper),
                     new MatchDaysBeforeTimePeriod(dateTimeWrapper),
                     new MatchKeywordTimePeriod(dateTimeWrapper)
-                }, "30").Build("this-week").End, Is.EqualTo(expectedStartDate));
+                },
+                DefaultValue = "30"
+            }).Build("this-week").End, Is.EqualTo(expectedStartDate));
         }
 
         [Test]
@@ -82,12 +93,16 @@ namespace LeanKit.ReleaseManager.Tests.Models
 
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
 
-            Assert.That(new CycleTimeQueryFactory(new IMatchATimePeriod[]
+            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
+            {
+                Matchers = new IMatchATimePeriod[]
                 {
                     new MatchWeekCommencingTimePeriod(dateTimeWrapper),
                     new MatchDaysBeforeTimePeriod(dateTimeWrapper),
                     new MatchKeywordTimePeriod(dateTimeWrapper)
-                }, "30").Build("last-week").Start, Is.EqualTo(expectedStartDate));
+                },
+                DefaultValue = "30"
+            }).Build("last-week").Start, Is.EqualTo(expectedStartDate));
         }
 
         [TestCase("", 30)]
@@ -101,12 +116,16 @@ namespace LeanKit.ReleaseManager.Tests.Models
 
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
 
-            Assert.That(new CycleTimeQueryFactory(new IMatchATimePeriod[]
+            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
+            {
+                Matchers = new IMatchATimePeriod[]
                 {
                     new MatchWeekCommencingTimePeriod(dateTimeWrapper),
                     new MatchDaysBeforeTimePeriod(dateTimeWrapper),
                     new MatchKeywordTimePeriod(dateTimeWrapper)
-                }, "30").Build(timePeriod).Start, Is.EqualTo(expectedStartDate));
+                },
+                DefaultValue = "30"
+            }).Build(timePeriod).Start, Is.EqualTo(expectedStartDate));
         }
 
         [Test]
@@ -118,12 +137,16 @@ namespace LeanKit.ReleaseManager.Tests.Models
 
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
 
-            Assert.That(new CycleTimeQueryFactory(new IMatchATimePeriod[]
+            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
+            {
+                Matchers = new IMatchATimePeriod[]
                 {
                     new MatchWeekCommencingTimePeriod(dateTimeWrapper),
                     new MatchDaysBeforeTimePeriod(dateTimeWrapper),
                     new MatchKeywordTimePeriod(dateTimeWrapper)
-                }, "30").Build("wc-2").Start, Is.EqualTo(expectedStartDate));
+                },
+                DefaultValue = "30"
+            }).Build("wc-2").Start, Is.EqualTo(expectedStartDate));
         }
 
         [Test]
@@ -135,12 +158,16 @@ namespace LeanKit.ReleaseManager.Tests.Models
 
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
 
-            Assert.That(new CycleTimeQueryFactory(new IMatchATimePeriod[]
+            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
+            {
+                Matchers = new IMatchATimePeriod[]
                 {
                     new MatchWeekCommencingTimePeriod(dateTimeWrapper),
                     new MatchDaysBeforeTimePeriod(dateTimeWrapper),
                     new MatchKeywordTimePeriod(dateTimeWrapper)
-                }, "30").Build("wc-2").End, Is.EqualTo(expectedStartDate));
+                },
+                DefaultValue = "30"
+            }).Build("wc-2").End, Is.EqualTo(expectedStartDate));
         }
 
         [Test]
@@ -152,12 +179,16 @@ namespace LeanKit.ReleaseManager.Tests.Models
 
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
 
-            Assert.That(new CycleTimeQueryFactory(new IMatchATimePeriod[]
+            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
+            {
+                Matchers = new IMatchATimePeriod[]
                 {
                     new MatchWeekCommencingTimePeriod(dateTimeWrapper),
                     new MatchDaysBeforeTimePeriod(dateTimeWrapper),
                     new MatchKeywordTimePeriod(dateTimeWrapper)
-                }, "30").Build("30").End, Is.EqualTo(expectedStartDate));
+                },
+                DefaultValue = "30"
+            }).Build("30").End, Is.EqualTo(expectedStartDate));
         }
 
         [Test]
@@ -167,12 +198,16 @@ namespace LeanKit.ReleaseManager.Tests.Models
 
             IKnowTheCurrentDateAndTime dateTimeWrapper = this;
 
-            Assert.Throws<UnknownTimePeriodException>(() => new CycleTimeQueryFactory(new IMatchATimePeriod[]
+            Assert.Throws<UnknownTimePeriodException>(() => new CycleTimeQueryFactory(new TimePeriodConfiguration
+            {
+                Matchers = new IMatchATimePeriod[]
                 {
                     new MatchWeekCommencingTimePeriod(dateTimeWrapper),
                     new MatchDaysBeforeTimePeriod(dateTimeWrapper),
                     new MatchKeywordTimePeriod(dateTimeWrapper)
-                }, "30").Build("gfdgfd"));
+                },
+                DefaultValue = "30"
+            }).Build("gfdgfd"));
         }
 
         public DateTime Now()
