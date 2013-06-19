@@ -67,15 +67,8 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IMatchATimePeriod>("MatchDaysBefore", i => new MatchDaysBeforeTimePeriod(i.Resolve<IKnowTheCurrentDateAndTime>()));
             ioc.Register<IMatchATimePeriod>("MatchKeyword", i => new MatchKeywordTimePeriod(i.Resolve<IKnowTheCurrentDateAndTime>()));
 
-            //ioc.Register("CycleTime", i => new ProductOwnerDashboardTimePeriodConfiguration
-            //    {
-            //        Matchers = new[]
-            //            {
-            //                i.Resolve<IMatchATimePeriod>("MatchDaysBefore"),
-            //                i.Resolve<IMatchATimePeriod>("MatchKeyword")
-            //            },
-            //        DefaultValue = "30"
-            //    });
+            ioc.Register<IConfigureTimePeriods>("CycleTime",
+                i => new CycleTimeTimePeriodConfiguration(i.Resolve<IKnowTheCurrentDateAndTime>()));
 
             ioc.Register<IConfigureTimePeriods>("ProductOwnerDashboard", 
                 i => new ProductOwnerDashboardTimePeriodConfiguration(i.Resolve<IKnowTheCurrentDateAndTime>()));

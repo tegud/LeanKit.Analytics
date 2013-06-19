@@ -3,41 +3,9 @@ using System.Collections.Generic;
 using LeanKit.Data;
 using LeanKit.ReleaseManager.ErrorHandling;
 using LeanKit.ReleaseManager.Models.TimePeriods;
-using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Models.CycleTime
 {
-    public interface IConfigureTimePeriods
-    {
-        IEnumerable<IMatchATimePeriod> Matchers { get; }
-        string DefaultValue { get; }
-    }
-
-    public class ProductOwnerDashboardTimePeriodConfiguration : IConfigureTimePeriods
-    {
-        private readonly IKnowTheCurrentDateAndTime _dateTimeWrapper;
-
-        public ProductOwnerDashboardTimePeriodConfiguration(IKnowTheCurrentDateAndTime dateTimeWrapper)
-        {
-            _dateTimeWrapper = dateTimeWrapper;
-        }
-
-        public IEnumerable<IMatchATimePeriod> Matchers
-        {
-            get
-            {
-                return new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(_dateTimeWrapper),
-                    new MatchKeywordTimePeriod(_dateTimeWrapper)
-                };
-            }
-        }
-
-        public string DefaultValue { get { return "this-week"; }
-        }
-    }
-
     public class CycleTimeQueryFactory : IMakeCycleTimeQueries
     {
         private readonly IEnumerable<IMatchATimePeriod> _matchers;

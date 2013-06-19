@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using LeanKit.ReleaseManager.ErrorHandling;
 using LeanKit.ReleaseManager.Models.CycleTime;
 using LeanKit.ReleaseManager.Models.TimePeriods;
-using LeanKit.Utilities.DateAndTime;
 using NUnit.Framework;
 
 namespace LeanKit.ReleaseManager.Tests.Models
@@ -13,8 +12,6 @@ namespace LeanKit.ReleaseManager.Tests.Models
     {
         private string _defaultValue;
         private IEnumerable<IMatchATimePeriod> _matchers = new IMatchATimePeriod[0];
-        private DateTime _startDateForMatch;
-        private DateTime _endDateForMatch;
 
         [Test]
         public void InvalidTimePeriodThrowsUnknownTimePeriodException()
