@@ -3,13 +3,39 @@ using System.Collections.Generic;
 using LeanKit.Data;
 using LeanKit.ReleaseManager.ErrorHandling;
 using LeanKit.ReleaseManager.Models.TimePeriods;
+using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Models.CycleTime
 {
-    public class TimePeriodConfiguration
+    public interface IConfigureTimePeriods
     {
-        public IEnumerable<IMatchATimePeriod> Matchers { get; set; }
-        public string DefaultValue { get; set; }
+        IEnumerable<IMatchATimePeriod> Matchers { get; }
+        string DefaultValue { get; }
+    }
+
+    public class ProductOwnerDashboardTimePeriodConfiguration : IConfigureTimePeriods
+    {
+        private readonly IKnowTheCurrentDateAndTime _dateTimeWrapper;
+
+        public ProductOwnerDashboardTimePeriodConfiguration(IKnowTheCurrentDateAndTime dateTimeWrapper)
+        {
+            _dateTimeWrapper = dateTimeWrapper;
+        }
+
+        public IEnumerable<IMatchATimePeriod> Matchers
+        {
+            get
+            {
+                return new IMatchATimePeriod[]
+                {
+                    new MatchWeekCommencingTimePeriod(_dateTimeWrapper),
+                    new MatchKeywordTimePeriod(_dateTimeWrapper)
+                };
+            }
+        }
+
+        public string DefaultValue { get { return "this-week"; }
+        }
     }
 
     public class CycleTimeQueryFactory : IMakeCycleTimeQueries
@@ -17,7 +43,7 @@ namespace LeanKit.ReleaseManager.Models.CycleTime
         private readonly IEnumerable<IMatchATimePeriod> _matchers;
         private readonly string _defaultValue;
 
-        public CycleTimeQueryFactory(TimePeriodConfiguration configuration)
+        public CycleTimeQueryFactory(IConfigureTimePeriods configuration)
         {
             _matchers = configuration.Matchers;
             _defaultValue = configuration.DefaultValue;
@@ -47,7 +73,7 @@ namespace LeanKit.ReleaseManager.Models.CycleTime
                 }
             }
 
-            if(!matchFound)
+            if (!matchFound)
             {
                 throw new UnknownTimePeriodException();
             }

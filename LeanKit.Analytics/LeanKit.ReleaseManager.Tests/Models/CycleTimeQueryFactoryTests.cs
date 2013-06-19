@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LeanKit.ReleaseManager.ErrorHandling;
 using LeanKit.ReleaseManager.Models.CycleTime;
 using LeanKit.ReleaseManager.Models.TimePeriods;
@@ -8,211 +9,98 @@ using NUnit.Framework;
 namespace LeanKit.ReleaseManager.Tests.Models
 {
     [TestFixture]
-    public class CycleTimeQueryFactoryTests : IKnowTheCurrentDateAndTime
+    public class CycleTimeQueryFactoryTests : IConfigureTimePeriods
     {
-        private DateTime _currentDateTime;
-
-        [TestCase("all-time")]
-        [TestCase("this-week")]
-        public void SetsPeriod(string period)
-        {
-            _currentDateTime = new DateTime(2013, 6, 5);
-            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
-                    {
-                        Matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(dateTimeWrapper),
-                    new MatchKeywordTimePeriod(dateTimeWrapper)
-                },
-                        DefaultValue = "30"
-                    }).Build(period).Period, Is.EqualTo(period));
-        }
-
-        [TestCase(-3)]
-        [TestCase(-2)]
-        [TestCase(-1)]
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        public void ThisWeekSetsStartDateToThePreviousSunday(int daysToAdd)
-        {
-            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12).AddDays(daysToAdd);
-
-            var expectedStartDate = new DateTime(2013, 6, 2);
-
-            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-
-            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
-            {
-                Matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(dateTimeWrapper),
-                    new MatchKeywordTimePeriod(dateTimeWrapper)
-                },
-                DefaultValue = "30"
-            }).Build("this-week").Start, Is.EqualTo(expectedStartDate));
-        }
-
-        [TestCase(-3)]
-        [TestCase(-2)]
-        [TestCase(-1)]
-        [TestCase(0)]
-        [TestCase(1)]
-        [TestCase(2)]
-        [TestCase(3)]
-        public void ThisWeekSetsStartDateToTheNextSaturday(int daysToAdd)
-        {
-            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12).AddDays(daysToAdd);
-
-            var expectedStartDate = new DateTime(2013, 6, 8);
-
-            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-
-            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
-            {
-                Matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(dateTimeWrapper),
-                    new MatchKeywordTimePeriod(dateTimeWrapper)
-                },
-                DefaultValue = "30"
-            }).Build("this-week").End, Is.EqualTo(expectedStartDate));
-        }
-
-        [Test]
-        public void LastWeekSetsStartDateToTheSundayBeforePrevious()
-        {
-            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
-
-            var expectedStartDate = new DateTime(2013, 5, 26);
-
-            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-
-            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
-            {
-                Matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(dateTimeWrapper),
-                    new MatchKeywordTimePeriod(dateTimeWrapper)
-                },
-                DefaultValue = "30"
-            }).Build("last-week").Start, Is.EqualTo(expectedStartDate));
-        }
-
-        [TestCase("", 30)]
-        [TestCase("30", 30)]
-        [TestCase("90", 90)]
-        public void NumberSetsStartDateToThatNumberOfDaysBeforeCurrentDate(string timePeriod, int numberOfDays)
-        {
-            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
-
-            var expectedStartDate = _currentDateTime.Date.AddDays(-numberOfDays);
-
-            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-
-            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
-            {
-                Matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(dateTimeWrapper),
-                    new MatchKeywordTimePeriod(dateTimeWrapper)
-                },
-                DefaultValue = "30"
-            }).Build(timePeriod).Start, Is.EqualTo(expectedStartDate));
-        }
-
-        [Test]
-        public void WeekCommencingSetsStartDateToThatNumberOfWeeksBeforeCurrentDate()
-        {
-            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
-
-            var expectedStartDate = new DateTime(2013, 5, 19);
-
-            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-
-            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
-            {
-                Matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(dateTimeWrapper),
-                    new MatchKeywordTimePeriod(dateTimeWrapper)
-                },
-                DefaultValue = "30"
-            }).Build("wc-2").Start, Is.EqualTo(expectedStartDate));
-        }
-
-        [Test]
-        public void WeekCommencingSetsEndDateToThatNumberOfWeeksBeforeCurrentDate()
-        {
-            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
-
-            var expectedStartDate = new DateTime(2013, 5, 25);
-
-            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-
-            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
-            {
-                Matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(dateTimeWrapper),
-                    new MatchKeywordTimePeriod(dateTimeWrapper)
-                },
-                DefaultValue = "30"
-            }).Build("wc-2").End, Is.EqualTo(expectedStartDate));
-        }
-
-        [Test]
-        public void NumberSetsEndDateToCurrentDate()
-        {
-            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
-
-            var expectedStartDate = _currentDateTime.Date;
-
-            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-
-            Assert.That(new CycleTimeQueryFactory(new TimePeriodConfiguration
-            {
-                Matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(dateTimeWrapper),
-                    new MatchKeywordTimePeriod(dateTimeWrapper)
-                },
-                DefaultValue = "30"
-            }).Build("30").End, Is.EqualTo(expectedStartDate));
-        }
+        private string _defaultValue;
+        private IEnumerable<IMatchATimePeriod> _matchers = new IMatchATimePeriod[0];
+        private DateTime _startDateForMatch;
+        private DateTime _endDateForMatch;
 
         [Test]
         public void InvalidTimePeriodThrowsUnknownTimePeriodException()
         {
-            _currentDateTime = new DateTime(2013, 6, 5, 13, 44, 12);
-
-            IKnowTheCurrentDateAndTime dateTimeWrapper = this;
-
-            Assert.Throws<UnknownTimePeriodException>(() => new CycleTimeQueryFactory(new TimePeriodConfiguration
-            {
-                Matchers = new IMatchATimePeriod[]
-                {
-                    new MatchWeekCommencingTimePeriod(dateTimeWrapper),
-                    new MatchDaysBeforeTimePeriod(dateTimeWrapper),
-                    new MatchKeywordTimePeriod(dateTimeWrapper)
-                },
-                DefaultValue = "30"
-            }).Build("gfdgfd"));
+            _matchers = new IMatchATimePeriod[0];
+            IConfigureTimePeriods configuration = this;
+            Assert.Throws<UnknownTimePeriodException>(() => new CycleTimeQueryFactory(configuration).Build("gfdgfd"));
         }
 
-        public DateTime Now()
+        [Test]
+        public void EmptyTimePeriodUsesDefault()
         {
-            return _currentDateTime;
+            _defaultValue = "the-default";
+
+            _matchers = new IMatchATimePeriod[] { new FakeTimePeriodMatcher("the-default", DateTime.MinValue, DateTime.MinValue) };
+
+            IConfigureTimePeriods configuration = this;
+            Assert.That(new CycleTimeQueryFactory(configuration).Build("").Period, Is.EqualTo("the-default"));
+        }
+
+        [Test]
+        public void SetsStartToTimePeriodStart()
+        {
+            var expectedStartDate = new DateTime(2013, 01, 01);
+
+            _defaultValue = "the-default";
+
+            _matchers = new IMatchATimePeriod[] { new FakeTimePeriodMatcher("the-default", expectedStartDate, DateTime.MinValue) };
+
+            IConfigureTimePeriods configuration = this;
+            Assert.That(new CycleTimeQueryFactory(configuration).Build("").Start, Is.EqualTo(expectedStartDate));
+        }
+
+        [Test]
+        public void SetsEndToTimePeriodStart()
+        {
+            var expectedEndDate = new DateTime(2013, 01, 01);
+
+            _defaultValue = "the-default";
+
+            _matchers = new IMatchATimePeriod[] { new FakeTimePeriodMatcher("the-default", DateTime.MinValue, expectedEndDate) };
+
+            IConfigureTimePeriods configuration = this;
+            Assert.That(new CycleTimeQueryFactory(configuration).Build("").End, Is.EqualTo(expectedEndDate));
+        }
+
+        [Test]
+        public void UsesFirstMatchingTimePeriod()
+        {
+            var expectedStartDate = new DateTime(2013, 1, 1);
+
+            _matchers = new IMatchATimePeriod[]
+                {
+                    new FakeTimePeriodMatcher("one", expectedStartDate, DateTime.MinValue),
+                    new FakeTimePeriodMatcher("one", DateTime.MinValue, DateTime.MinValue)
+                };
+
+            IConfigureTimePeriods configuration = this;
+            Assert.That(new CycleTimeQueryFactory(configuration).Build("one").Start, Is.EqualTo(expectedStartDate));
+        }
+
+        public IEnumerable<IMatchATimePeriod> Matchers { get { return _matchers; } }
+        public string DefaultValue { get { return _defaultValue; }}
+    }
+
+    public class FakeTimePeriodMatcher : IMatchATimePeriod
+    {
+        private readonly string _matchingTimePeriod;
+        private readonly DateTime _startDateForMatch;
+        private readonly DateTime _endDateForMatch;
+
+        public FakeTimePeriodMatcher(string matchingTimePeriod, DateTime startDateForMatch, DateTime endDateForMatch)
+        {
+            _matchingTimePeriod = matchingTimePeriod;
+            _startDateForMatch = startDateForMatch;
+            _endDateForMatch = endDateForMatch;
+        }
+
+        public TimePeriodMatch GetTimeSpanIfMatch(string timePeriod)
+        {
+            if (timePeriod == _matchingTimePeriod)
+            {
+                return new TimePeriodMatch(_startDateForMatch, _endDateForMatch);
+            }
+
+            return TimePeriodMatch.NotMatched;
         }
     }
 }

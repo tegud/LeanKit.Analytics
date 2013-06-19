@@ -14,7 +14,8 @@ namespace LeanKit.ReleaseManager.Models.TimePeriods
                 new WeekCommencingPeriodItem(-3), 
                 new WeekCommencingPeriodItem(-4), 
                 new WeekCommencingPeriodItem(-5), 
-                new StaticPeriodItem("All Time", "all-time")
+                new WeekCommencingPeriodItem(-6), 
+                new WeekCommencingPeriodItem(-7)
             };
 
 

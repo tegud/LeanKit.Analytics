@@ -15,7 +15,7 @@ namespace LeanKit.ReleaseManager.Models.TimePeriods
         {
             var currentDate = DateTime.Now.Date;
             var dayOfWeekOffset = -(int)currentDate.DayOfWeek;
-            var start = currentDate.AddDays(dayOfWeekOffset).AddDays(-_weeksBefore);
+            var start = currentDate.AddDays(dayOfWeekOffset).AddDays(_weeksBefore * 7);
 
             return start.ToString("\"W/C\" dd MMM");
         }
