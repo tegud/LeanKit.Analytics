@@ -5,22 +5,7 @@
 
 <h2>Ticket Cycle Time</h2>
 
-<ul id="time-period-options">
-    <li><strong>Select Period:</strong></li>
-    @foreach(var period in Model.CycleTimePeriods) 
-    {
-        <li class="time-option@(period.Selected ? " selected" : "")">
-            @if(period.Selected)
-            {
-                @period.Label
-            }
-            else
-            {
-                <a href="?timePeriod=@period.Value">@period.Label</a>
-            }
-        </li>
-    }
-</ul>
+@Html.Partial("TimePeriodList", Model.CycleTimePeriods)
 
 <div id="cycle-time-summary">
     <div class="cycle-time-summary-section">

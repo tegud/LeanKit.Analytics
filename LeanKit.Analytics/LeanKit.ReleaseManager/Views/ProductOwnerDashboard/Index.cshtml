@@ -6,22 +6,7 @@
 
 <h2>Product Owner Dashboard</h2>
 
-<ul id="time-period-options">
-    <li><strong>Select Period:</strong></li>
-    @foreach(var period in Model.TimePeriods) 
-    {
-        <li class="time-option@(period.Selected ? " selected" : "")">
-            @if(period.Selected)
-            {
-                @period.Label
-            }
-            else
-            {
-                <a href="?timePeriod=@period.Value">@period.Label</a>
-            }
-        </li>
-    }
-</ul>
+@Html.Partial("TimePeriodList", Model.TimePeriods)
 
 <div>
     <div class="dashboard-item">

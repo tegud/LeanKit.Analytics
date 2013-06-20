@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LeanKit.Data;
 using LeanKit.Data.SQL;
-using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.Releases;
 using NUnit.Framework;
 
@@ -48,7 +45,7 @@ namespace LeanKit.ReleaseManager.Tests.Models
             throw new NotImplementedException();
         }
 
-        public IEnumerable<ReleaseRecord> GetAllReleases()
+        public IEnumerable<ReleaseRecord> GetAllReleases(CycleTimeQuery query)
         {
             throw new NotImplementedException();
         }

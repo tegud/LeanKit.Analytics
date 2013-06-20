@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MakeTicketBlockagesTests.cs" />
+    <Compile Include="SqlCommandBuilderTests.cs" />
     <Compile Include="TicketActivityFactoryTests.cs" />
     <Compile Include="TicketFactoryTests.cs" />
   </ItemGroup>

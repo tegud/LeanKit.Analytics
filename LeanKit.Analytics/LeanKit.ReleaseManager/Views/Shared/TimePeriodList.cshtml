@@ -1,0 +1,18 @@
+﻿@model LeanKit.ReleaseManager.Models.CycleTime.CycleTimePeriodViewModel
+
+<ul id="time-period-options">
+    <li><strong>Select Period:</strong></li>
+    @foreach(var period in Model) 
+    {
+        <li class="time-option@(period.Selected ? " selected" : "")">
+            @if(period.Selected)
+            {
+                @period.Label
+            }
+            else
+            {
+                <a href="?timePeriod=@period.Value">@period.Label</a>
+            }
+        </li>
+    }
+</ul>

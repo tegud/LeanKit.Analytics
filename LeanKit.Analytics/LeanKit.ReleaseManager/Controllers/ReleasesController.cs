@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using LeanKit.Data.SQL;
+using LeanKit.ReleaseManager.Models;
+using LeanKit.ReleaseManager.Models.CycleTime;
 using LeanKit.Utilities.DateAndTime;
 
 namespace LeanKit.ReleaseManager.Controllers
@@ -11,22 +11,31 @@ namespace LeanKit.ReleaseManager.Controllers
     public class ReleasesController : Controller
     {
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
+        private readonly IMakeTimePeriodViewModels _timePeriodViewModelFactory;
+        private readonly IMakeCycleTimeQueries _queryFactory;
 
-        public ReleasesController(IGetReleasesFromTheDatabase releaseRepository)
+        public ReleasesController(IGetReleasesFromTheDatabase releaseRepository,
+            IMakeTimePeriodViewModels timePeriodViewModelFactory,
+            IMakeCycleTimeQueries queryFactory)
         {
             _releaseRepository = releaseRepository;
+            _timePeriodViewModelFactory = timePeriodViewModelFactory;
+            _queryFactory = queryFactory;
         }
 
-        public ActionResult Index()
+        public ActionResult Index(string timePeriod)
         {
-            var allReleases = _releaseRepository.GetAllReleases();
+            var query = _queryFactory.Build(timePeriod);
+
+            var allReleases = _releaseRepository.GetAllReleases(query);
 
             return View(new ListOfReleasesViewModel
                 {
+                    TimePeriods = _timePeriodViewModelFactory.Build(query.Period),
                     Releases = allReleases.Select(r =>
                         {
                             var totalMinutes = (r.CompletedAt - r.StartedAt).TotalMinutes;
-                            string formattedTotalMinutes = string.Empty;
+                            var formattedTotalMinutes = string.Empty;
 
                             if(totalMinutes > 0)
                             {
@@ -54,6 +63,8 @@ namespace LeanKit.ReleaseManager.Controllers
     public class ListOfReleasesViewModel
     {
         public IEnumerable<ReleaseListItemViewModel> Releases { get; set; }
+
+        public CycleTimePeriodViewModel TimePeriods { get; set; }
     }
 
     public class ReleaseListItemViewModel
