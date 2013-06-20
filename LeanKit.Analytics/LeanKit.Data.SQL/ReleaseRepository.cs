@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using Dapper;
 
 namespace LeanKit.Data.SQL
@@ -46,9 +47,38 @@ namespace LeanKit.Data.SQL
             }
         }
 
-        public IEnumerable<ReleaseRecord> GetAllReleases()
+        public IEnumerable<ReleaseRecord> GetAllReleases(CycleTimeQuery query)
         {
-            return GetListOfReleases(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID ORDER BY R.PlannedDate DESC");
+            var sql = new StringBuilder("SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID ");
+            var whereClause = new StringBuilder();
+            var parameters = new Dictionary<string, object>();
+
+            if (query.Start > DateTime.MinValue)
+            {
+                whereClause.Append("R.StartedAt >= @Start ");
+                parameters.Add("Start", query.Start);
+            }
+
+            if (query.End > DateTime.MinValue)
+            {
+                if (whereClause.Length > 0)
+                {
+                    whereClause.Append("AND ");
+                }
+
+                whereClause.Append("R.StartedAt <= @End ");
+                parameters.Add("End", query.End);
+            }
+
+            if (whereClause.Length > 0)
+            {
+                sql.Append("WHERE ");
+                sql.Append(whereClause);
+            }
+
+            sql.Append("ORDER BY R.PlannedDate DESC");
+
+            return GetListOfReleases(sql.ToString(), parameters);
         }
 
         public IEnumerable<ReleaseRecord> GetUpcomingReleases()
@@ -161,7 +191,7 @@ namespace LeanKit.Data.SQL
         int Create(ReleaseRecord newRelease);
         void Update(ReleaseRecord releaseRecord);
 
-        IEnumerable<ReleaseRecord> GetAllReleases();
+        IEnumerable<ReleaseRecord> GetAllReleases(CycleTimeQuery query);
         ReleaseRecord GetRelease(int id);
         void SetStartedDate(int id, DateTime started);
         void SetCompletedDate(int id, DateTime completed);

@@ -16,6 +16,7 @@ using LeanKit.Utilities;
 using LeanKit.Utilities.Collections;
 using LeanKit.Utilities.DateAndTime;
 using Munq.MVC3;
+using CycleTimePeriodViewModelFactory = LeanKit.ReleaseManager.Models.TimePeriods.CycleTimePeriodViewModelFactory;
 
 [assembly: WebActivator.PreApplicationStartMethod(
     typeof(LeanKit.ReleaseManager.App_Start.MunqMvc3Startup), "PreStart")]
@@ -60,7 +61,6 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IParsePlannedReleaseDate, PlannedDateParser>();
             ioc.Register<IBuildNewReleaseRecords, CreateReleaseReleaseRecordFactory>();
             ioc.Register<IBuildReleaseViewModels, ReleaseViewModelFactory>();
-            ioc.Register<IBuildCycleTimeViewModels, CycleTimeViewModelFactory>();
             ioc.Register<IMakeCycleTimeReleaseViewModels, CycleTimeReleaseViewModelFactory>();
 
             ioc.Register<IMatchATimePeriod>("MatchWeekCommencing", i => new MatchWeekCommencingTimePeriod(i.Resolve<IKnowTheCurrentDateAndTime>()));
@@ -76,19 +76,29 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IMakeCycleTimeQueries>("CycleTime", i => new CycleTimeQueryFactory(i.Resolve<CycleTimeTimePeriodConfiguration>("CycleTime")));
             ioc.Register<IMakeCycleTimeQueries>("ProductOwnerDashboard", i => new CycleTimeQueryFactory(i.Resolve<ProductOwnerDashboardTimePeriodConfiguration>("ProductOwnerDashboard")));
 
-            ioc.Register<IMakeTimePeriodViewModels, CycleTimePeriodViewModelFactory>();
             ioc.Register<ISummariseTicketCycleTimeInformation, SummariseTicketCycleTimeInformation>();
             ioc.Register<IBuildListOfCycleTimeItems, CycleTimeListOfTicketsViewModelFactory>();
+
+            ioc.Register<IMakeTimePeriodViewModels, CycleTimePeriodViewModelFactory>("CycleTime");
+            ioc.Register<IMakeTimePeriodViewModels, ProductOwnerTimePeriodViewModelFactory>("ProductOwner");
 
             ioc.Register(i => new ProductOwnerDashboardController(
                 i.Resolve<IBuildListOfCycleTimeItems>(), 
                 i.Resolve<IGetReleasedTicketsFromTheDatabase>(),
-                i.Resolve<IMakeCycleTimeQueries>("ProductOwnerDashboard")
-            ));
+                i.Resolve<IMakeCycleTimeQueries>("ProductOwnerDashboard"),
+                i.Resolve<IMakeTimePeriodViewModels>("ProductOwner"),
+                i.Resolve<IGetReleasesFromTheDatabase>()));
+
+            ioc.Register<IBuildCycleTimeViewModels>(i => new CycleTimeViewModelFactory(i.Resolve<IGetReleasedTicketsFromTheDatabase>(),
+                i.Resolve<IMakeTimePeriodViewModels>("CycleTime"),
+                i.Resolve<ISummariseTicketCycleTimeInformation>(), 
+                i.Resolve<IBuildListOfCycleTimeItems>()));
 
             ioc.Register(
                 i => new CycleTimeController(i.Resolve<IBuildCycleTimeViewModels>(),
                                             i.Resolve<IMakeCycleTimeQueries>("CycleTime")));
+
+            ioc.Register(i => new ReleasesController(i.Resolve<IGetReleasesFromTheDatabase>(), i.Resolve<IMakeTimePeriodViewModels>("CycleTime"), i.Resolve<IMakeCycleTimeQueries>("CycleTime")));
 
             DataRegistry.Register(ioc);
             DataSqlRegistry.Register(ioc);

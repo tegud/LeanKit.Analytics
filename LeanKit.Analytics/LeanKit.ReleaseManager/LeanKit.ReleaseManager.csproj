@@ -197,7 +197,7 @@
     <Compile Include="Models\TimePeriods\ProductOwnerDashboardTimePeriodConfiguration.cs" />
     <Compile Include="Models\TimePeriods\StaticPeriodItem.cs" />
     <Compile Include="Models\TimePeriods\TimePeriodMatch.cs" />
-    <Compile Include="Models\TimePeriods\TimePeriodViewModelFactory.cs" />
+    <Compile Include="Models\TimePeriods\CycleTimePeriodViewModelFactory.cs" />
     <Compile Include="Models\TimePeriods\WeekCommencingPeriodItem.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -281,6 +281,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\CycleTimeTicketList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Shared\TimePeriodList.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

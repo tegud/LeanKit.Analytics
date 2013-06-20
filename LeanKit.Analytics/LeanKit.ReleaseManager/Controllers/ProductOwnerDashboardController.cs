@@ -5,7 +5,6 @@ using System.Web.Mvc;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
-using LeanKit.ReleaseManager.Models.TimePeriods;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
@@ -15,15 +14,19 @@ namespace LeanKit.ReleaseManager.Controllers
         private readonly IGetReleasedTicketsFromTheDatabase _ticketRepository;
         private readonly IMakeCycleTimeQueries _queryFactory;
         private readonly IMakeTimePeriodViewModels _timePeriodViewModelFactory;
+        private readonly IGetReleasesFromTheDatabase _releaseRepository;
 
         public ProductOwnerDashboardController(IBuildListOfCycleTimeItems listOfCycleTimeItemsFactory, 
-            IGetReleasedTicketsFromTheDatabase ticketRepository, 
-            IMakeCycleTimeQueries queryFactory)
+            IGetReleasedTicketsFromTheDatabase ticketRepository,
+            IMakeCycleTimeQueries queryFactory, 
+            IMakeTimePeriodViewModels timePeriodViewModelFactory,
+            IGetReleasesFromTheDatabase releaseRepository)
         {
             _listOfCycleTimeItemsFactory = listOfCycleTimeItemsFactory;
             _ticketRepository = ticketRepository;
             _queryFactory = queryFactory;
-            _timePeriodViewModelFactory = new TimePeriodViewModelFactory();
+            _timePeriodViewModelFactory = timePeriodViewModelFactory;
+            _releaseRepository = releaseRepository;
         }
 
         public ActionResult Index(string timePeriod)
@@ -31,42 +34,10 @@ namespace LeanKit.ReleaseManager.Controllers
             var cycleTimeQuery = _queryFactory.Build(timePeriod);
             var tickets = _ticketRepository.Get(cycleTimeQuery).ToArray();
             var cycleTimeTicketsList = _listOfCycleTimeItemsFactory.Build(tickets);
+            var releaseRecords = _releaseRepository.GetAllReleases(cycleTimeQuery);
+            var timePeriods = _timePeriodViewModelFactory.Build(cycleTimeQuery.Period);
 
-            var releases = new List<ProductOwnerDashboardReleaseViewModel>
-                {
-                    new ProductOwnerDashboardReleaseViewModel
-                        {
-                            Id = 1,
-                            Day = "Tues",
-                            FormattedDate = "11 Jun 2013 at 14:30",
-                            TicketCount = 3,
-                            ServiceNowId = "CHG0006063"
-                        },
-                    new ProductOwnerDashboardReleaseViewModel
-                        {
-                            Id = 2,
-                            Day = "Weds",
-                            FormattedDate = "12 Jun 2013 at 15:26",
-                            TicketCount = 2,
-                            ServiceNowId = "CHG0006093"
-                        },
-                    new ProductOwnerDashboardReleaseViewModel
-                        {
-                            Id = 3,
-                            Day = "Thurs",
-                            FormattedDate = "13 Jun 2013 at 16:07",
-                            TicketCount = 1,
-                            ServiceNowId = "CHG0006102"
-                        },
-                    new ProductOwnerDashboardReleaseViewModel
-                        {
-                            Id = 4,
-                            Day = "Fri",
-                            FormattedDate = "14 Jun 2013 at 15:25",
-                            TicketCount = 3,
-                            ServiceNowId = "CHG0006114"
-                        },
-                };
+            var releases = BuildReleasesViewModels(releaseRecords).ToArray();
 
             var ticketsCompletedCount = tickets.Count();
             var complexityPointsReleased = tickets.Sum(t => t.Size);
@@ -81,8 +52,21 @@ namespace LeanKit.ReleaseManager.Controllers
                     SelectedTimePeriodFriendlyName = "this week",
                     Tickets = cycleTimeTicketsList,
                     Releases = releases,
-                    TimePeriods = _timePeriodViewModelFactory.Build(cycleTimeQuery.Period)
+                    TimePeriods = timePeriods
                 });
+        }
+
+        private static IEnumerable<ProductOwnerDashboardReleaseViewModel> BuildReleasesViewModels(IEnumerable<ReleaseRecord> releaseRecords)
+        {
+            return releaseRecords.Select(r => new ProductOwnerDashboardReleaseViewModel
+                {
+                    Id = r.Id,
+                    Day = r.StartedAt.ToString("ddd"),
+                    FormattedDate = r.StartedAt.ToString("dd MMM yyyy \"at\" HH:mm"),
+                    ServiceNowId = r.ServiceNowId,
+                    TicketCount = r.IncludedTickets.Count()
+                });
+
         }
     }
 
