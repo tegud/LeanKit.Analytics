@@ -180,11 +180,11 @@ td.ticket-cycle-time { width: 90px;}
 
 .activity-time-detail { font-size: 0.8em; color: #888 }
 
-.dashboard-item {display: inline-block; background-color: #f7f7f7;width: 280px;min-height: 200px;height: 200px;border-radius: 5px;padding: 10px; margin: 0 10px 14px 0;vertical-align: top; }
+.dashboard-item {display: inline-block; background-color: #f7f7f7;width: 270px;min-height: 200px;height: 200px;border-radius: 5px;padding: 10px; margin: 0 10px 14px 0;vertical-align: top; }
 
-.dashboard-item.double-width { width: 594px; }
+.dashboard-item.double-width { width: 574px; }
 
-.dashboard-item h3 { margin-top: 0;color: #999; }
+.dashboard-item h3 { margin-top: 0;color: #999;font-size: 1.1em; }
 
 .dashboard-bigtext { font-size: 10em; }
 
