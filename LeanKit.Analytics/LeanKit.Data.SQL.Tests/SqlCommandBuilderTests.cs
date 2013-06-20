@@ -22,5 +22,16 @@ namespace LeanKit.Data.SQL.Tests
 
             Assert.That(commandBuilder.Build().Sql, Is.StringEnding(" ORDER BY A.Column DESC"));
         }
+
+        [Test]
+        public void SetsSecondOrderBy()
+        {
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder.OrderBy("A.Column", SqlCommandOrderDirection.Descending);
+            commandBuilder.OrderBy("A.Column2", SqlCommandOrderDirection.Ascending);
+
+            Assert.That(commandBuilder.Build().Sql, Is.StringEnding(" ORDER BY A.Column DESC, A.Column2 ASC"));
+        }
     }
 }

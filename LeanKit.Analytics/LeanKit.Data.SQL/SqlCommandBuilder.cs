@@ -22,7 +22,10 @@ namespace LeanKit.Data.SQL
 
         public void OrderBy(string column, SqlCommandOrderDirection desc)
         {
-            var orderBySql = string.Format(" ORDER BY {0} {1}", column, desc == SqlCommandOrderDirection.Descending ? "DESC" : "");
+            var sqlFormatString = _orderSql.Length > 0 ? ", {0} {1}" : " ORDER BY {0} {1}";
+            var direction = desc == SqlCommandOrderDirection.Descending ? "DESC" : "ASC";
+
+            var orderBySql = string.Format(sqlFormatString, column, direction);
             _orderSql.Append(orderBySql);
         }
     }
@@ -34,6 +37,7 @@ namespace LeanKit.Data.SQL
 
     public enum SqlCommandOrderDirection
     {
-        Descending
+        Descending,
+        Ascending
     }
 }
