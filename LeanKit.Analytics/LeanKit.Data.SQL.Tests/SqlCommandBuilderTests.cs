@@ -33,5 +33,15 @@ namespace LeanKit.Data.SQL.Tests
 
             Assert.That(commandBuilder.Build().Sql, Is.StringEnding(" ORDER BY A.Column DESC, A.Column2 ASC"));
         }
+
+        [Test]
+        public void SetsWhereClause()
+        {
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder.Where("A.Column = @Start");
+
+            Assert.That(commandBuilder.Build().Sql, Is.StringEnding(" WHERE A.Column = @Start"));
+        }
     }
 }

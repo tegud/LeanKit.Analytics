@@ -28,6 +28,11 @@ namespace LeanKit.Data.SQL
             var orderBySql = string.Format(sqlFormatString, column, direction);
             _orderSql.Append(orderBySql);
         }
+
+        public void Where(string whereClause)
+        {
+            _allSql.Append(" WHERE " + whereClause);
+        }
     }
 
     public class SqlCommandAndParameters
