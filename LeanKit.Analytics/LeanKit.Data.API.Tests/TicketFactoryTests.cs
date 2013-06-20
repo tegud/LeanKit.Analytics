@@ -113,9 +113,9 @@ namespace LeanKit.Data.API.Tests
         private WorkDuration _workDuration;
         private List<TicketActivity> _ticketActivities = new List<TicketActivity>(0);
         private IEnumerable<TicketBlockage> _blockages;
-        private IEnumerable<LeanKitCardHistory> _cardHistory;
-        private IEnumerable<LeanKitCardHistory> _cardHistoryPassedToBlockagesFactory;
-        private IEnumerable<LeanKitCardHistory> _cardHistoryPassedToActivitiesFactory;
+        private IEnumerable<LeanKitCardHistory> _cardHistory = new LeanKitCardHistory[0];
+        private IEnumerable<LeanKitCardHistory> _cardHistoryPassedToBlockagesFactory = new LeanKitCardHistory[0];
+        private IEnumerable<LeanKitCardHistory> _cardHistoryPassedToActivitiesFactory = new LeanKitCardHistory[0];
 
         [Test]
         public void SetsId()
