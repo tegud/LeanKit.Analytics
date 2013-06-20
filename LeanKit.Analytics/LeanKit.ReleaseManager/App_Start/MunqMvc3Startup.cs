@@ -73,7 +73,7 @@ namespace LeanKit.ReleaseManager.App_Start
             ioc.Register<IConfigureTimePeriods>("ProductOwnerDashboard", 
                 i => new ProductOwnerDashboardTimePeriodConfiguration(i.Resolve<IKnowTheCurrentDateAndTime>()));
 
-            ioc.Register<IMakeCycleTimeQueries>("CycleTime", i => new CycleTimeQueryFactory(i.Resolve<ProductOwnerDashboardTimePeriodConfiguration>("CycleTime")));
+            ioc.Register<IMakeCycleTimeQueries>("CycleTime", i => new CycleTimeQueryFactory(i.Resolve<CycleTimeTimePeriodConfiguration>("CycleTime")));
             ioc.Register<IMakeCycleTimeQueries>("ProductOwnerDashboard", i => new CycleTimeQueryFactory(i.Resolve<ProductOwnerDashboardTimePeriodConfiguration>("ProductOwnerDashboard")));
 
             ioc.Register<IMakeTimePeriodViewModels, CycleTimePeriodViewModelFactory>();
