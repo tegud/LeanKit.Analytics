@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
@@ -49,11 +50,25 @@ namespace LeanKit.ReleaseManager.Controllers
                     TicketsCompletedCount = ticketsCompletedCount,
                     ComplexityPointsReleased = complexityPointsReleased,
                     AverageCycleTime = averageCycleTime,
-                    SelectedTimePeriodFriendlyName = "this week",
+                    SelectedTimePeriodFriendlyName = GetSelectedTimePeriodFriendlyName(cycleTimeQuery),
                     Tickets = cycleTimeTicketsList,
                     Releases = releases,
                     TimePeriods = timePeriods
                 });
+        }
+
+        private static string GetSelectedTimePeriodFriendlyName(CycleTimeQuery period)
+        {
+            if (period.Period == "this-week")
+            {
+                return "this week";
+            }
+            if (period.Period == "last-week")
+            {
+                return "last week";
+            }
+
+            return string.Format("for week starting {0}", period.Start.ToString("dd MMM"));
         }
 
         private static IEnumerable<ProductOwnerDashboardReleaseViewModel> BuildReleasesViewModels(IEnumerable<ReleaseRecord> releaseRecords)
