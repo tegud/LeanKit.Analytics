@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 
 namespace LeanKit.Data.SQL.Tests
 {
@@ -39,9 +40,33 @@ namespace LeanKit.Data.SQL.Tests
         {
             var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
 
-            commandBuilder.Where("A.Column = @Start");
+            commandBuilder.Where("A.Column = @Start", null);
 
             Assert.That(commandBuilder.Build().Sql, Is.StringEnding(" WHERE A.Column = @Start"));
+        }
+
+        [Test]
+        public void SetsParameterForWhereClause()
+        {
+            var expectedValue = new DateTime(2013, 1, 1);
+
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder.Where("A.Column = @Start", expectedValue);
+
+            Assert.That(commandBuilder.Build().Parameters["Start"], Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        public void SetsMultipleParameters()
+        {
+            var expectedValue = new DateTime(2013, 1, 1);
+
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder.Where("A.Column BETWEEN @Start AND @End", new DateTime(2012, 1, 1), expectedValue);
+
+            Assert.That(commandBuilder.Build().Parameters["Start"], Is.EqualTo(expectedValue));
         }
     }
 }

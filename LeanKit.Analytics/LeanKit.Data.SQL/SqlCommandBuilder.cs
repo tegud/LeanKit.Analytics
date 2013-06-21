@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace LeanKit.Data.SQL
 {
@@ -6,6 +9,10 @@ namespace LeanKit.Data.SQL
     {
         private readonly StringBuilder _allSql;
         private readonly StringBuilder _orderSql = new StringBuilder();
+        private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
+
+        private const RegexOptions ParamRegexOptions = RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled;
+        private readonly Regex _parameterRegex = new Regex("@(?<parameterName>[a-z0-9]+)", ParamRegexOptions);
 
         public SqlCommandBuilder(string select)
         {
@@ -16,7 +23,8 @@ namespace LeanKit.Data.SQL
         {
             return new SqlCommandAndParameters
                 {
-                    Sql = string.Concat( _allSql.ToString(), _orderSql.ToString())
+                    Sql = string.Concat( _allSql.ToString(), _orderSql.ToString()),
+                    Parameters = _parameters
                 };
         }
 
@@ -29,15 +37,38 @@ namespace LeanKit.Data.SQL
             _orderSql.Append(orderBySql);
         }
 
-        public void Where(string whereClause)
+        public void Where(string whereClause, params object[] values)
         {
             _allSql.Append(" WHERE " + whereClause);
+
+            var matches = _parameterRegex.Matches(whereClause);
+            var index = 0;
+
+            foreach (Match match in matches)
+            {
+                var parameterName = match.Groups["parameterName"].Value;
+
+                _parameters.Add(parameterName, GetValue(values, index));
+                index++;
+            }
+        }
+
+        private static object GetValue(object[] values, int index)
+        {
+            if (values == null)
+            {
+                return null;
+            }
+
+            return values[index];
         }
     }
 
     public class SqlCommandAndParameters
     {
         public string Sql { get; set; }
+
+        public IDictionary<string, object> Parameters { get; set; }
     }
 
     public enum SqlCommandOrderDirection
