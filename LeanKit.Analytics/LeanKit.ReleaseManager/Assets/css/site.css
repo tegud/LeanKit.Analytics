@@ -112,6 +112,8 @@ table th { text-align: left;background-color: #f7f7f7;height: 30px;padding: 5px;
 
 a { color: #000;transition-property: color;transition-duration: 300ms;text-decoration: none; }
 
+#release-table { width: 100%; }
+
 .release-row:hover a, a:hover { color: #75A4FF }
 
 .release-id { width: 60px; }

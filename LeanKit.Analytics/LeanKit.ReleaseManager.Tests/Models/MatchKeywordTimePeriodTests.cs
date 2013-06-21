@@ -71,9 +71,9 @@ namespace LeanKit.ReleaseManager.Tests.Models
         }
 
         [Test]
-        public void AllTimeSetsEndToDateTimeMax()
+        public void AllTimeSetsEndToDateTimeMin()
         {
-            DateTime expectedEndDate = DateTime.MaxValue;
+            DateTime expectedEndDate = DateTime.MinValue;
 
             var dateTimeWrapper = this;
 

@@ -50,7 +50,7 @@ namespace LeanKit.ReleaseManager.Models.TimePeriods
         {
             if(timePeriod == "all-time")
             {
-                return new TimePeriodMatch(DateTime.MinValue, DateTime.MaxValue);
+                return new TimePeriodMatch(DateTime.MinValue, DateTime.MinValue);
             }
 
             var match = new Regex("(this|last)-week").Match(timePeriod);
