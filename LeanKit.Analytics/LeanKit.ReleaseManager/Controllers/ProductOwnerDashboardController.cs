@@ -34,7 +34,7 @@ namespace LeanKit.ReleaseManager.Controllers
             var cycleTimeQuery = _queryFactory.Build(timePeriod);
             var tickets = _ticketRepository.Get(cycleTimeQuery).ToArray();
             var cycleTimeTicketsList = _listOfCycleTimeItemsFactory.Build(tickets);
-            var releaseRecords = _releaseRepository.GetAllReleases(cycleTimeQuery);
+            var releaseRecords = _releaseRepository.GetAllReleases(cycleTimeQuery).OrderBy(r => r.StartedAt);
             var timePeriods = _timePeriodViewModelFactory.Build(cycleTimeQuery.Period);
 
             var releases = BuildReleasesViewModels(releaseRecords).ToArray();
