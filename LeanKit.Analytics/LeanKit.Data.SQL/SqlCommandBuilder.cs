@@ -11,8 +11,9 @@ namespace LeanKit.Data.SQL
         private readonly StringBuilder _orderSql = new StringBuilder();
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
 
-        private const RegexOptions ParamRegexOptions = RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled;
-        private readonly Regex _parameterRegex = new Regex("@(?<parameterName>[a-z0-9]+)", ParamRegexOptions);
+        private const RegexOptions PARAM_REGEX_OPTIONS = RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled;
+        private readonly Regex _parameterRegex = new Regex("@(?<parameterName>[a-z0-9]+)", PARAM_REGEX_OPTIONS);
+        private SqlWhereClause _sqlWhereClause = SqlWhereClause.Empty;
 
         public SqlCommandBuilder(string select)
         {
@@ -21,10 +22,12 @@ namespace LeanKit.Data.SQL
 
         public SqlCommandAndParameters Build()
         {
+            var whereClause = _sqlWhereClause.Build();
+
             return new SqlCommandAndParameters
                 {
-                    Sql = string.Concat( _allSql.ToString(), _orderSql.ToString()),
-                    Parameters = _parameters
+                    Sql = string.Concat(_allSql.ToString(), whereClause.Sql, _orderSql.ToString()),
+                    Parameters = whereClause.Parameters
                 };
         }
 
@@ -37,30 +40,65 @@ namespace LeanKit.Data.SQL
             _orderSql.Append(orderBySql);
         }
 
-        public void Where(string whereClause, params object[] values)
+        public SqlWhereClause Where(string whereClause, IDictionary<string, object> values)
         {
-            _allSql.Append(" WHERE " + whereClause);
+            _sqlWhereClause = new SqlWhereClause(whereClause, values);
+            return _sqlWhereClause;
+        }
+    }
+
+    public class SqlWhereClause
+    {
+        private readonly StringBuilder _sql;
+        private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
+        private const RegexOptions PARAM_REGEX_OPTIONS = RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled;
+        private readonly Regex _parameterRegex = new Regex("@(?<parameterName>[a-z0-9]+)", PARAM_REGEX_OPTIONS);
+
+        private SqlWhereClause()
+        {
+            _sql = new StringBuilder();
+        }
+
+        public SqlWhereClause(string whereClause, IDictionary<string, object> values)
+        {
+            _sql = new StringBuilder(" WHERE " + whereClause);
 
             var matches = _parameterRegex.Matches(whereClause);
-            var index = 0;
 
             foreach (Match match in matches)
             {
                 var parameterName = match.Groups["parameterName"].Value;
 
-                _parameters.Add(parameterName, GetValue(values, index));
-                index++;
+                _parameters.Add(parameterName, GetValue(values, parameterName));
             }
         }
 
-        private static object GetValue(object[] values, int index)
+        public SqlWhereClause And(string whereClause, IDictionary<string, object> values)
         {
-            if (values == null)
+            _sql.Append(" AND " + whereClause);
+
+            return this;
+        }
+
+        private static object GetValue(IDictionary<string, object> values, string key)
+        {
+            if(values == null || !values.ContainsKey(key))
             {
                 return null;
             }
 
-            return values[index];
+            return values[key];
+        }
+
+        public static SqlWhereClause Empty = new SqlWhereClause();
+
+        public SqlCommandAndParameters Build()
+        {
+            return new SqlCommandAndParameters
+                {
+                    Sql = _sql.ToString(),
+                    Parameters = _parameters
+                };
         }
     }
 

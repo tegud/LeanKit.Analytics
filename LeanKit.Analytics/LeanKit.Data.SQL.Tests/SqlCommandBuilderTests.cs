@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 
 namespace LeanKit.Data.SQL.Tests
@@ -52,7 +53,10 @@ namespace LeanKit.Data.SQL.Tests
 
             var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
 
-            commandBuilder.Where("A.Column = @Start", expectedValue);
+            commandBuilder.Where("A.Column = @Start", new Dictionary<string, object>
+                {
+                    {"Start", expectedValue}
+                });
 
             Assert.That(commandBuilder.Build().Parameters["Start"], Is.EqualTo(expectedValue));
         }
@@ -64,9 +68,34 @@ namespace LeanKit.Data.SQL.Tests
 
             var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
 
-            commandBuilder.Where("A.Column BETWEEN @Start AND @End", new DateTime(2012, 1, 1), expectedValue);
+            commandBuilder.Where("A.Column BETWEEN @Start AND @End", new Dictionary<string, object>
+                {
+                    { "Start", new DateTime(2012, 1, 1) },
+                    { "End", expectedValue }
+                });
 
-            Assert.That(commandBuilder.Build().Parameters["Start"], Is.EqualTo(expectedValue));
+            Assert.That(commandBuilder.Build().Parameters["End"], Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        public void AndSetsWhereToIncludeAndClause()
+        {
+            var expectedValue = "WHERE A.Column BETWEEN @Start AND @End AND A.Column2 = @SiteID";
+
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder
+                .Where("A.Column BETWEEN @Start AND @End", new Dictionary<string, object>
+                    {
+                        {"Start", new DateTime(2012, 1, 1)},
+                        {"End", new DateTime(2013, 1, 1)}
+                    })
+                .And("A.Column2 = @SiteID", new Dictionary<string, object>
+                    {
+                        {"SiteID", 1}
+                    });
+
+            Assert.That(commandBuilder.Build().Sql, Is.StringEnding(expectedValue));
         }
     }
 }
