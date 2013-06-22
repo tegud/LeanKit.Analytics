@@ -40,7 +40,7 @@ namespace LeanKit.Data.SQL
             _orderSql.Append(orderBySql);
         }
 
-        public SqlWhereClause Where(string whereClause, IDictionary<string, object> values)
+        public SqlWhereClause Where(string whereClause, IDictionary<string, object> values = null)
         {
             _sqlWhereClause = new SqlWhereClause(whereClause, values);
             return _sqlWhereClause;
@@ -63,21 +63,52 @@ namespace LeanKit.Data.SQL
         {
             _sql = new StringBuilder(" WHERE " + whereClause);
 
-            var matches = _parameterRegex.Matches(whereClause);
+            var matches = ExtractParametersFromSql(whereClause);
 
+            AddParameters(values, matches);
+        }
+
+        private MatchCollection ExtractParametersFromSql(string whereClause)
+        {
+            var matches = _parameterRegex.Matches(whereClause);
+            return matches;
+        }
+
+        public SqlWhereClause And(string whereClause, IDictionary<string, object> values = null)
+        {
+            _sql.Append(" AND " + whereClause);
+
+            var matches = ExtractParametersFromSql(whereClause);
+
+            AddParameters(values, matches);
+
+            return this;
+        }
+
+        public SqlWhereClause Parameters(Dictionary<string, object> dictionary)
+        {
+            foreach(var kvp in dictionary)
+            {
+                if (_parameters.ContainsKey(kvp.Key))
+                {
+                    _parameters[kvp.Key] = kvp.Value;
+                }
+                else
+                {
+                    _parameters.Add(kvp.Key, kvp.Value);
+                }
+            }
+            return this;
+        }
+
+        private void AddParameters(IDictionary<string, object> values, MatchCollection matches)
+        {
             foreach (Match match in matches)
             {
                 var parameterName = match.Groups["parameterName"].Value;
 
                 _parameters.Add(parameterName, GetValue(values, parameterName));
             }
-        }
-
-        public SqlWhereClause And(string whereClause, IDictionary<string, object> values)
-        {
-            _sql.Append(" AND " + whereClause);
-
-            return this;
         }
 
         private static object GetValue(IDictionary<string, object> values, string key)

@@ -80,7 +80,7 @@ namespace LeanKit.Data.SQL.Tests
         [Test]
         public void AndSetsWhereToIncludeAndClause()
         {
-            var expectedValue = "WHERE A.Column BETWEEN @Start AND @End AND A.Column2 = @SiteID";
+            const string expectedWhereClause = "WHERE A.Column BETWEEN @Start AND @End AND A.Column2 = @SiteID";
 
             var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
 
@@ -95,7 +95,45 @@ namespace LeanKit.Data.SQL.Tests
                         {"SiteID", 1}
                     });
 
-            Assert.That(commandBuilder.Build().Sql, Is.StringEnding(expectedValue));
+            Assert.That(commandBuilder.Build().Sql, Is.StringEnding(expectedWhereClause));
+        }
+
+        [Test]
+        public void AndAppendsParameters()
+        {
+            const int expectedValue = 1;
+
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder
+                .Where("A.Column BETWEEN @Start AND @End", new Dictionary<string, object>
+                    {
+                        {"Start", new DateTime(2012, 1, 1)},
+                        {"End", new DateTime(2013, 1, 1)}
+                    })
+                .And("A.Column2 = @SiteID", new Dictionary<string, object>
+                    {
+                        {"SiteID", 1}
+                    });
+
+            Assert.That(commandBuilder.Build().Parameters["SiteID"], Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        public void ParametersSetsParameterValues()
+        {
+            const int expectedValue = 1;
+
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder
+                .Where("A.Column = @SiteID")
+                .Parameters(new Dictionary<string, object>
+                    {
+                        {"SiteID", 1}
+                    });
+
+            Assert.That(commandBuilder.Build().Parameters["SiteID"], Is.EqualTo(expectedValue));
         }
     }
 }
