@@ -23,8 +23,23 @@ namespace LeanKit.Data.SQL
                     {"id", id}
                 };
 
-            return GetListOfReleases(@"SELECT R.*, RC.CardID, C.ExternalID, C.Title, C.Size FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID LEFT OUTER JOIN Card C ON RC.CardID = C.ID WHERE R.ID = @ID",
-                parameters).Single();
+            var sql = @"SELECT R.*, RC.CardID, C.ExternalID, C.Title, C.Size 
+FROM Release R 
+LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID 
+LEFT OUTER JOIN Card C ON RC.CardID = C.ID 
+WHERE R.ID = @ID";
+
+            var command =
+                new SqlCommandBuilder(
+                    "SELECT R.*, RC.CardID, C.ExternalID, C.Title, C.Size FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID LEFT OUTER JOIN Card C ON RC.CardID = C.ID ");
+
+            command.Where("R.ID = @ID")
+                .Parameters(new Dictionary<string, object>
+                    {
+                        {"ID", id}
+                    });
+
+            return GetListOfReleases(command).Single();
         }
 
         public void SetStartedDate(int id, DateTime started)
@@ -45,6 +60,12 @@ namespace LeanKit.Data.SQL
 
                 sqlConnection.Execute("UPDATE Release SET CompletedAt = @completed WHERE ID = @ID", new { id, completed });
             }
+        }
+
+        private IEnumerable<ReleaseRecord> GetListOfReleases(SqlCommandBuilder command)
+        {
+            var builtCommand = command.Build();
+            return GetListOfReleases(builtCommand.Sql, builtCommand.Parameters);
         }
 
         public IEnumerable<ReleaseRecord> GetAllReleases(CycleTimeQuery query)
@@ -91,7 +112,7 @@ namespace LeanKit.Data.SQL
             return GetListOfReleases(sql, new Dictionary<string, object>(0));
         }
 
-        private IEnumerable<ReleaseRecord> GetListOfReleases(string sql, Dictionary<string, object> parameters)
+        private IEnumerable<ReleaseRecord> GetListOfReleases(string sql, IEnumerable<KeyValuePair<string, object>> parameters)
         {
             var sqlParameters = new DynamicParameters();
 
