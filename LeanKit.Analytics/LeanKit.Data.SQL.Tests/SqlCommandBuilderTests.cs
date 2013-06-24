@@ -99,6 +99,27 @@ namespace LeanKit.Data.SQL.Tests
         }
 
         [Test]
+        public void OrSetsWhereToIncludeAndClause()
+        {
+            const string expectedWhereClause = "WHERE A.Column BETWEEN @Start AND @End OR A.Column2 = @SiteID";
+
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder
+                .Where("A.Column BETWEEN @Start AND @End", new Dictionary<string, object>
+                    {
+                        {"Start", new DateTime(2012, 1, 1)},
+                        {"End", new DateTime(2013, 1, 1)}
+                    })
+                .Or("A.Column2 = @SiteID", new Dictionary<string, object>
+                    {
+                        {"SiteID", 1}
+                    });
+
+            Assert.That(commandBuilder.Build().Sql, Is.StringEnding(expectedWhereClause));
+        }
+
+        [Test]
         public void AndAppendsParameters()
         {
             const int expectedValue = 1;
@@ -110,6 +131,52 @@ namespace LeanKit.Data.SQL.Tests
                     {
                         {"Start", new DateTime(2012, 1, 1)},
                         {"End", new DateTime(2013, 1, 1)}
+                    })
+                .And("A.Column2 = @SiteID", new Dictionary<string, object>
+                    {
+                        {"SiteID", 1}
+                    });
+
+            Assert.That(commandBuilder.Build().Parameters["SiteID"], Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        public void OrAppendsParameters()
+        {
+            const int expectedValue = 1;
+
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder
+                .Where("A.Column BETWEEN @Start AND @End", new Dictionary<string, object>
+                    {
+                        {"Start", new DateTime(2012, 1, 1)},
+                        {"End", new DateTime(2013, 1, 1)}
+                    })
+                .Or("A.Column2 = @SiteID", new Dictionary<string, object>
+                    {
+                        {"SiteID", 1}
+                    });
+
+            Assert.That(commandBuilder.Build().Parameters["SiteID"], Is.EqualTo(expectedValue));
+        }
+
+        [Test]
+        public void AndThenOrCanSpecifyTheSameParameters()
+        {
+            const int expectedValue = 1;
+
+            var commandBuilder = new SqlCommandBuilder("SELECT * FROM TableA A");
+
+            commandBuilder
+                .Where("A.Column BETWEEN @Start AND @End", new Dictionary<string, object>
+                    {
+                        {"Start", new DateTime(2012, 1, 1)},
+                        {"End", new DateTime(2013, 1, 1)}
+                    })
+                .Or("A.Column2 = @SiteID", new Dictionary<string, object>
+                    {
+                        {"SiteID", 1}
                     })
                 .And("A.Column2 = @SiteID", new Dictionary<string, object>
                     {

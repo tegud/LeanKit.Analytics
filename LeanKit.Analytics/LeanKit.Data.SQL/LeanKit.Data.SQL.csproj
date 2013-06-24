@@ -66,6 +66,7 @@
     <Compile Include="ITicketRepository.cs" />
     <Compile Include="ReleaseRepository.cs" />
     <Compile Include="SqlCommandBuilder.cs" />
+    <Compile Include="SqlWhereClause.cs" />
     <Compile Include="TicketActivityFactory.cs" />
     <Compile Include="TicketActivityRecord.cs" />
     <Compile Include="TicketAssignedUserRecord.cs" />

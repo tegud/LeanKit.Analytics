@@ -73,11 +73,12 @@ namespace LeanKit.ReleaseManager.Controllers
 
         private static IEnumerable<ProductOwnerDashboardReleaseViewModel> BuildReleasesViewModels(IEnumerable<ReleaseRecord> releaseRecords)
         {
-            return releaseRecords.Select(r => new ProductOwnerDashboardReleaseViewModel
+            return releaseRecords.OrderBy(r => r.PlannedDate).OrderBy(r => r.StartedAt).Select(r => new ProductOwnerDashboardReleaseViewModel
                 {
                     Id = r.Id,
-                    Day = r.StartedAt.ToString("ddd"),
-                    FormattedDate = r.StartedAt.ToString("dd MMM yyyy \"at\" HH:mm"),
+                    Day = r.StartedAt > DateTime.MinValue ? r.StartedAt.ToString("ddd") : r.PlannedDate.ToString("ddd"),
+                    FormattedDate = r.StartedAt > DateTime.MinValue ? r.StartedAt.ToString("dd MMM yyyy \"at\" HH:mm")
+                     : r.PlannedDate.ToString("dd MMM yyyy \"at\" HH:mm"),
                     ServiceNowId = r.ServiceNowId,
                     TicketCount = r.IncludedTickets.Count()
                 });

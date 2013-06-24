@@ -43,14 +43,19 @@ namespace LeanKit.Data.SQL
 
             if (query.Start > DateTime.MinValue && query.End > DateTime.MinValue)
             {
-                command.Where("R.StartedAt BETWEEN @Start and @End", new Dictionary<string, object>
-                    {
-                        {"Start", query.Start},
-                        {"End", query.End}
-                    });
+                command
+                    .Where("R.StartedAt BETWEEN @Start AND @End")
+                    .Or("(R.StartedAt IS NULL AND R.PlannedDate BETWEEN @Start AND @End)")
+                    .Parameters(new Dictionary<string, object>
+                        {
+                            {"Start", query.Start},
+                            {"End", query.End}
+                        });
             }
 
-            command.OrderBy("R.PlannedDate", SqlCommandOrderDirection.Descending);
+            command
+                .OrderBy("R.StartedAt", SqlCommandOrderDirection.Descending)
+                .OrderBy("R.PlannedDate", SqlCommandOrderDirection.Descending);
 
             return GetListOfReleases(command);
         }
