@@ -43,8 +43,15 @@
             }
         </ul>
     </div>
-    <div class="dashboard-item double-width">
+    <div class="dashboard-item double-width" id="product-owner-blockages">
         <h3>Blockages @Model.SelectedTimePeriodFriendlyName</h3>
+        
+        <ul>
+            @foreach(var blockage in Model.Blockages)
+            {
+                <li>@blockage.Title (@blockage.AffectedTickets ticket@(blockage.AffectedTickets != 1 ? "s" : "") affected)</li>
+            }
+        </ul>
     </div>
 </div>
 

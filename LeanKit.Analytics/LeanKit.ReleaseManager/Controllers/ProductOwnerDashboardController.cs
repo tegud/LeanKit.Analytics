@@ -16,18 +16,21 @@ namespace LeanKit.ReleaseManager.Controllers
         private readonly IMakeCycleTimeQueries _queryFactory;
         private readonly IMakeTimePeriodViewModels _timePeriodViewModelFactory;
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
+        private readonly IGetBlockagesFromTheDatabase _blockageRepository;
 
         public ProductOwnerDashboardController(IBuildListOfCycleTimeItems listOfCycleTimeItemsFactory, 
             IGetReleasedTicketsFromTheDatabase ticketRepository,
             IMakeCycleTimeQueries queryFactory, 
             IMakeTimePeriodViewModels timePeriodViewModelFactory,
-            IGetReleasesFromTheDatabase releaseRepository)
+            IGetReleasesFromTheDatabase releaseRepository,
+            IGetBlockagesFromTheDatabase blockageRepository)
         {
             _listOfCycleTimeItemsFactory = listOfCycleTimeItemsFactory;
             _ticketRepository = ticketRepository;
             _queryFactory = queryFactory;
             _timePeriodViewModelFactory = timePeriodViewModelFactory;
             _releaseRepository = releaseRepository;
+            _blockageRepository = blockageRepository;
         }
 
         public ActionResult Index(string timePeriod)
@@ -37,6 +40,7 @@ namespace LeanKit.ReleaseManager.Controllers
             var cycleTimeTicketsList = _listOfCycleTimeItemsFactory.Build(tickets);
             var releaseRecords = _releaseRepository.GetAllReleases(cycleTimeQuery).OrderBy(r => r.StartedAt);
             var timePeriods = _timePeriodViewModelFactory.Build(cycleTimeQuery.Period);
+            var blockages = _blockageRepository.Get(cycleTimeQuery);
 
             var releases = BuildReleasesViewModels(releaseRecords).ToArray();
 
@@ -53,8 +57,27 @@ namespace LeanKit.ReleaseManager.Controllers
                     SelectedTimePeriodFriendlyName = GetSelectedTimePeriodFriendlyName(cycleTimeQuery),
                     Tickets = cycleTimeTicketsList,
                     Releases = releases,
-                    TimePeriods = timePeriods
+                    TimePeriods = timePeriods,
+                    Blockages = BuildBlockageViewModels(blockages)
                 });
+        }
+
+        private static IEnumerable<ProductOwnerDashboardBlockagesViewModel> BuildBlockageViewModels(IEnumerable<TicketBlockage> blockages)
+        {
+            var groupedBlockages = blockages.GroupBy(b => b.Reason);
+
+            return groupedBlockages.Select(b =>
+                {
+                    //var averageBlockageTime = b.Average(i => i.Duration.Hours);
+                    var averageBlockageTime = 0;
+
+                    return new ProductOwnerDashboardBlockagesViewModel
+                        {
+                            Title = b.Key,
+                            AffectedTickets = b.Count(),
+                            FormattedAverageBlockageTime = averageBlockageTime >= 1 ? "less than an hour" : averageBlockageTime.ToString("0")
+                        };
+                }).OrderByDescending(b => b.AffectedTickets);
         }
 
         private static string GetSelectedTimePeriodFriendlyName(CycleTimeQuery period)
@@ -73,7 +96,9 @@ namespace LeanKit.ReleaseManager.Controllers
 
         private static IEnumerable<ProductOwnerDashboardReleaseViewModel> BuildReleasesViewModels(IEnumerable<ReleaseRecord> releaseRecords)
         {
-            return releaseRecords.OrderBy(r => r.PlannedDate).OrderBy(r => r.StartedAt).Select(r => new ProductOwnerDashboardReleaseViewModel
+            return releaseRecords
+                .OrderBy(r => r.PlannedDate)
+                .ThenBy(r => r.StartedAt).Select(r => new ProductOwnerDashboardReleaseViewModel
                 {
                     Id = r.Id,
                     Day = r.StartedAt > DateTime.MinValue ? r.StartedAt.ToString("ddd") : r.PlannedDate.ToString("ddd"),
@@ -122,6 +147,10 @@ namespace LeanKit.ReleaseManager.Controllers
 
     public class ProductOwnerDashboardBlockagesViewModel
     {
-         
+        public string Title { get; set; }
+
+        public int AffectedTickets { get; set; }
+
+        public string FormattedAverageBlockageTime { get; set; }
     }
 }

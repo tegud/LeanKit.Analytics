@@ -6,6 +6,55 @@ using Dapper;
 
 namespace LeanKit.Data.SQL
 {
+    public class BlockageRepository : IGetBlockagesFromTheDatabase
+    {
+        private readonly string _connectionString;
+
+        public BlockageRepository(DbConnectionString connectionString)
+        {
+            _connectionString = connectionString.ConnectionString;
+        }
+
+        public IEnumerable<TicketBlockage> Get(CycleTimeQuery query)
+        {
+            var command = new SqlCommandBuilder(@"  SELECT  *
+                                                    FROM    CardBlockage CB
+                                                            INNER JOIN Card C ON CB.CardID = C.ID");
+            var where = command.Where("C.Started IS NOT NULL");
+
+            if(query.Start > DateTime.MinValue && query.End > DateTime.MinValue)
+            {
+                where.And("(CB.Started BETWEEN @Start AND @End AND (CB.Finished IS NULL OR CB.Finished BETWEEN @Start AND @End))",
+                    new Dictionary<string, object>
+                        {
+                            { "Start", query.Start },
+                            { "End", query.End }
+                        });
+            }
+
+            var builtCommand = command.Build();
+
+            var sqlParameters = new DynamicParameters();
+
+            foreach (var param in builtCommand.Parameters)
+            {
+                sqlParameters.Add(param.Key, param.Value);
+            }
+
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                return sqlConnection.Query<TicketBlockage>(builtCommand.Sql, sqlParameters);
+            }
+        }
+    }
+
+    public interface IGetBlockagesFromTheDatabase
+    {
+        IEnumerable<TicketBlockage> Get(CycleTimeQuery query);
+    }
+
     public class ReleaseRepository : IGetReleasesFromTheDatabase
     {
         private readonly string _connectionString;
@@ -22,13 +71,13 @@ namespace LeanKit.Data.SQL
                     @"  SELECT    R.*, RC.CardID, C.ExternalID, C.Title, C.Size 
                         FROM    Release R 
                                 LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID 
-                                LEFT OUTER JOIN Card C ON RC.CardID = C.ID ");
+                                LEFT OUTER JOIN Card C ON RC.CardID = C.ID");
 
             command
                 .Where("R.ID = @ID")
                 .Parameters(new Dictionary<string, object>
                     {
-                        {"ID", id}
+                        { "ID", id }
                     });
 
             return GetListOfReleases(command).Single();
@@ -55,7 +104,7 @@ namespace LeanKit.Data.SQL
 
             command
                 .OrderBy("R.StartedAt", SqlCommandOrderDirection.Descending)
-                .OrderBy("R.PlannedDate", SqlCommandOrderDirection.Descending);
+                .ThenBy("R.PlannedDate", SqlCommandOrderDirection.Descending);
 
             return GetListOfReleases(command);
         }

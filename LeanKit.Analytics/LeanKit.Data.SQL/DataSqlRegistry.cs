@@ -14,6 +14,7 @@ namespace LeanKit.Data.SQL
                 i => new CompletedTicketsRepository(i.Resolve<DbConnectionString>(), i.Resolve<ICreateTickets>()));
             ioc.Register<ICreateTicketActivities>(i => new TicketActivityFactory(i.Resolve<ICalculateWorkDuration>()));
             ioc.Register<IMakeTicketBlockages>(i => new TicketBlockageFactory(i.Resolve<ICalculateWorkDuration>()));
+            ioc.Register<IGetBlockagesFromTheDatabase>(i => new BlockageRepository(i.Resolve<DbConnectionString>()));
             ioc.Register<IGetAllTicketInformation>(i => new FullTicketInformationRepository(i.Resolve<DbConnectionString>(), i.Resolve<ICreateTickets>()));
 
             ioc.Register<ICreateTickets>(i =>

@@ -87,7 +87,8 @@ namespace LeanKit.ReleaseManager.App_Start
                 i.Resolve<IGetReleasedTicketsFromTheDatabase>(),
                 i.Resolve<IMakeCycleTimeQueries>("ProductOwnerDashboard"),
                 i.Resolve<IMakeTimePeriodViewModels>("ProductOwner"),
-                i.Resolve<IGetReleasesFromTheDatabase>()));
+                i.Resolve<IGetReleasesFromTheDatabase>(),
+                i.Resolve<IGetBlockagesFromTheDatabase>()));
 
             ioc.Register<IBuildCycleTimeViewModels>(i => new CycleTimeViewModelFactory(i.Resolve<IGetReleasedTicketsFromTheDatabase>(),
                 i.Resolve<IMakeTimePeriodViewModels>("CycleTime"),

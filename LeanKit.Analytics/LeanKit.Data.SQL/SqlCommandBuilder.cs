@@ -26,7 +26,7 @@ namespace LeanKit.Data.SQL
                 };
         }
 
-        public SqlCommandBuilder OrderBy(string column, SqlCommandOrderDirection desc)
+        public SqlOrderClause OrderBy(string column, SqlCommandOrderDirection desc)
         {
             var sqlFormatString = _orderSql.Length > 0 ? ", {0} {1}" : " ORDER BY {0} {1}";
             var direction = desc == SqlCommandOrderDirection.Descending ? "DESC" : "ASC";
@@ -34,13 +34,30 @@ namespace LeanKit.Data.SQL
             var orderBySql = string.Format(sqlFormatString, column, direction);
             _orderSql.Append(orderBySql);
 
-            return this;
+            return new SqlOrderClause(this);
         }
 
         public SqlWhereClause Where(string whereClause, IDictionary<string, object> values = null)
         {
             _sqlWhereClause = new SqlWhereClause(whereClause, values);
             return _sqlWhereClause;
+        }
+    }
+
+    public class SqlOrderClause
+    {
+        private readonly SqlCommandBuilder _command;
+
+        public SqlOrderClause(SqlCommandBuilder command)
+        {
+            _command = command;
+        }
+
+        public SqlOrderClause ThenBy(string column, SqlCommandOrderDirection direction)
+        {
+            _command.OrderBy(column, direction);
+
+            return this;
         }
     }
 
