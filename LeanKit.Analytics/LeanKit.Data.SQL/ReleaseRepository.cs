@@ -16,32 +16,6 @@ namespace LeanKit.Data.SQL
             _connectionString = connectionString.ConnectionString;
         }
 
-        public ReleaseRecord GetRelease(int id)
-        {
-            var parameters = new Dictionary<string, object>
-                {
-                    {"id", id}
-                };
-
-            var sql = @"SELECT R.*, RC.CardID, C.ExternalID, C.Title, C.Size 
-FROM Release R 
-LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID 
-LEFT OUTER JOIN Card C ON RC.CardID = C.ID 
-WHERE R.ID = @ID";
-
-            var command =
-                new SqlCommandBuilder(
-                    "SELECT R.*, RC.CardID, C.ExternalID, C.Title, C.Size FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID LEFT OUTER JOIN Card C ON RC.CardID = C.ID ");
-
-            command.Where("R.ID = @ID")
-                .Parameters(new Dictionary<string, object>
-                    {
-                        {"ID", id}
-                    });
-
-            return GetListOfReleases(command).Single();
-        }
-
         public void SetStartedDate(int id, DateTime started)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
@@ -62,10 +36,22 @@ WHERE R.ID = @ID";
             }
         }
 
-        private IEnumerable<ReleaseRecord> GetListOfReleases(SqlCommandBuilder command)
+        public ReleaseRecord GetRelease(int id)
         {
-            var builtCommand = command.Build();
-            return GetListOfReleases(builtCommand.Sql, builtCommand.Parameters);
+            var command =
+                new SqlCommandBuilder(
+                    @"  SELECT    R.*, RC.CardID, C.ExternalID, C.Title, C.Size 
+                        FROM    Release R 
+                                LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID 
+                                LEFT OUTER JOIN Card C ON RC.CardID = C.ID ");
+
+            command.Where("R.ID = @ID")
+                .Parameters(new Dictionary<string, object>
+                    {
+                        {"ID", id}
+                    });
+
+            return GetListOfReleases(command).Single();
         }
 
         public IEnumerable<ReleaseRecord> GetAllReleases(CycleTimeQuery query)
@@ -104,12 +90,17 @@ WHERE R.ID = @ID";
 
         public IEnumerable<ReleaseRecord> GetUpcomingReleases()
         {
-            return GetListOfReleases(@"SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID WHERE R.PlannedDate > GETDATE() ORDER BY R.PlannedDate ASC");
+            return GetListOfReleases(@" SELECT  R.*, RC.CardID 
+                                        FROM    Release R 
+                                                LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID 
+                                        WHERE   R.PlannedDate > GETDATE()
+                                        ORDER   BY R.PlannedDate ASC");
         }
 
-        private IEnumerable<ReleaseRecord> GetListOfReleases(string sql)
+        private IEnumerable<ReleaseRecord> GetListOfReleases(SqlCommandBuilder command)
         {
-            return GetListOfReleases(sql, new Dictionary<string, object>(0));
+            var builtCommand = command.Build();
+            return GetListOfReleases(builtCommand.Sql, builtCommand.Parameters);
         }
 
         private IEnumerable<ReleaseRecord> GetListOfReleases(string sql, IEnumerable<KeyValuePair<string, object>> parameters)
@@ -147,6 +138,11 @@ WHERE R.ID = @ID";
 
                 return releases;
             }
+        }
+
+        private IEnumerable<ReleaseRecord> GetListOfReleases(string sql)
+        {
+            return GetListOfReleases(sql, new Dictionary<string, object>(0));
         }
 
         public int Create(ReleaseRecord newRelease)
