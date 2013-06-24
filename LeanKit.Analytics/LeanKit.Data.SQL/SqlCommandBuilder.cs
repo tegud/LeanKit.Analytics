@@ -9,10 +9,6 @@ namespace LeanKit.Data.SQL
     {
         private readonly StringBuilder _allSql;
         private readonly StringBuilder _orderSql = new StringBuilder();
-        private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
-
-        private const RegexOptions PARAM_REGEX_OPTIONS = RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled;
-        private readonly Regex _parameterRegex = new Regex("@(?<parameterName>[a-z0-9]+)", PARAM_REGEX_OPTIONS);
         private SqlWhereClause _sqlWhereClause = SqlWhereClause.Empty;
 
         public SqlCommandBuilder(string select)
@@ -51,8 +47,8 @@ namespace LeanKit.Data.SQL
     {
         private readonly StringBuilder _sql;
         private readonly Dictionary<string, object> _parameters = new Dictionary<string, object>();
-        private const RegexOptions PARAM_REGEX_OPTIONS = RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled;
-        private readonly Regex _parameterRegex = new Regex("@(?<parameterName>[a-z0-9]+)", PARAM_REGEX_OPTIONS);
+        private const RegexOptions ParamRegexOptions = RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.Compiled;
+        private readonly Regex _parameterRegex = new Regex("@(?<parameterName>[a-z0-9]+)", ParamRegexOptions);
 
         private SqlWhereClause()
         {

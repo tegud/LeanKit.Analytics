@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
 using Dapper;
 
 namespace LeanKit.Data.SQL
@@ -16,26 +15,6 @@ namespace LeanKit.Data.SQL
             _connectionString = connectionString.ConnectionString;
         }
 
-        public void SetStartedDate(int id, DateTime started)
-        {
-            using (var sqlConnection = new SqlConnection(_connectionString))
-            {
-                sqlConnection.Open();
-
-                sqlConnection.Execute("UPDATE Release SET StartedAt = @started WHERE ID = @ID AND StartedAt IS NULL", new { id, started });
-            }
-        }
-
-        public void SetCompletedDate(int id, DateTime completed)
-        {
-            using (var sqlConnection = new SqlConnection(_connectionString))
-            {
-                sqlConnection.Open();
-
-                sqlConnection.Execute("UPDATE Release SET CompletedAt = @completed WHERE ID = @ID", new { id, completed });
-            }
-        }
-
         public ReleaseRecord GetRelease(int id)
         {
             var command =
@@ -45,7 +24,8 @@ namespace LeanKit.Data.SQL
                                 LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID 
                                 LEFT OUTER JOIN Card C ON RC.CardID = C.ID ");
 
-            command.Where("R.ID = @ID")
+            command
+                .Where("R.ID = @ID")
                 .Parameters(new Dictionary<string, object>
                     {
                         {"ID", id}
@@ -56,58 +36,45 @@ namespace LeanKit.Data.SQL
 
         public IEnumerable<ReleaseRecord> GetAllReleases(CycleTimeQuery query)
         {
-            var sql = new StringBuilder("SELECT R.*, RC.CardID FROM Release R LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID ");
-            var whereClause = new StringBuilder();
-            var parameters = new Dictionary<string, object>();
+            var command = new SqlCommandBuilder(@"  SELECT  R.*, 
+                                                            RC.CardID 
+                                                    FROM    Release R 
+                                                            LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID ");
 
-            if (query.Start > DateTime.MinValue)
+            if (query.Start > DateTime.MinValue && query.End > DateTime.MinValue)
             {
-                whereClause.Append("R.StartedAt >= @Start ");
-                parameters.Add("Start", query.Start);
+                command.Where("R.StartedAt BETWEEN @Start and @End", new Dictionary<string, object>
+                    {
+                        {"Start", query.Start},
+                        {"End", query.End}
+                    });
             }
 
-            if (query.End > DateTime.MinValue)
-            {
-                if (whereClause.Length > 0)
-                {
-                    whereClause.Append("AND ");
-                }
+            command.OrderBy("R.PlannedDate", SqlCommandOrderDirection.Descending);
 
-                whereClause.Append("R.StartedAt <= @End ");
-                parameters.Add("End", query.End);
-            }
-
-            if (whereClause.Length > 0)
-            {
-                sql.Append("WHERE ");
-                sql.Append(whereClause);
-            }
-
-            sql.Append("ORDER BY R.PlannedDate DESC");
-
-            return GetListOfReleases(sql.ToString(), parameters);
+            return GetListOfReleases(command);
         }
 
         public IEnumerable<ReleaseRecord> GetUpcomingReleases()
         {
-            return GetListOfReleases(@" SELECT  R.*, RC.CardID 
-                                        FROM    Release R 
-                                                LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID 
-                                        WHERE   R.PlannedDate > GETDATE()
-                                        ORDER   BY R.PlannedDate ASC");
-        }
+            var command = new SqlCommandBuilder(@"  SELECT  R.*, 
+                                                            RC.CardID 
+                                                    FROM    Release R 
+                                                            LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID");
 
+            command.Where("R.PlannedDate > GETDATE()");
+            command.OrderBy("R.PlannedDate", SqlCommandOrderDirection.Descending);
+
+            return GetListOfReleases(command);
+        }
+        
         private IEnumerable<ReleaseRecord> GetListOfReleases(SqlCommandBuilder command)
         {
             var builtCommand = command.Build();
-            return GetListOfReleases(builtCommand.Sql, builtCommand.Parameters);
-        }
 
-        private IEnumerable<ReleaseRecord> GetListOfReleases(string sql, IEnumerable<KeyValuePair<string, object>> parameters)
-        {
             var sqlParameters = new DynamicParameters();
 
-            foreach (var param in parameters)
+            foreach (var param in builtCommand.Parameters)
             {
                 sqlParameters.Add(param.Key, param.Value);
             }
@@ -118,7 +85,7 @@ namespace LeanKit.Data.SQL
 
                 var releases = new List<ReleaseRecord>();
 
-                sqlConnection.Query<ReleaseRecord, IncludedTicketRecord, ReleaseRecord>(sql, (release, ticket) =>
+                sqlConnection.Query<ReleaseRecord, IncludedTicketRecord, ReleaseRecord>(builtCommand.Sql, (release, ticket) =>
                     {
                         var existingRelease = releases.FirstOrDefault(r => r.Id == release.Id);
 
@@ -138,11 +105,6 @@ namespace LeanKit.Data.SQL
 
                 return releases;
             }
-        }
-
-        private IEnumerable<ReleaseRecord> GetListOfReleases(string sql)
-        {
-            return GetListOfReleases(sql, new Dictionary<string, object>(0));
         }
 
         public int Create(ReleaseRecord newRelease)
@@ -197,6 +159,26 @@ namespace LeanKit.Data.SQL
                         ticket.CardId
                     });
                 }
+            }
+        }
+
+        public void SetStartedDate(int id, DateTime started)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                sqlConnection.Execute("UPDATE Release SET StartedAt = @started WHERE ID = @ID AND StartedAt IS NULL", new { id, started });
+            }
+        }
+
+        public void SetCompletedDate(int id, DateTime completed)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                sqlConnection.Execute("UPDATE Release SET CompletedAt = @completed WHERE ID = @ID", new { id, completed });
             }
         }
     }
