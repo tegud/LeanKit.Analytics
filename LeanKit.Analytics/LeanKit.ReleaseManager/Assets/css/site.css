@@ -160,7 +160,7 @@ td.ticket-cycle-time { width: 90px;}
 
 .time-option { background-color: #eee;border-radius: 3px; }
 
-.time-option.selected { background-color: #75A4FF }
+.time-option.selected { background-color: #75A4FF;cursor: default; }
 
 #cycle-time-summary { font-size: 1.2em;font-weight: bold;margin-bottom: 10px; }
 
@@ -233,6 +233,14 @@ td.ticket-cycle-time { width: 90px;}
 .po-dashboard-chg-id { font-size: 0.8em;font-style: italic;color: #888; }
 
 #product-owner-blockages { height: auto; }
+
+.view-options {margin: 0 0 14px 7px; padding: 0 }
+
+.view-options li.view-option {display: inline-block;cursor: pointer; background-color: #eee;border-radius: 3px;padding: 11px 4px 4px 34px;margin-right: 5px; height: 25px;background-repeat: no-repeat;background-position: 6px center; }
+.view-options li.view-option.selected { background-color: #75A4FF;cursor: default }
+
+.view-options li.summary { background-image: url('../images/glyphicons_119_table.png'); }
+.view-options li.graphs { background-image: url('../images/glyphicons_040_stats.png'); }
 
 @media (max-width: 800px)
 {
