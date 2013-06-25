@@ -62,6 +62,11 @@ namespace LeanKit.ReleaseManager.Controllers
                 });
         }
 
+        public ActionResult Graphs()
+        {
+            return View();
+        }
+
         private static IEnumerable<ProductOwnerDashboardBlockagesViewModel> BuildBlockageViewModels(IEnumerable<TicketBlockage> blockages)
         {
             var groupedBlockages = blockages.GroupBy(b => b.Reason);

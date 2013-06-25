@@ -206,6 +206,8 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Content Include="Assets\css\ladda.css" />
     <Content Include="Assets\css\site.css" />
+    <Content Include="Assets\images\glyphicons_040_stats.png" />
+    <Content Include="Assets\images\glyphicons_119_table.png" />
     <Content Include="Assets\images\logo.png" />
     <Content Include="Assets\images\release-notes.png" />
     <Content Include="Assets\images\release_toolbar.png" />
@@ -284,6 +286,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Shared\TimePeriodList.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\ProductOwnerDashboard\Graphs.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
