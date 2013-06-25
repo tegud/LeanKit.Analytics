@@ -236,11 +236,21 @@ td.ticket-cycle-time { width: 90px;}
 
 .view-options {margin: 0 0 14px 7px; padding: 0 }
 
-.view-options li.view-option {display: inline-block;cursor: pointer; background-color: #eee;border-radius: 3px;padding: 11px 4px 4px 34px;margin-right: 5px; height: 25px;background-repeat: no-repeat;background-position: 6px center; }
+.view-options li.view-option {display: inline-block;cursor: pointer; background-color: #eee;border-radius: 3px;padding: 11px 12px 4px 40px;margin-right: 5px; height: 25px;background-repeat: no-repeat;background-position: 10px center; }
 .view-options li.view-option.selected { background-color: #75A4FF;cursor: default }
 
 .view-options li.summary { background-image: url('../images/glyphicons_119_table.png'); }
 .view-options li.graphs { background-image: url('../images/glyphicons_040_stats.png'); }
+
+.graph-options { width: 250px;height: 700px;float: left;vertical-align: middle;list-style: none;margin: 0;padding: 0; }
+
+.graph-options li { width: 220px;height: 80px;background-color: #ddd;margin: 0 0 10px 7px;padding: 10px;cursor: pointer;border-radius: 5px 0 0 5px;font-size: 1.3em; }
+
+.graph-options li.selected { background-color: #75A4FF; }
+
+.graph-container { height: 690px;width: 840px;vertical-align: middle;background-color: #75A4FF;margin-left: 247px;border-radius: 0 5px 5px 5px;padding: 5px; }
+
+.graph-container-inner { width: 100%;height: 100%;background-color: #fff;border-radius: 3px; }
 
 @media (max-width: 800px)
 {
