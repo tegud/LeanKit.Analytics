@@ -73,7 +73,7 @@ namespace LeanKit.ReleaseManager.Controllers
             var dayOfWeekOffset = -(int)currentDate.DayOfWeek;
             var start = currentDate.AddDays(dayOfWeekOffset);
 
-            for (var x = 0; x < 6; x++)
+            for (var x = 0; x < 7; x++)
             {
                 var periodStart = start.AddDays(-x*7);
                 var periodEnd = periodStart.AddDays(6);
@@ -92,9 +92,13 @@ namespace LeanKit.ReleaseManager.Controllers
             var cycleTimeGraphWeeks = weeks.Select((w, i) => new CycleTimeGraphWeek(i, tickets.Where(t => t.Finished >= w.Item1 && t.Started <= w.Item2)));
             var data =
                 cycleTimeGraphWeeks.SelectMany(
-                    w => w.Items.Select(i => new {Week = w.WeekIndex, TicketNumber = i.Index, i.CycleTime}));
+                    w => w.Items.Select(i => new CycleTimeGraphRow {Week = w.WeekIndex, TicketNumber = i.Index, CycleTime = i.CycleTime})).ToArray();
 
-            return View("Graphs", new GraphViewModel { Data = new HtmlString(JsonConvert.SerializeObject(data)) });
+            return View("Graphs", new GraphViewModel
+                {
+                    Data = new HtmlString(JsonConvert.SerializeObject(data)),
+                    Items = data
+                });
         }
 
         private static IEnumerable<ProductOwnerDashboardBlockagesViewModel> BuildBlockageViewModels(IEnumerable<TicketBlockage> blockages)
@@ -146,9 +150,20 @@ namespace LeanKit.ReleaseManager.Controllers
         }
     }
 
+    public class CycleTimeGraphRow
+    {
+        public int Week { get; set; }
+
+        public int TicketNumber { get; set; }
+
+        public int CycleTime { get; set; }
+    }
+
     public class GraphViewModel
     {
         public IHtmlString Data { get; set; }
+
+        public IEnumerable<CycleTimeGraphRow> Items { get; set; }
     }
 
     public class CycleTimeGraphWeek
@@ -159,11 +174,11 @@ namespace LeanKit.ReleaseManager.Controllers
 
         public CycleTimeGraphWeek(int index, IEnumerable<Ticket> tickets)
         {
-            WeekIndex = index;
+            WeekIndex = index + 1;
             Items = tickets.Select((t, i) => new CycleTimeGraphWeekItem
                 {
                     CycleTime = t.CycleTime.Days,
-                    Index = index
+                    Index = i + 1
                 });
         }
     }

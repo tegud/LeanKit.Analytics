@@ -104,26 +104,11 @@
                             .attr("x1", width / 2)
                             .attr("y1", function (d) { return x0(d[0]); })
                             .attr("x2", width / 2)
-                            .attr("y2", function (d) { return x0(d[1]); })
-                            .style("opacity", 1e-6)
-                          .transition()
-                            .duration(duration)
-                            .style("opacity", 1)
+                            .attr("y2", function (d) { return x0(d[1]); });
+
+                        center
                             .attr("y1", function (d) { return x1(d[0]); })
                             .attr("y2", function (d) { return x1(d[1]); });
-
-                        center.transition()
-                            .duration(duration)
-                            .style("opacity", 1)
-                            .attr("y1", function (d) { return x1(d[0]); })
-                            .attr("y2", function (d) { return x1(d[1]); });
-
-                        center.exit().transition()
-                            .duration(duration)
-                            .style("opacity", 1e-6)
-                            .attr("y1", function (d) { return x1(d[0]); })
-                            .attr("y2", function (d) { return x1(d[1]); })
-                            .remove();
 
                         // Update innerquartile box.
                         var box = g.selectAll("rect.box")
@@ -134,14 +119,9 @@
                             .attr("x", 0)
                             .attr("y", function (d) { return x0(d[2]); })
                             .attr("width", width)
-                            .attr("height", function (d) { return x0(d[0]) - x0(d[2]); })
-                          .transition()
-                            .duration(duration)
-                            .attr("y", function (d) { return x1(d[2]); })
-                            .attr("height", function (d) { return x1(d[0]) - x1(d[2]); });
+                            .attr("height", function (d) { return x0(d[0]) - x0(d[2]); });
 
-                        box.transition()
-                            .duration(duration)
+                        box
                             .attr("y", function (d) { return x1(d[2]); })
                             .attr("height", function (d) { return x1(d[0]) - x1(d[2]); });
 
@@ -154,14 +134,9 @@
                             .attr("x1", 0)
                             .attr("y1", x0)
                             .attr("x2", width)
-                            .attr("y2", x0)
-                          .transition()
-                            .duration(duration)
-                            .attr("y1", x1)
-                            .attr("y2", x1);
+                            .attr("y2", x0);
 
-                        medianLine.transition()
-                            .duration(duration)
+                        medianLine
                             .attr("y1", x1)
                             .attr("y2", x1);
 
@@ -174,26 +149,11 @@
                             .attr("x1", 0)
                             .attr("y1", x0)
                             .attr("x2", width)
-                            .attr("y2", x0)
-                            .style("opacity", 1e-6)
-                          .transition()
-                            .duration(duration)
-                            .attr("y1", x1)
-                            .attr("y2", x1)
-                            .style("opacity", 1);
+                            .attr("y2", x0);
 
-                        whisker.transition()
-                            .duration(duration)
+                        whisker
                             .attr("y1", x1)
-                            .attr("y2", x1)
-                            .style("opacity", 1);
-
-                        whisker.exit().transition()
-                            .duration(duration)
-                            .attr("y1", x1)
-                            .attr("y2", x1)
-                            .style("opacity", 1e-6)
-                            .remove();
+                            .attr("y2", x1);
 
                         // Update outliers.
                         var outlier = g.selectAll("circle.outlier")
@@ -203,23 +163,10 @@
                             .attr("class", "outlier")
                             .attr("r", 5)
                             .attr("cx", width / 2)
-                            .attr("cy", function (i) { return x0(d[i]); })
-                            .style("opacity", 1e-6)
-                          .transition()
-                            .duration(duration)
-                            .attr("cy", function (i) { return x1(d[i]); })
-                            .style("opacity", 1);
+                            .attr("cy", function (i) { return x0(d[i]); });
 
-                        outlier.transition()
-                            .duration(duration)
-                            .attr("cy", function (i) { return x1(d[i]); })
+                        outlier.attr("cy", function (i) { return x1(d[i]); })
                             .style("opacity", 1);
-
-                        outlier.exit().transition()
-                            .duration(duration)
-                            .attr("cy", function (i) { return x1(d[i]); })
-                            .style("opacity", 1e-6)
-                            .remove();
 
                         // Compute the tick format.
                         var format = tickFormat || x1.tickFormat(8);
@@ -235,14 +182,9 @@
                             .attr("x", function (d, i) { return i & 1 ? width : 0 })
                             .attr("y", x0)
                             .attr("text-anchor", function (d, i) { return i & 1 ? "start" : "end"; })
-                            .text(format)
-                          .transition()
-                            .duration(duration)
-                            .attr("y", x1);
+                            .text(format);
 
-                        boxTick.transition()
-                            .duration(duration)
-                            .text(format)
+                        boxTick.text(format)
                             .attr("y", x1);
 
                         // Update whisker ticks. These are handled separately from the box
@@ -257,26 +199,29 @@
                             .attr("dx", 6)
                             .attr("x", width)
                             .attr("y", x0)
-                            .text(format)
-                            .style("opacity", 1e-6)
-                          .transition()
-                            .duration(duration)
-                            .attr("y", x1)
-                            .style("opacity", 1);
+                            .text(format);
 
-                        whiskerTick.transition()
-                            .duration(duration)
-                            .text(format)
-                            .attr("y", x1)
-                            .style("opacity", 1);
+                        whiskerTick.text(format).attr("y", x1);
 
-                        whiskerTick.exit().transition()
-                            .duration(duration)
-                            .attr("y", x1)
-                            .style("opacity", 1e-6)
-                            .remove();
+                        whiskerTick.exit().attr("y", x1).remove();
+
+                        g.append("line")
+                            .attr("x1", -40)
+                            .attr("y1", height)
+                            .attr("x2", width + 40)
+                            .attr("y2", height);
+
+                        g.append("line")
+                            .attr("x1", -39)
+                            .attr("y1", height)
+                            .attr("x2", -39)
+                            .attr("y2", height + 10);
+                        g.append("line")
+                            .attr("x1", 59)
+                            .attr("y1", height)
+                            .attr("x2", 59)
+                            .attr("y2", height + 10);
                     });
-                    d3.timer.flush();
                 }
 
                 box.width = function (x) {
@@ -349,26 +294,35 @@
                 width = 120 - margin.left - margin.right,
                 height = 700 - margin.top - margin.bottom;
 
-            var min = Infinity,
-                max = -Infinity;
-
             var chart = d3.box()
                 .whiskers(iqr(1.5))
                 .width(width)
                 .height(height);
 
             (function (csv) {
-                var data = [];
+                var data = [],
+                    min = 0,
+                    max = 0;
 
                 csv.forEach(function (x) {
                     var e = Math.floor(x.Week - 1),
-                        r = Math.floor(x.TicketNumber - 1),
                         s = Math.floor(x.CycleTime),
                         d = data[e];
-                    if (!d) d = data[e] = [s];
-                    else d.push(s);
-                    if (s > max) max = s;
-                    if (s < min) min = s;
+                    
+                    if (!d) {
+                        data[e] = [s];
+                    }
+                    else {
+                        d.push(s);
+                    }
+                    
+                    if (s > max) {
+                        max = s;
+                    }
+                    
+                    if (s < min) {
+                        min = s;
+                    } 
                 });
 
                 chart.domain([min, max]);
@@ -383,49 +337,12 @@
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                     .call(chart);
                 
-            })(
-                //JSON.parse(@Model.Data)
-                [{ "Week": "1", "Ticket": "1", "CycleTime": "3" },
-                { "Week": "1", "Ticket": "2", "CycleTime": "2" },
-                { "Week": "1", "Ticket": "3", "CycleTime": "1" },
-                { "Week": "1", "Ticket": "4", "CycleTime": "4" },
-                { "Week": "1", "Ticket": "5", "CycleTime": "1" },
-                { "Week": "1", "Ticket": "6", "CycleTime": "1" },
-                { "Week": "1", "Ticket": "7", "CycleTime": "12" },
-                { "Week": "1", "Ticket": "8", "CycleTime": "1" },
-                { "Week": "1", "Ticket": "9", "CycleTime": "3" },
-                { "Week": "2", "Ticket": "1", "CycleTime": "6" },
-                { "Week": "2", "Ticket": "2", "CycleTime": "5" },
-                { "Week": "2", "Ticket": "3", "CycleTime": "1" },
-                { "Week": "2", "Ticket": "4", "CycleTime": "1" },
-                { "Week": "2", "Ticket": "5", "CycleTime": "1" },
-                { "Week": "2", "Ticket": "6", "CycleTime": "4" },
-                { "Week": "2", "Ticket": "7", "CycleTime": "3" },
-                { "Week": "3", "Ticket": "1", "CycleTime": "3" },
-                { "Week": "3", "Ticket": "2", "CycleTime": "1" },
-                { "Week": "3", "Ticket": "3", "CycleTime": "1" },
-                { "Week": "3", "Ticket": "4", "CycleTime": "1" },
-                { "Week": "3", "Ticket": "5", "CycleTime": "1" },
-                { "Week": "3", "Ticket": "6", "CycleTime": "3" },
-                { "Week": "3", "Ticket": "7", "CycleTime": "2" },
-                { "Week": "4", "Ticket": "1", "CycleTime": "1" },
-                { "Week": "4", "Ticket": "2", "CycleTime": "2" },
-                { "Week": "4", "Ticket": "3", "CycleTime": "1" },
-                { "Week": "4", "Ticket": "4", "CycleTime": "1" },
-                { "Week": "4", "Ticket": "5", "CycleTime": "1" },
-                { "Week": "4", "Ticket": "6", "CycleTime": "1" },
-                { "Week": "4", "Ticket": "7", "CycleTime": "1" },
-                { "Week": "4", "Ticket": "8", "CycleTime": "1" },
-                { "Week": "4", "Ticket": "9", "CycleTime": "4" },
-                { "Week": "4", "Ticket": "10", "CycleTime": "49" },
-                { "Week": "4", "Ticket": "11", "CycleTime": "3" },
-                { "Week": "4", "Ticket": "12", "CycleTime": "45" },
-                { "Week": "5", "Ticket": "1", "CycleTime": "7" },
-                { "Week": "5", "Ticket": "2", "CycleTime": "7" },
-                { "Week": "5", "Ticket": "3", "CycleTime": "44" },
-                { "Week": "6", "Ticket": "1", "CycleTime": "5" },
-                { "Week": "7", "Ticket": "1", "CycleTime": "7" }]
-            );
+            })([
+                    @foreach(var row in Model.Items)
+                    {
+                        <text>{ @string.Format("Week: {0}, Ticket: {1}, CycleTime: {2},", row.Week, row.TicketNumber, row.CycleTime) },</text>
+                    }
+            ]);
 
 
             // Returns a function to compute the interquartile range.
