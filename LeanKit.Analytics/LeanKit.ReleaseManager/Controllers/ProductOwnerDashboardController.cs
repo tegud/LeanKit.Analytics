@@ -66,30 +66,28 @@ namespace LeanKit.ReleaseManager.Controllers
         {
             var currentDate = DateTime.Now.Date;
 
-            var weeks = new List<Tuple<DateTime, DateTime>>();
+            var weeks = new Stack<Tuple<DateTime, DateTime>>();
 
             var dayOfWeekOffset = -(int)currentDate.DayOfWeek;
             var start = currentDate.AddDays(dayOfWeekOffset);
 
             for (var x = 0; x < 6; x++)
             {
-                var periodStart = start.AddDays(x*7);
+                var periodStart = start.AddDays(-x*7);
                 var periodEnd = periodStart.AddDays(6);
+
+                weeks.Push(new Tuple<DateTime, DateTime>(periodStart, periodEnd));
             }
-
-
-
-
 
             var cycleTimeQuery = new CycleTimeQuery()
                 {
                     Start = weeks.Min(w => w.Item1),
-                    End = weeks.Min(w => w.Item2)
+                    End = weeks.Max(w => w.Item2)
                 };
 
             var tickets = _ticketRepository.Get(cycleTimeQuery).ToArray();
 
-
+            weeks.Select((w, i) => new CycleTimeGraphWeek(w.Item1, w.Item2, i, tickets.Where(t => t.Finished >= w.Item1 && t.Started <= w.Item2)));
 
             return View();
         }
@@ -140,6 +138,16 @@ namespace LeanKit.ReleaseManager.Controllers
                     TicketCount = r.IncludedTickets.Count()
                 });
 
+        }
+    }
+
+    public class CycleTimeGraphWeek
+    {
+        public int WeekIndex { get; private set; }
+
+        public CycleTimeGraphWeek(DateTime start, DateTime end, int index, IEnumerable<Ticket> tickets)
+        {
+            WeekIndex = index;
         }
     }
 
