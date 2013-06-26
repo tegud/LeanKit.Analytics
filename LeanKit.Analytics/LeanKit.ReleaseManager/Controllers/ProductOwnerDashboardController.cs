@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
+using Newtonsoft.Json;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
@@ -87,9 +89,12 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var tickets = _ticketRepository.Get(cycleTimeQuery).ToArray();
 
-            weeks.Select((w, i) => new CycleTimeGraphWeek(w.Item1, w.Item2, i, tickets.Where(t => t.Finished >= w.Item1 && t.Started <= w.Item2)));
+            var cycleTimeGraphWeeks = weeks.Select((w, i) => new CycleTimeGraphWeek(i, tickets.Where(t => t.Finished >= w.Item1 && t.Started <= w.Item2)));
+            var data =
+                cycleTimeGraphWeeks.SelectMany(
+                    w => w.Items.Select(i => new {Week = w.WeekIndex, TicketNumber = i.Index, i.CycleTime}));
 
-            return View();
+            return View("Graphs", new GraphViewModel { Data = new HtmlString(JsonConvert.SerializeObject(data)) });
         }
 
         private static IEnumerable<ProductOwnerDashboardBlockagesViewModel> BuildBlockageViewModels(IEnumerable<TicketBlockage> blockages)
@@ -141,14 +146,33 @@ namespace LeanKit.ReleaseManager.Controllers
         }
     }
 
+    public class GraphViewModel
+    {
+        public IHtmlString Data { get; set; }
+    }
+
     public class CycleTimeGraphWeek
     {
         public int WeekIndex { get; private set; }
 
-        public CycleTimeGraphWeek(DateTime start, DateTime end, int index, IEnumerable<Ticket> tickets)
+        public IEnumerable<CycleTimeGraphWeekItem> Items { get; private set; }
+
+        public CycleTimeGraphWeek(int index, IEnumerable<Ticket> tickets)
         {
             WeekIndex = index;
+            Items = tickets.Select((t, i) => new CycleTimeGraphWeekItem
+                {
+                    CycleTime = t.CycleTime.Days,
+                    Index = index
+                });
         }
+    }
+
+    public class CycleTimeGraphWeekItem
+    {
+        public int Index { get; set; }
+
+        public int CycleTime { get; set; }
     }
 
     public class ProductOwnerDashboardViewModel

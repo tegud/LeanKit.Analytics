@@ -2,6 +2,8 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Layouts/_Layout.cshtml";
 }
+@model LeanKit.ReleaseManager.Controllers.GraphViewModel
+
 <style>
     .box line,
     .box rect,
@@ -360,7 +362,7 @@
 
                 csv.forEach(function (x) {
                     var e = Math.floor(x.Week - 1),
-                        r = Math.floor(x.Run - 1),
+                        r = Math.floor(x.TicketNumber - 1),
                         s = Math.floor(x.CycleTime),
                         d = data[e];
                     if (!d) d = data[e] = [s];
@@ -381,7 +383,9 @@
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                     .call(chart);
                 
-            })([{ "Week": "1", "Ticket": "1", "CycleTime": "3" },
+            })(
+                //JSON.parse(@Model.Data)
+                [{ "Week": "1", "Ticket": "1", "CycleTime": "3" },
                 { "Week": "1", "Ticket": "2", "CycleTime": "2" },
                 { "Week": "1", "Ticket": "3", "CycleTime": "1" },
                 { "Week": "1", "Ticket": "4", "CycleTime": "4" },
@@ -420,7 +424,8 @@
                 { "Week": "5", "Ticket": "2", "CycleTime": "7" },
                 { "Week": "5", "Ticket": "3", "CycleTime": "44" },
                 { "Week": "6", "Ticket": "1", "CycleTime": "5" },
-                { "Week": "7", "Ticket": "1", "CycleTime": "7" }]);
+                { "Week": "7", "Ticket": "1", "CycleTime": "7" }]
+            );
 
 
             // Returns a function to compute the interquartile range.
