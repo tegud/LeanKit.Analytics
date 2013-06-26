@@ -64,6 +64,33 @@ namespace LeanKit.ReleaseManager.Controllers
 
         public ActionResult Graphs()
         {
+            var currentDate = DateTime.Now.Date;
+
+            var weeks = new List<Tuple<DateTime, DateTime>>();
+
+            var dayOfWeekOffset = -(int)currentDate.DayOfWeek;
+            var start = currentDate.AddDays(dayOfWeekOffset);
+
+            for (var x = 0; x < 6; x++)
+            {
+                var periodStart = start.AddDays(x*7);
+                var periodEnd = periodStart.AddDays(6);
+            }
+
+
+
+
+
+            var cycleTimeQuery = new CycleTimeQuery()
+                {
+                    Start = weeks.Min(w => w.Item1),
+                    End = weeks.Min(w => w.Item2)
+                };
+
+            var tickets = _ticketRepository.Get(cycleTimeQuery).ToArray();
+
+
+
             return View();
         }
 
