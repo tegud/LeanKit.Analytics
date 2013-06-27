@@ -212,6 +212,7 @@
     <Content Include="Assets\images\release-notes.png" />
     <Content Include="Assets\images\release_toolbar.png" />
     <Content Include="Assets\images\reschedule.png" />
+    <Content Include="Assets\js\d3.box.js" />
     <Content Include="Assets\js\ladda.js" />
     <Content Include="Assets\js\lib\d3.min.js" />
     <Content Include="Assets\js\lib\jquery-2.0.0.min.js" />

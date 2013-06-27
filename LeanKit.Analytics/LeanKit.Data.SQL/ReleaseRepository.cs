@@ -90,21 +90,35 @@ namespace LeanKit.Data.SQL
                                                     FROM    Release R 
                                                             LEFT OUTER JOIN ReleaseCard RC ON R.ID = RC.ReleaseID ");
 
-            if (query.Start > DateTime.MinValue && query.End > DateTime.MinValue)
+            SqlWhereClause where = null;
+            if (query.Start > DateTime.MinValue)
             {
-                command
-                    .Where("R.StartedAt BETWEEN @Start AND @End")
-                    .Or("(R.StartedAt IS NULL AND R.PlannedDate BETWEEN @Start AND @End)")
-                    .Parameters(new Dictionary<string, object>
+                where = command
+                    .Where("ISNULL(R.StartedAt,R.PlannedDate) >= @Start", new Dictionary<string, object>
                         {
-                            {"Start", query.Start},
-                            {"End", query.End}
+                            {"Start", query.Start}
                         });
             }
 
-            command
-                .OrderBy("R.StartedAt", SqlCommandOrderDirection.Descending)
-                .ThenBy("R.PlannedDate", SqlCommandOrderDirection.Descending);
+            if(query.End > DateTime.MinValue)
+            {
+                const string sql = "ISNULL(R.StartedAt,R.PlannedDate) <= @End";
+                var parameters = new Dictionary<string, object>
+                    {
+                        {"End", query.End}
+                    };
+
+                if(where == null)
+                {
+                    command.Where(sql, parameters);
+                }
+                else
+                {
+                    where.And(sql, parameters);
+                }
+            }
+
+            command.OrderBy("ISNULL(R.StartedAt, R.PlannedDate)", SqlCommandOrderDirection.Descending);
 
             return GetListOfReleases(command);
         }

@@ -93,10 +93,9 @@ namespace LeanKit.ReleaseManager.Models.TimePeriods
                 return TimePeriodMatch.NotMatched;
             }
 
-            var currentDate = _dateTimeWrapper.Now().Date;
             var start = _dateTimeWrapper.Now().Date.AddDays(-int.Parse(timePeriod));
 
-            return new TimePeriodMatch(start, currentDate);
+            return new TimePeriodMatch(start, DateTime.MinValue);
         }
     }
 }

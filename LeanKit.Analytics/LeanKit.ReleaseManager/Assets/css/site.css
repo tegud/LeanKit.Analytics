@@ -236,8 +236,11 @@ td.ticket-cycle-time { width: 90px;}
 
 .view-options {margin: 0 0 14px 7px; padding: 0 }
 
-.view-options li.view-option {display: inline-block;cursor: pointer; background-color: #eee;border-radius: 3px;padding: 11px 12px 4px 40px;margin-right: 5px; height: 25px;background-repeat: no-repeat;background-position: 10px center; }
-.view-options li.view-option.selected { background-color: #75A4FF;cursor: default }
+.view-options li.view-option {display: inline-block;cursor: pointer; background-color: #eee;border-radius: 3px;margin-right: 5px; background-repeat: no-repeat;background-position: 10px center; }
+.view-options li.view-option.selected,
+.view-options li.view-option a {padding: 11px 12px 4px 40px;height: 25px;}
+.view-options li.view-option a {display: block;}
+.view-options li.view-option.selected { background-color: #75A4FF;cursor: default; }
 
 .view-options li.summary { background-image: url('../images/glyphicons_119_table.png'); }
 .view-options li.graphs { background-image: url('../images/glyphicons_040_stats.png'); }
@@ -251,6 +254,15 @@ td.ticket-cycle-time { width: 90px;}
 .graph-container { height: 690px;width: 840px;vertical-align: middle;background-color: #75A4FF;margin-left: 247px;border-radius: 0 5px 5px 5px;padding: 5px; }
 
 .graph-container-inner { width: 100%;height: 100%;background-color: #fff;border-radius: 3px; }
+
+
+.box line,
+.box rect,
+.box circle { fill: #fff; stroke: #000; stroke-width: 1.5px; }
+
+.box .center { stroke-dasharray: 3,3; }
+
+.box .outlier { fill: none; stroke: #ccc; }
 
 @media (max-width: 800px)
 {

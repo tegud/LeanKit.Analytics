@@ -30,11 +30,11 @@ namespace LeanKit.ReleaseManager.Tests.Models
         }
 
         [Test]
-        public void MatchingTimePeriodEndToCurrentDate()
+        public void MatchingTimePeriodEndToDateTimeMinValue()
         {
-            var expectedEndDate = new DateTime(2013, 4, 3);
+            var expectedEndDate = DateTime.MinValue;
 
-            _currentDateTime = expectedEndDate;
+            _currentDateTime = new DateTime(2013, 1, 4);
 
             var dateTimeWrapper = this;
 
@@ -45,14 +45,14 @@ namespace LeanKit.ReleaseManager.Tests.Models
         [Test]
         public void MatchingTimePeriodStartToCurrentDateMinusSpecifiedDays()
         {
-            var expectedEndDate = new DateTime(2013, 4, 1);
+            var expectedStartDate = new DateTime(2013, 4, 1);
 
             _currentDateTime = new DateTime(2013, 4, 3);
 
             var dateTimeWrapper = this;
 
             var daysBeforeTimePeriod = new MatchDaysBeforeTimePeriod(dateTimeWrapper);
-            Assert.That(daysBeforeTimePeriod.GetTimeSpanIfMatch("2").Start, Is.EqualTo(expectedEndDate));
+            Assert.That(daysBeforeTimePeriod.GetTimeSpanIfMatch("2").Start, Is.EqualTo(expectedStartDate));
         }
 
         public DateTime Now()
