@@ -44,8 +44,8 @@
 {
     <script src="~/Assets/js/lib/d3.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        (function () {
-            d3.box = function () {
+        (function() {
+            d3.box = function() {
                 var width = 1,
                     height = 1,
                     duration = 0,
@@ -56,9 +56,11 @@
                     tickFormat = null;
 
                 // For each small multiple…
+
                 function box(g) {
                     g.each(function (d, i) {
-                        d = d.map(value).sort(d3.ascending);
+                        var label = d[0].Label;
+                        d = d.map(function (i) { return i.CycleTime; }).sort(d3.ascending);
                         var g = d3.select(this),
                             n = d.length,
                             min = d[0],
@@ -69,7 +71,7 @@
 
                         // Compute whiskers. Must return exactly 2 elements, or null.
                         var whiskerIndices = whiskers && whiskers.call(this, d, i),
-                            whiskerData = whiskerIndices && whiskerIndices.map(function (i) { return d[i]; });
+                            whiskerData = whiskerIndices && whiskerIndices.map(function(i) { return d[i]; });
 
                         // Compute outliers. If no whiskers are specified, all data are "outliers".
                         // We compute the outliers as indices, so that we can join across transitions!
@@ -102,13 +104,13 @@
                         center.enter().insert("line", "rect")
                             .attr("class", "center")
                             .attr("x1", width / 2)
-                            .attr("y1", function (d) { return x0(d[0]); })
+                            .attr("y1", function(d) { return x0(d[0]); })
                             .attr("x2", width / 2)
-                            .attr("y2", function (d) { return x0(d[1]); });
+                            .attr("y2", function(d) { return x0(d[1]); });
 
                         center
-                            .attr("y1", function (d) { return x1(d[0]); })
-                            .attr("y2", function (d) { return x1(d[1]); });
+                            .attr("y1", function(d) { return x1(d[0]); })
+                            .attr("y2", function(d) { return x1(d[1]); });
 
                         // Update innerquartile box.
                         var box = g.selectAll("rect.box")
@@ -117,13 +119,13 @@
                         box.enter().append("rect")
                             .attr("class", "box")
                             .attr("x", 0)
-                            .attr("y", function (d) { return x0(d[2]); })
+                            .attr("y", function(d) { return x0(d[2]); })
                             .attr("width", width)
-                            .attr("height", function (d) { return x0(d[0]) - x0(d[2]); });
+                            .attr("height", function(d) { return x0(d[0]) - x0(d[2]); });
 
                         box
-                            .attr("y", function (d) { return x1(d[2]); })
-                            .attr("height", function (d) { return x1(d[0]) - x1(d[2]); });
+                            .attr("y", function(d) { return x1(d[2]); })
+                            .attr("height", function(d) { return x1(d[0]) - x1(d[2]); });
 
                         // Update median line.
                         var medianLine = g.selectAll("line.median")
@@ -163,9 +165,9 @@
                             .attr("class", "outlier")
                             .attr("r", 5)
                             .attr("cx", width / 2)
-                            .attr("cy", function (i) { return x0(d[i]); });
+                            .attr("cy", function(i) { return x0(d[i]); });
 
-                        outlier.attr("cy", function (i) { return x1(d[i]); })
+                        outlier.attr("cy", function(i) { return x1(d[i]); })
                             .style("opacity", 1);
 
                         // Compute the tick format.
@@ -178,10 +180,10 @@
                         boxTick.enter().append("text")
                             .attr("class", "box")
                             .attr("dy", ".3em")
-                            .attr("dx", function (d, i) { return i & 1 ? 6 : -6 })
-                            .attr("x", function (d, i) { return i & 1 ? width : 0 })
+                            .attr("dx", function(d, i) { return i & 1 ? 6 : -6 })
+                            .attr("x", function(d, i) { return i & 1 ? width : 0 })
                             .attr("y", x0)
-                            .attr("text-anchor", function (d, i) { return i & 1 ? "start" : "end"; })
+                            .attr("text-anchor", function(d, i) { return i & 1 ? "start" : "end"; })
                             .text(format);
 
                         boxTick.text(format)
@@ -221,52 +223,59 @@
                             .attr("y1", height)
                             .attr("x2", 59)
                             .attr("y2", height + 10);
+
+                        g.append("text")
+                            .attr("dy", ".3em")
+                            .attr("dx", 20)
+                            .attr("x", -32)
+                            .attr("y", height + 14)
+                            .text(label);
                     });
                 }
 
-                box.width = function (x) {
+                box.width = function(x) {
                     if (!arguments.length) return width;
                     width = x;
                     return box;
                 };
 
-                box.height = function (x) {
+                box.height = function(x) {
                     if (!arguments.length) return height;
                     height = x;
                     return box;
                 };
 
-                box.tickFormat = function (x) {
+                box.tickFormat = function(x) {
                     if (!arguments.length) return tickFormat;
                     tickFormat = x;
                     return box;
                 };
 
-                box.duration = function (x) {
+                box.duration = function(x) {
                     if (!arguments.length) return duration;
                     duration = x;
                     return box;
                 };
 
-                box.domain = function (x) {
+                box.domain = function(x) {
                     if (!arguments.length) return domain;
                     domain = x == null ? x : d3.functor(x);
                     return box;
                 };
 
-                box.value = function (x) {
+                box.value = function(x) {
                     if (!arguments.length) return value;
                     value = x;
                     return box;
                 };
 
-                box.whiskers = function (x) {
+                box.whiskers = function(x) {
                     if (!arguments.length) return whiskers;
                     whiskers = x;
                     return box;
                 };
 
-                box.quartiles = function (x) {
+                box.quartiles = function(x) {
                     if (!arguments.length) return quartiles;
                     quartiles = x;
                     return box;
@@ -281,15 +290,15 @@
 
             function boxQuartiles(d) {
                 return [
-                  d3.quantile(d, .25),
-                  d3.quantile(d, .5),
-                  d3.quantile(d, .75)
+                    d3.quantile(d, .25),
+                    d3.quantile(d, .5),
+                    d3.quantile(d, .75)
                 ];
             }
 
         })();
 
-        (function () {
+        (function() {
             var margin = { top: 30, right: 50, bottom: 60, left: 50 },
                 width = 120 - margin.left - margin.right,
                 height = 700 - margin.top - margin.bottom;
@@ -299,30 +308,33 @@
                 .width(width)
                 .height(height);
 
-            (function (csv) {
+            (function(csv) {
                 var data = [],
                     min = 0,
                     max = 0;
 
-                csv.forEach(function (x) {
+                csv.forEach(function(x) {
                     var e = Math.floor(x.Week - 1),
                         s = Math.floor(x.CycleTime),
-                        d = data[e];
-                    
+                        d = data[e],
+                        item = {
+                            CycleTime: x.CycleTime,
+                            Label: x.Label
+                        };
+
                     if (!d) {
-                        data[e] = [s];
+                        data[e] = [item];
+                    } else {
+                        d.push(item);
                     }
-                    else {
-                        d.push(s);
-                    }
-                    
+
                     if (s > max) {
                         max = s;
                     }
-                    
+
                     if (s < min) {
                         min = s;
-                    } 
+                    }
                 });
 
                 chart.domain([min, max]);
@@ -336,25 +348,26 @@
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                     .call(chart);
-                
+
             })([
-                    @foreach(var row in Model.Items)
-                    {
-                        <text>{ @string.Format("Week: {0}, Ticket: {1}, CycleTime: {2}, Label: {3} ", row.Week, row.TicketNumber, row.CycleTime, row.Label) },</text>
-                    }
+                @foreach (var row in Model.Items)
+                {
+                    <text>{ @Html.Raw(string.Format("Week: {0}, Ticket: {1}, CycleTime: {2}, Label: '{3}' ", row.Week, row.TicketNumber, row.CycleTime, row.Label)) },</text>
+                }
             ]);
 
 
             // Returns a function to compute the interquartile range.
+
             function iqr(k) {
-                return function (d, i) {
+                return function(d, i) {
                     var q1 = d.quartiles[0],
                         q3 = d.quartiles[2],
                         iqr = (q3 - q1) * k,
                         i = -1,
                         j = d.length;
-                    while (d[++i] < q1 - iqr);
-                    while (d[--j] > q3 + iqr);
+                    while (d[++i] < q1 - iqr) ;
+                    while (d[--j] > q3 + iqr) ;
                     return [i, j];
                 };
             }

@@ -89,7 +89,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var tickets = _ticketRepository.Get(cycleTimeQuery).ToArray();
 
-            var cycleTimeGraphWeeks = weeks.Select((w, i) => new CycleTimeGraphWeek("", i, tickets.Where(t => t.Finished >= w.Item1 && t.Started <= w.Item2)));
+            var cycleTimeGraphWeeks = weeks.Select((w, i) => new CycleTimeGraphWeek(w.Item1.ToString("dd/MM"), i, tickets.Where(t => t.Finished >= w.Item1 && t.Started <= w.Item2)));
             var data =
                 cycleTimeGraphWeeks.SelectMany(
                     w => w.Items.Select(i => new CycleTimeGraphRow
