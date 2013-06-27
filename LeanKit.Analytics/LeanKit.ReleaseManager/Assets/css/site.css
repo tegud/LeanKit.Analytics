@@ -247,14 +247,17 @@ td.ticket-cycle-time { width: 90px;}
 
 .graph-options { width: 250px;height: 700px;float: left;vertical-align: middle;list-style: none;margin: 0;padding: 0; }
 
-.graph-options li { width: 220px;height: 80px;background-color: #ddd;margin: 0 0 10px 7px;padding: 10px;cursor: pointer;border-radius: 5px 0 0 5px;font-size: 1.3em; }
+.graph-options li.graph-option { width: 220px;height: 80px;background-color: #ddd;margin: 0 0 10px 7px;padding: 10px;cursor: pointer;border-radius: 5px 0 0 5px;font-size: 1.3em; }
 
-.graph-options li.selected { background-color: #75A4FF; }
+.graph-options li.graph-option.selected { background-color: #75A4FF; }
+
+.graph-type-options { margin-top: 15px; }
+
+.graph-type-options li.view-option { padding: 5px; }
 
 .graph-container { height: 690px;width: 840px;vertical-align: middle;background-color: #75A4FF;margin-left: 247px;border-radius: 0 5px 5px 5px;padding: 5px; }
 
 .graph-container-inner { width: 100%;height: 100%;background-color: #fff;border-radius: 3px; }
-
 
 .box line,
 .box rect,
@@ -263,6 +266,12 @@ td.ticket-cycle-time { width: 90px;}
 .box .center { stroke-dasharray: 3,3; }
 
 .box .outlier { fill: none; stroke: #ccc; }
+
+.axis path, .axis line { fill:none; stroke: #000; shape-rendering: crispEdges }
+
+.x.axis path { display: none }
+
+.line { fill:none; stroke-width: 1.5px }
 
 @media (max-width: 800px)
 {
