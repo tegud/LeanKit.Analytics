@@ -340,7 +340,7 @@
             })([
                     @foreach(var row in Model.Items)
                     {
-                        <text>{ @string.Format("Week: {0}, Ticket: {1}, CycleTime: {2},", row.Week, row.TicketNumber, row.CycleTime) },</text>
+                        <text>{ @string.Format("Week: {0}, Ticket: {1}, CycleTime: {2}, Label: {3} ", row.Week, row.TicketNumber, row.CycleTime, row.Label) },</text>
                     }
             ]);
 

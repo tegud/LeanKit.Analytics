@@ -89,10 +89,16 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var tickets = _ticketRepository.Get(cycleTimeQuery).ToArray();
 
-            var cycleTimeGraphWeeks = weeks.Select((w, i) => new CycleTimeGraphWeek(i, tickets.Where(t => t.Finished >= w.Item1 && t.Started <= w.Item2)));
+            var cycleTimeGraphWeeks = weeks.Select((w, i) => new CycleTimeGraphWeek("", i, tickets.Where(t => t.Finished >= w.Item1 && t.Started <= w.Item2)));
             var data =
                 cycleTimeGraphWeeks.SelectMany(
-                    w => w.Items.Select(i => new CycleTimeGraphRow {Week = w.WeekIndex, TicketNumber = i.Index, CycleTime = i.CycleTime})).ToArray();
+                    w => w.Items.Select(i => new CycleTimeGraphRow
+                        {
+                            Week = w.WeekIndex, 
+                            TicketNumber = i.Index, 
+                            CycleTime = i.CycleTime,
+                            Label = w.Label
+                        })).ToArray();
 
             return View("Graphs", new GraphViewModel
                 {
@@ -157,6 +163,8 @@ namespace LeanKit.ReleaseManager.Controllers
         public int TicketNumber { get; set; }
 
         public int CycleTime { get; set; }
+
+        public string Label { get; set; }
     }
 
     public class GraphViewModel
@@ -172,8 +180,11 @@ namespace LeanKit.ReleaseManager.Controllers
 
         public IEnumerable<CycleTimeGraphWeekItem> Items { get; private set; }
 
-        public CycleTimeGraphWeek(int index, IEnumerable<Ticket> tickets)
+        public string Label { get; set; }
+
+        public CycleTimeGraphWeek(string label, int index, IEnumerable<Ticket> tickets)
         {
+            Label = label;
             WeekIndex = index + 1;
             Items = tickets.Select((t, i) => new CycleTimeGraphWeekItem
                 {
