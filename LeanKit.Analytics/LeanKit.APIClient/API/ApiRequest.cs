@@ -1,8 +1,8 @@
-using System;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
 using System.Text;
+using LeanKit.ErrorHandling.Api;
 
 namespace LeanKit.APIClient.API
 {
@@ -62,9 +62,5 @@ namespace LeanKit.APIClient.API
 
             return output;
         }
-    }
-
-    public class ApiCredentialsIncorrectException : Exception
-    {
     }
 }

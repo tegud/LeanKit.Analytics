@@ -1,8 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using LeanKit.ErrorHandling.Api;
 
 namespace LeanKit.APIClient.API
 {
@@ -66,10 +65,6 @@ namespace LeanKit.APIClient.API
         }
 
         
-    }
-
-    internal class NoAccessToSpecifiedBoardException : Exception
-    {
     }
 
     public class LeankitBoardLaneWrapper
