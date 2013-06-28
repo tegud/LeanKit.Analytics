@@ -19,14 +19,6 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
 		
 		options = $.extend(true, {}, defaultOptions, options);
 		
-		if(options.axisExtents.x) {
-			x.domain(options.axisExtents.x);
-		}
-		
-		if(options.axisExtents.y) {
-			y.domain(options.axisExtents.y);
-		}
-		
 		return {
 			svg: svg,
 			appendAxis: function(yAxisLabel) {
@@ -47,14 +39,33 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
 			},
 			x: x,
 			y: y,
-			setAxisExtent: function(extents) {
-				if(extents.x && !options.axisExtents.x) {
-					x.domain(extents.x);
-				}
-				
-				if(extents.y && !options.axisExtents.y) {
-					y.domain(extents.y);
-				}
+			setAxisExtent: function (extents) {
+			    //options.axisExtents.x
+			    //options.axisExtents.y
+
+			    var calculatedExtentX = extents.x;
+			    var calculatedExtentY = extents.y;
+
+			    if (options.axisExtents.x) {
+			        if(options.axisExtents.x[0] !== null) {
+			            extents.x[0] = options.axisExtents.x[0];
+			        }
+			        if (options.axisExtents.x.length == 2 && options.axisExtents.x[1] !== null) {
+			            extents.x[1] = options.axisExtents.x[1];
+			        }
+			    }
+
+			    if (options.axisExtents.y) {
+			        if (options.axisExtents.y[0] !== null) {
+			            extents.y[0] = options.axisExtents.y[0];
+			        }
+			        if (options.axisExtents.y.length == 2 && options.axisExtents.y[1] !== null) {
+			            extents.y[1] = options.axisExtents.y[1];
+			        }
+			    }
+
+				x.domain(extents.x);
+				y.domain(extents.y);
 				
 				svg.select(".x.axis").call(xAxis);
 				svg.select(".y.axis").call(yAxis);

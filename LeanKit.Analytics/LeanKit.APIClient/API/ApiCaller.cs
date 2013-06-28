@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,11 @@ namespace LeanKit.APIClient.API
 
             var apiResponse = JsonConvert.DeserializeObject<ApiResponse<T>>(output);
 
+            if(apiResponse.ReplyCode == 1000)
+            {
+                throw new NoAccessToSpecifiedBoardException();
+            }
+
             return apiResponse.ReplyData.First();
         }
 
@@ -60,6 +66,10 @@ namespace LeanKit.APIClient.API
         }
 
         
+    }
+
+    internal class NoAccessToSpecifiedBoardException : Exception
+    {
     }
 
     public class LeankitBoardLaneWrapper

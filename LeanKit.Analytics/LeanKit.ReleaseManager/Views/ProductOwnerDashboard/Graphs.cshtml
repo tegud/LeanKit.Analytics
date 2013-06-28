@@ -117,15 +117,18 @@
                     dimensions: {
                         width: 840,
                         height: 690,
-                            margin: { top: 20, right: 30, bottom: 40, left: 50 }
-                        },
-                        elementSelector: '#the-graph',
-                        series: [{
-                            id: 'average',
-                            title: 'Average Cycle Time',
-                            color: 'green',
-                        }]
+                        margin: { top: 20, right: 30, bottom: 40, left: 50 }
                     },
+                    axisExtents: {
+                        y: [0]
+                    },
+                    elementSelector: '#the-graph',
+                    series: [{
+                        id: 'average',
+                        title: 'Average Cycle Time',
+                        color: 'green'
+                    }]
+                },
                     chart = new TLRGRP.dashboards.graphs.DashboardChart(options);
                 
                 chart.drawChart({

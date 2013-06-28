@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
@@ -41,6 +42,13 @@ namespace LeanKit.APIClient.API
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
+                    var response = (HttpWebResponse) ex.Response;
+
+                    if(response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        throw new ApiCredentialsIncorrectException();
+                    }
+
                     using (var stream = new StreamReader(ex.Response.GetResponseStream()))
                     {
                         output = stream.ReadToEnd();
@@ -54,5 +62,9 @@ namespace LeanKit.APIClient.API
 
             return output;
         }
+    }
+
+    public class ApiCredentialsIncorrectException : Exception
+    {
     }
 }
