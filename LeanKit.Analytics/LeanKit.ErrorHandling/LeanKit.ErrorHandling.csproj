@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\ApiCredentialsIncorrectException.cs" />
     <Compile Include="Api\NoAccessToSpecifiedBoardException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

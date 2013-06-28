@@ -83,7 +83,8 @@ namespace LeanKit.Data.SQL
                                         ExternalId = @ExternalId,
                                         Size = @Size,
                                         Started = @Started,
-                                        Finished = @Finished
+                                        Finished = @Finished,
+                                        LastUpdated = GETDATE()
                                     WHERE ID = @Id;
                                     
                                     DELETE FROM CardAssignedUsers WHERE CardID = @ID
