@@ -297,7 +297,7 @@
     <Content Include="Views\Shared\TimePeriodList.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\ProductOwnerDashboard\Graphs.cshtml" />
+    <Content Include="Views\ProductOwnerDashboard\Graphs.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
