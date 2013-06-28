@@ -106,7 +106,7 @@
                     .call(chart);
 
             })([
-                @foreach (var row in Model.Items)
+                @foreach (var row in Model.BoxChartItems)
                     {
                         <text>{ @Html.Raw(string.Format("Week: {0}, Ticket: {1}, CycleTime: {2}, Label: '{3}' ", row.Week, row.TicketNumber, row.CycleTime, row.Label)) },</text>
                     }
@@ -133,13 +133,17 @@
                 
                 chart.drawChart({
                     'average': [
-                        { time: new Date(2013, 04, 12), value: 19 },
-                        { time: new Date(2013, 04, 19), value: 10 },
-                        { time: new Date(2013, 04, 26), value: 2 },
-                        { time: new Date(2013, 05, 02), value: 3 },
-                        { time: new Date(2013, 05, 09), value: 3 },
-                        { time: new Date(2013, 05, 16), value: 1 },
-                        { time: new Date(2013, 05, 23), value: 3 }
+                        @foreach(var row in Model.LineGraphItems)
+                        {
+                            <text>
+                                { @Html.Raw(string.Format("time: new Date({0}, {1}, {2}), value: {3}", 
+                                                                row.WeekStarts.ToString("yyyy"), 
+                                                                row.WeekStarts.ToString("MM"),
+                                                                row.WeekStarts.ToString("dd"), 
+                                                                row.AverageCycleTime)) },
+                        
+                            </text>
+                        }
                     ]
                 });
             };

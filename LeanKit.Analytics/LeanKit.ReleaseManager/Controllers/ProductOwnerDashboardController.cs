@@ -89,7 +89,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
             var tickets = _ticketRepository.Get(cycleTimeQuery).ToArray();
 
-            var cycleTimeGraphWeeks = weeks.Select((w, i) => new CycleTimeGraphWeek(w.Item1.ToString("dd/MM"), i, tickets.Where(t => t.Finished >= w.Item1 && t.Started <= w.Item2)));
+            var cycleTimeGraphWeeks = weeks.Select((w, i) => new CycleTimeGraphWeek(w.Item1.ToString("dd/MM"), i, tickets.Where(t => t.Finished >= w.Item1 && t.Finished <= w.Item2)));
             var data =
                 cycleTimeGraphWeeks.SelectMany(
                     w => w.Items.Select(i => new CycleTimeGraphRow
@@ -99,11 +99,16 @@ namespace LeanKit.ReleaseManager.Controllers
                             CycleTime = i.CycleTime,
                             Label = w.Label
                         })).ToArray();
+            var lineGraphWeeks = weeks.Select(w => new LineGraphWeek
+                {
+                    AverageCycleTime = (int) Math.Round(tickets.Where(t => t.Finished >= w.Item1 && t.Finished <= w.Item2).Average(t => t.CycleTime.Days)),
+                    WeekStarts = w.Item1
+                });
 
             return View("Graphs", new GraphViewModel
                 {
-                    Data = new HtmlString(JsonConvert.SerializeObject(data)),
-                    Items = data
+                    BoxChartItems = data,
+                    LineGraphItems = lineGraphWeeks
                 });
         }
 
@@ -156,6 +161,13 @@ namespace LeanKit.ReleaseManager.Controllers
         }
     }
 
+    public class LineGraphWeek
+    {
+        public DateTime WeekStarts { get; set; }
+
+        public int AverageCycleTime { get; set; }
+    }
+
     public class CycleTimeGraphRow
     {
         public int Week { get; set; }
@@ -171,7 +183,9 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         public IHtmlString Data { get; set; }
 
-        public IEnumerable<CycleTimeGraphRow> Items { get; set; }
+        public IEnumerable<CycleTimeGraphRow> BoxChartItems { get; set; }
+
+        public IEnumerable<LineGraphWeek> LineGraphItems { get; set; }
     }
 
     public class CycleTimeGraphWeek

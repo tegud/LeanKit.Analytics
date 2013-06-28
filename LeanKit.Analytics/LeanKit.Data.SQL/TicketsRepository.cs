@@ -84,7 +84,8 @@ namespace LeanKit.Data.SQL
                                         Size = @Size,
                                         Started = @Started,
                                         Finished = @Finished,
-                                        LastUpdated = GETDATE()
+                                        LastUpdated = GETDATE(),
+                                        SizeLastModified = CASE WHEN Size <> @Size THEN GETDATE() ELSE SizeLastModified END
                                     WHERE ID = @Id;
                                     
                                     DELETE FROM CardAssignedUsers WHERE CardID = @ID
