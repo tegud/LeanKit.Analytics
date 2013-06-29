@@ -99,10 +99,16 @@ namespace LeanKit.ReleaseManager.Controllers
                             CycleTime = i.CycleTime,
                             Label = w.Label
                         })).ToArray();
-            var lineGraphWeeks = weeks.Select(w => new LineGraphWeek
+            var lineGraphWeeks = weeks.Select(w =>
                 {
-                    AverageCycleTime = (int) Math.Round(tickets.Where(t => t.Finished >= w.Item1 && t.Finished <= w.Item2).Average(t => t.CycleTime.Days)),
-                    WeekStarts = w.Item1
+                    var matchingTickets = tickets.Where(t => t.Finished >= w.Item1 && t.Finished <= w.Item2);
+
+                    return new LineGraphWeek
+                        {
+                            AverageCycleTime = (int) Math.Round(matchingTickets.Average(t => t.CycleTime.Days)),
+                            MaxCycleTime = matchingTickets.Max(t => t.CycleTime.Days),
+                            WeekStarts = w.Item1
+                        };
                 });
 
             return View("Graphs", new GraphViewModel
@@ -166,6 +172,8 @@ namespace LeanKit.ReleaseManager.Controllers
         public DateTime WeekStarts { get; set; }
 
         public int AverageCycleTime { get; set; }
+
+        public int MaxCycleTime { get; set; }
     }
 
     public class CycleTimeGraphRow

@@ -127,7 +127,11 @@
                         id: 'average',
                         title: 'Average Cycle Time',
                         color: 'green'
-                    }]
+                    },{
+                    id: 'max',
+                    title: 'Max Cycle Time',
+                    color: 'red'
+                }]
                 },
                     chart = new TLRGRP.dashboards.graphs.DashboardChart(options);
                 
@@ -141,6 +145,19 @@
                                                                 row.WeekStarts.ToString("MM"),
                                                                 row.WeekStarts.ToString("dd"), 
                                                                 row.AverageCycleTime)) },
+                        
+                            </text>
+                        }
+                    ],
+                    'max': [
+                    @foreach(var row in Model.LineGraphItems)
+                        {
+                            <text>
+                                { @Html.Raw(string.Format("time: new Date({0}, {1}, {2}), value: {3}", 
+                                                                row.WeekStarts.ToString("yyyy"), 
+                                                                row.WeekStarts.ToString("MM"),
+                                                                row.WeekStarts.ToString("dd"), 
+                                                                row.MaxCycleTime)) },
                         
                             </text>
                         }

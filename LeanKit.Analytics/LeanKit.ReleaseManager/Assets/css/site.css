@@ -271,7 +271,7 @@ td.ticket-cycle-time { width: 90px;}
 
 .x.axis path { display: none }
 
-.line { fill:none; stroke-width: 1.5px }
+.line { fill:none; stroke-width: 2px }
 
 @media (max-width: 800px)
 {
