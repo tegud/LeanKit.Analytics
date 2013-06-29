@@ -9,6 +9,7 @@ namespace LeanKit.ReleaseManager
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+
             routes.MapRoute(
                 name: "Release",
                 url: "Release/{action}/{id}",
@@ -17,67 +18,21 @@ namespace LeanKit.ReleaseManager
             );
 
             routes.MapRoute(
-                name: "ReleaseDetail",
-                url: "Release/{id}",
-                defaults: new { controller = "Release", action = "Index" },
-                constraints: new { id = "[0-9]{1,9}" }
-            );
+                name: "ControllerWithId",
+                url: "{controller}/{id}",
+                defaults: new { controller = "Home", action = "Index" },
+                constraints: new { id = "[0-9]{1,9}" });
 
             routes.MapRoute(
-                name: "EditRelease",
-                url: "EditRelease/{id}",
-                defaults: new { controller = "EditRelease", action = "Index" },
-                constraints: new { id = "[0-9]{1,9}" }
-            );
+                name: "ControllerActionWithId",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+                constraints: new { id = "[0-9]{1,9}" });
 
             routes.MapRoute(
-                name: "Ticket",
-                url: "Ticket/{id}",
-                defaults: new { controller = "Ticket", action = "Index" },
-                constraints: new { id = "[0-9]{1,9}" }
-            );
-
-            routes.MapRoute(
-                name: "NewRelease",
-                url: "NewRelease",
-                defaults: new { controller = "NewRelease", action = "Index" }
-            );
-
-            routes.MapRoute(
-                name: "CycleTime",
-                url: "CycleTime",
-                defaults: new { controller = "CycleTime", action = "Index" }
-            );
-
-            routes.MapRoute(
-                name: "UpdateExistingRelease",
-                url: "UpdateExistingRelease",
-                defaults: new { controller = "UpdateExistingRelease", action = "Index" }
-            );
-
-            routes.MapRoute(
-                name: "Releases",
-                url: "Releases",
-                defaults: new { controller = "Releases", action = "Index" }
-            );
-
-            routes.MapRoute(
-                name: "UpcomingReleases",
-                url: "UpcomingReleases",
-                defaults: new { controller = "UpcomingReleases", action = "Index" }
-            );
-
-            routes.MapRoute(
-                name: "ProductOwnerDashboard",
-                url: "ProductOwnerDashboard/{action}",
-                defaults: new { controller = "ProductOwnerDashboard", action = "Index" }
-            );
-
-            routes.MapRoute(
-                name: "Home",
-                url: "",
-                defaults: new { controller = "Home", action = "Index" }
-            );
+                name: "Default",
+                url: "{controller}/{action}",
+                defaults: new { controller = "Home", action = "Index" });
         }
     }
 }
