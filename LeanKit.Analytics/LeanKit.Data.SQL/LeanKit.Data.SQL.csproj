@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActivityRepository.cs" />
+    <Compile Include="BlockageRepository.cs" />
     <Compile Include="CompletedTicketsRepository.cs" />
     <Compile Include="DataSqlRegistry.cs" />
     <Compile Include="DbConnectionString.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="ICreateTicketActivities.cs" />
     <Compile Include="ICreateTickets.cs" />
     <Compile Include="IGetAllTicketInformation.cs" />
+    <Compile Include="IGetBlockagesFromTheDatabase.cs" />
     <Compile Include="IGetReleasedTicketsFromTheDatabase.cs" />
     <Compile Include="IMakeTicketBlockages.cs" />
     <Compile Include="ITicketRepository.cs" />

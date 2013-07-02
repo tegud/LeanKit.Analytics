@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data.SQL;
-using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.Releases;
 using LeanKit.Utilities.DateAndTime;
 
@@ -19,6 +18,20 @@ namespace LeanKit.ReleaseManager.Controllers
         public ReleaseController(IGetReleasesFromTheDatabase releaseRepository)
         {
             _releaseRepository = releaseRepository;
+        }
+
+        public ContentResult SetStartedForSvnRevision(string svnRevision, DateTime started)
+        {
+            var id = _releaseRepository.GetReleaseIdForSvnRevision(svnRevision);
+
+            return SetStarted(id, started);
+        }
+
+        public ContentResult SetCompletedForSvnRevision(string svnRevision, DateTime completed)
+        {
+            var id = _releaseRepository.GetReleaseIdForSvnRevision(svnRevision);
+
+            return SetCompleted(id, completed);
         }
 
         public ContentResult SetStarted(int id, DateTime started)

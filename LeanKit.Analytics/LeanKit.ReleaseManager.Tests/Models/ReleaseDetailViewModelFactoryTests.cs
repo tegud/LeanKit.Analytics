@@ -64,5 +64,10 @@ namespace LeanKit.ReleaseManager.Tests.Models
         {
             throw new NotImplementedException();
         }
+
+        public int GetReleaseIdForSvnRevision(string svnRevision)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

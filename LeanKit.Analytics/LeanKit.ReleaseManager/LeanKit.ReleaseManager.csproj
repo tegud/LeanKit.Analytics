@@ -226,7 +226,10 @@
     <Content Include="Assets\js\lib\jquery-2.0.0.min.js" />
     <Content Include="Assets\js\lib\TLRGRP.core.js" />
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Views\Estimates\Index.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -299,9 +302,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\ProductOwnerDashboard\Graphs.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Estimates.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
