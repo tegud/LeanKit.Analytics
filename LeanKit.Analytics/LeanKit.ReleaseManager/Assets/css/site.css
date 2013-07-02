@@ -263,9 +263,9 @@ td.ticket-cycle-time { width: 90px;}
 
 .estimate-list li { background-color: #eee;min-height: 180px; }
 
-.estimate-ticket-details {padding: 10px;display: inline-block;width: 250px;}
+.estimate-ticket-section { display: inline-block;width: 250px; }
 
-.estimate-ticket-estimate { display: inline-block; }
+.estimate-ticket-details {padding: 10px;}
 
 .estimate-ticket-identifier { font-weight: bold;font-size: 1.1em; }
 
