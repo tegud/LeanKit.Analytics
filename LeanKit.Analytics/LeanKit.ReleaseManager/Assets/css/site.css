@@ -261,6 +261,14 @@ td.ticket-cycle-time { width: 90px;}
 
 .estimate-list { list-style: none;margin: 0;padding:0 }
 
+.estimate-list li { background-color: #eee;min-height: 180px; }
+
+.estimate-ticket-details {padding: 10px;display: inline-block;width: 250px;}
+
+.estimate-ticket-estimate { display: inline-block; }
+
+.estimate-ticket-identifier { font-weight: bold;font-size: 1.1em; }
+
 .box line,
 .box rect,
 .box circle { fill: #fff; stroke: #000; stroke-width: 1.5px; }
