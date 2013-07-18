@@ -69,5 +69,10 @@ namespace LeanKit.ReleaseManager.Tests.Models
         {
             throw new NotImplementedException();
         }
+
+        public void SetRollback(int id, DateTime rolledBackAt, string reason)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

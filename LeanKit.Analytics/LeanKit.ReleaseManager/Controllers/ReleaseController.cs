@@ -48,6 +48,13 @@ namespace LeanKit.ReleaseManager.Controllers
             return Content(string.Empty);
         }
 
+        public ContentResult SetRollback(int id, DateTime rolledBackAt, string reason)
+        {
+            _releaseRepository.SetRollback(id, rolledBackAt, reason);
+
+            return Content(string.Empty);
+        }
+
         public ActionResult Index(int id)
         {
             var releaseRecord = _releaseRepository.GetRelease(id);

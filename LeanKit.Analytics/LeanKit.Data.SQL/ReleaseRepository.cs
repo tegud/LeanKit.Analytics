@@ -213,6 +213,16 @@ namespace LeanKit.Data.SQL
                             }).First();
             }
         }
+
+        public void SetRollback(int id, DateTime rolledBackAt, string reason)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                sqlConnection.Execute("UPDATE Release SET RollbackDate = @rolledBackAt, RollbackReason = @reason WHERE ID = @ID", new { id, rolledBackAt, reason });
+            }
+        }
     }
 
     public interface IGetReleasesFromTheDatabase
@@ -227,6 +237,7 @@ namespace LeanKit.Data.SQL
         void SetStartedDate(int id, DateTime started);
         void SetCompletedDate(int id, DateTime completed);
         int GetReleaseIdForSvnRevision(string svnRevision);
+        void SetRollback(int id, DateTime rolledBackAt, string reason);
     }
 
     public class ReleaseRecord

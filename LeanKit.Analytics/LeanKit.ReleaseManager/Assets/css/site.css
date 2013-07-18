@@ -84,6 +84,8 @@ h2 { margin: 10px 0; }
 
 .options-bar ul li.edit-content { background-position: 0 -78px;  }
 
+.options-bar ul li.rollback { background-image: url('../images/rolledback.png');background-position: 0 2px; }
+
 .release-detail { margin-bottom: 10px;font-size: 1.2em; }
 
 .release-detail input { font-size: 1.2em; }
@@ -126,13 +128,16 @@ a { color: #000;transition-property: color;transition-duration: 300ms;text-decor
 .actual-duration { width: 140px; }
 .no-tickets { width: 100px; }
 
-#started-and-completed-form { display: none; margin-top: 10px;padding: 5px;background-color: #eee;width: 460px;border-radius: 10px; }
+#started-and-completed-form,
+#rollback-form { display: none; margin-top: 10px;padding: 5px;background-color: #eee;width: 460px;border-radius: 10px; }
 
 #started-and-completed-form label { width: 130px;display: inline-block;font-size: 1.2em; }
 
 #started-and-completed-form input { font-size: 1.4em; }
 
 #set-started-and-completed {margin: 5px 9px 9px 0 }
+
+#rolledback-reason { width: 98%;height: 100px; }
 
 .ladda-button.form-button {background-color: #999 ;border-radius: 2px; border: 1px solid transparent;transition-property: background-color;transition-duration: 300ms; }
 

@@ -213,6 +213,7 @@
     <Content Include="Assets\images\release-notes.png" />
     <Content Include="Assets\images\release_toolbar.png" />
     <Content Include="Assets\images\reschedule.png" />
+    <Content Include="Assets\images\rolledback.png" />
     <Content Include="Assets\js\charts\TLRGRP.dashboards.Builder.js" />
     <Content Include="Assets\js\charts\TLRGRP.dashboards.graphs.ChartCanvas.js" />
     <Content Include="Assets\js\charts\TLRGRP.dashboards.graphs.ChartDimensions.js" />

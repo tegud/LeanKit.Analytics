@@ -14,6 +14,10 @@
                 <li class="edit-content">Edit Details/Tickets</li>
                 <li class="mark-as-complete">Complete</li>
             }
+            else
+            {
+                <li class="rollback">Rollback</li>
+            }
         </ul>
     </nav>
     
@@ -31,6 +35,24 @@
         <div style="text-align: right;">
             <button type="submit" id="set-started-and-completed" class="form-button ladda-button slide-left"><span class="ladda-label">Update</span></button>
             <button id="cancel-started-and-completed" class="form-button cancel-button ladda-button"><span class="ladda-label">Cancel</span></button>
+        </div>
+    </div>
+    
+    <div id="rollback-form" data-release-id="@Model.Id">
+        <div>
+            <label>Rolled At:</label>
+            <input type="date" id="rolledback-at-field-date" value=""/>
+            <input type="time" id="rolledback-at-field-time" value=""/>
+        </div>
+        <div>
+            <div>
+                <label for="rolledback-reason">Reason:</label>
+            </div>
+            <textarea id="rolledback-reason"></textarea>
+        </div>
+        <div style="text-align: right;">
+            <button type="submit" id="set-rollback" class="form-button ladda-button slide-left"><span class="ladda-label">Update</span></button>
+            <button id="cancel-rollback" class="form-button cancel-button ladda-button"><span class="ladda-label">Cancel</span></button>
         </div>
     </div>
 
@@ -86,19 +108,42 @@
     <script type="text/javascript">
         (function() {
             var $submitButton = $('#set-started-and-completed'),
-                submitButton = Ladda.create($submitButton[0]);
+                submitButton = Ladda.create($submitButton[0]),
+                $rollbackButton = $('#set-rollback'),
+                rollbackButton = Ladda.create($submitButton[0]);
 
             $('#release-options')
                 .on('click', '.edit-content', function () {
                     var id = $('#started-and-completed-form').data('releaseId');
                     window.location = '/EditRelease/' + id;
                 })
-                .on('click', '.mark-as-complete', function() {
+                .on('click', '.mark-as-complete', function () {
                     $('#started-and-completed-form').slideDown(300);
+                })
+                .on('click', '.rollback', function () {
+                    $('#rollback-form').slideDown(300);
                 });
 
-            $('#cancel-started-and-completed').on('click', function() {
+            $('#cancel-started-and-completed').on('click', function () {
                 $('#started-and-completed-form').slideUp(300);
+            });
+            
+            $('#cancel-rollback').on('click', function () {
+                $('#rollback-form').slideUp(300);
+            });
+
+            $rollbackButton.on('click', function () {
+                var id = $('#rollback-form').data('releaseId');
+                $.ajax('/Release/SetRollback/' + id, {
+                    cache: false,
+                    data: {
+                        rolledbackAt: $('#rolledback-at-field-date').val() + ' ' + $('#rolledback-at-field-time').val(),
+                        Reason: $('#rolledback-reason').val()
+                    },
+                    success: function () {
+                        window.location = window.location + '';
+                    }
+                });
             });
 
             $submitButton.on('click', function() {
