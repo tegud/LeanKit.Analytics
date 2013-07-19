@@ -73,7 +73,7 @@ namespace LeanKit.ReleaseManager.Controllers
                 {
                     HasStarted = hasStarted,
                     HasCompleted = hasCompleted,
-                    Text = hasStarted ? hasCompleted ? "Completed" : "In Progress" : "Awaiting Approval"
+                    Text = releaseRecord.RollbackDate > DateTime.MinValue ? "Rolled Back" : hasStarted ? hasCompleted ? "Completed" : "In Progress" : "Awaiting Approval"
                 };
 
             var releaseDetailIncludedTicketViewModels = releaseRecord.IncludedTickets.Any() ? releaseRecord.IncludedTickets.Select(rr => new ReleaseDetailIncludedTicketViewModel
@@ -91,7 +91,9 @@ namespace LeanKit.ReleaseManager.Controllers
                     Status = releaseStatusViewModel,
                     IncludedTickets = releaseDetailIncludedTicketViewModels,
                     SvnRevision = releaseRecord.SvnRevision,
-                    ServiceNowId = releaseRecord.ServiceNowId
+                    ServiceNowId = releaseRecord.ServiceNowId,
+                    WasRolledBack = releaseRecord.RollbackDate > DateTime.MinValue,
+                    RollbackReason = releaseRecord.RollbackReason
                 };
             return View("Index", releaseViewModel);
         }

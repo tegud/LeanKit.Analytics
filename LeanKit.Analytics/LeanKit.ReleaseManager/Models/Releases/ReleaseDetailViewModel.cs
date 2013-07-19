@@ -17,5 +17,9 @@ namespace LeanKit.ReleaseManager.Models.Releases
         public ReleaseStatusViewModel Status { get; set; }
 
         public IEnumerable<ReleaseDetailIncludedTicketViewModel> IncludedTickets { get; set; }
+
+        public bool WasRolledBack { get; set; }
+
+        public string RollbackReason { get; set; }
     }
 }

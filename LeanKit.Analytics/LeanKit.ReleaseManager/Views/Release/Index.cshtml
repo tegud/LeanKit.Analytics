@@ -14,7 +14,7 @@
                 <li class="edit-content">Edit Details/Tickets</li>
                 <li class="mark-as-complete">Complete</li>
             }
-            else
+            else if (!Model.WasRolledBack)
             {
                 <li class="rollback">Rollback</li>
             }
@@ -38,29 +38,40 @@
         </div>
     </div>
     
-    <div id="rollback-form" data-release-id="@Model.Id">
-        <div>
-            <label>Rolled At:</label>
-            <input type="date" id="rolledback-at-field-date" value=""/>
-            <input type="time" id="rolledback-at-field-time" value=""/>
-        </div>
-        <div>
+    @if (!Model.WasRolledBack)
+    {
+        <div id="rollback-form" data-release-id="@Model.Id">
             <div>
-                <label for="rolledback-reason">Reason:</label>
+                <label>Rolled At:</label>
+                <input type="date" id="rolledback-at-field-date" value=""/>
+                <input type="time" id="rolledback-at-field-time" value=""/>
             </div>
-            <textarea id="rolledback-reason"></textarea>
+            <div>
+                <div>
+                    <label for="rolledback-reason">Reason:</label>
+                </div>
+                <textarea id="rolledback-reason"></textarea>
+            </div>
+            <div style="text-align: right;">
+                <button type="submit" id="set-rollback" class="form-button ladda-button slide-left"><span class="ladda-label">Update</span></button>
+                <button id="cancel-rollback" class="form-button cancel-button ladda-button"><span class="ladda-label">Cancel</span></button>
+            </div>
         </div>
-        <div style="text-align: right;">
-            <button type="submit" id="set-rollback" class="form-button ladda-button slide-left"><span class="ladda-label">Update</span></button>
-            <button id="cancel-rollback" class="form-button cancel-button ladda-button"><span class="ladda-label">Cancel</span></button>
-        </div>
-    </div>
+    }
 
     <h2>Current Status:</h2>
     <div id="release-status">
         <div id="release-status-indicator" class="@Model.Status.CssClass"></div>
         @Model.Status.Text
     </div>
+    
+    @if (Model.WasRolledBack)
+    {
+        <h2>Rollback Reason</h2>
+        <div>
+            @Model.RollbackReason
+        </div>
+    }
 
     <h2>Scheduling</h2>
     <div class="scheduling-entry">Planned for: @Model.PlannedTime.StartFriendlyText @Model.PlannedTime.Duration</div>
