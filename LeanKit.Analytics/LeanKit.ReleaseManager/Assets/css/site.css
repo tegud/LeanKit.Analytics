@@ -198,6 +198,8 @@ td.ticket-cycle-time { width: 90px;}
 
 .dashboard-bigtext { font-size: 10em; }
 
+.dashboard-sub-item-text { font-size: 5em; }
+
 .dashboard-bigtext-units { font-size: 2em; }
 
 .dashboard-bigtext-container { text-align: center; }
@@ -239,6 +241,8 @@ td.ticket-cycle-time { width: 90px;}
 .po-dashboard-release-list li { padding: 5px 0;  }
 
 .po-dashboard-chg-id { font-size: 0.8em;font-style: italic;color: #888; }
+
+.po-dashboard-release-rollback { font-size: 0.75em;background-image: url('../images/rolledback.png');background-repeat: no-repeat;min-height: 19px;padding: 2px 0 0 30px; }
 
 #product-owner-blockages { height: auto; }
 

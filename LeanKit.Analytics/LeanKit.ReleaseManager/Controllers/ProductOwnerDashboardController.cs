@@ -53,6 +53,7 @@ namespace LeanKit.ReleaseManager.Controllers
             return View(new ProductOwnerDashboardViewModel
                 {
                     ReleaseCount = releases.Count(),
+                    RolledBackReleases = releases.Count(r => r.WasRolledBack),
                     TicketsCompletedCount = ticketsCompletedCount,
                     ComplexityPointsReleased = complexityPointsReleased,
                     AverageCycleTime = averageCycleTime,
@@ -161,7 +162,9 @@ namespace LeanKit.ReleaseManager.Controllers
                     FormattedDate = r.StartedAt > DateTime.MinValue ? r.StartedAt.ToString("dd MMM yyyy \"at\" HH:mm")
                      : r.PlannedDate.ToString("dd MMM yyyy \"at\" HH:mm"),
                     ServiceNowId = r.ServiceNowId,
-                    TicketCount = r.IncludedTickets.Count()
+                    TicketCount = r.IncludedTickets.Count(),
+                    WasRolledBack = r.RollbackDate > DateTime.MinValue,
+                    RollbackReason = r.RollbackReason
                 });
 
         }
@@ -242,6 +245,8 @@ namespace LeanKit.ReleaseManager.Controllers
         public IEnumerable<CycleTimeTicketItem> Tickets { get; set; }
 
         public CycleTimePeriodViewModel TimePeriods { get; set; }
+
+        public int RolledBackReleases { get; set; }
     }
 
     public class ProductOwnerDashboardReleaseViewModel
@@ -255,6 +260,10 @@ namespace LeanKit.ReleaseManager.Controllers
         public int TicketCount { get; set; }
 
         public string ServiceNowId { get; set; }
+
+        public bool WasRolledBack { get; set; }
+
+        public string RollbackReason { get; set; }
     }
 
     public class ProductOwnerDashboardBlockagesViewModel
