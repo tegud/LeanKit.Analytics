@@ -25,7 +25,7 @@ namespace LeanKit.ReleaseManager
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             ViewEngines.Engines.Clear();
-            ViewEngines.Engines.Add(new RazorViewEngine());
+            ViewEngines.Engines.Add(new RazorViewEngine()); 
 
             ConnectionString = new DbConnectionString(ConfigurationManager.ConnectionStrings["LeanKitSyncDb"].ConnectionString);
         }

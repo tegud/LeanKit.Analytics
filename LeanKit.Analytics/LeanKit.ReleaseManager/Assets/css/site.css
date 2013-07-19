@@ -127,6 +127,9 @@ a { color: #000;transition-property: color;transition-duration: 300ms;text-decor
 .actual-end-date { width: 170px; }
 .actual-duration { width: 140px; }
 .no-tickets { width: 100px; }
+.rolled-back { width: 90px; }
+
+.releases-item-was-rolled-back { width: 24px;height: 21px;background-image: url('../images/rolledback.png');margin: auto; }
 
 #started-and-completed-form,
 #rollback-form { display: none; margin-top: 10px;padding: 5px;background-color: #eee;width: 460px;border-radius: 10px; }

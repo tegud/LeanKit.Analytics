@@ -258,6 +258,10 @@ namespace LeanKit.Data.SQL
 
         public List<IncludedTicketRecord> IncludedTickets { get; set; }
 
+        public DateTime RollbackDate { get; set; }
+
+        public string RollbackReason { get; set; }
+
         public ReleaseRecord()
         {
             IncludedTickets = new List<IncludedTicketRecord>();

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using LeanKit.Data.SQL;
@@ -39,7 +40,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
                             if(totalMinutes > 0)
                             {
-                                formattedTotalMinutes = string.Format("{0} min{1}", 
+                                formattedTotalMinutes = string.Format("{0:0.00} min{1}", 
                                     totalMinutes,
                                     totalMinutes > 1 ? "s" : string.Empty);
                             }
@@ -53,7 +54,9 @@ namespace LeanKit.ReleaseManager.Controllers
                                                                    FormattedActualStartedDate = r.StartedAt.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
                                                                    FormattedActualEndDate = r.CompletedAt.ToFriendlyText("dd MMM yyyy", "\" at \" HH:mm"),
                                                                    FormattedActualDuration = formattedTotalMinutes,
-                                                                   NumberOfIncludedTickets = r.IncludedTickets.Count(t => t != null)
+                                                                   NumberOfIncludedTickets = r.IncludedTickets.Count(t => t != null),
+                                                                   WasRolledBack = r.RollbackDate > DateTime.MinValue,
+                                                                   RollbackReason = r.RollbackReason
                                                                };
                         })
                 });
@@ -84,5 +87,9 @@ namespace LeanKit.ReleaseManager.Controllers
         public int NumberOfIncludedTickets { get; set; }
 
         public string FormattedActualDuration { get; set; }
+
+        public bool WasRolledBack { get; set; }
+
+        public string RollbackReason { get; set; }
     }
 }

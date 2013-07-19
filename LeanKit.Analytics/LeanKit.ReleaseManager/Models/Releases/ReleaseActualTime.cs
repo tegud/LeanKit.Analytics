@@ -8,7 +8,7 @@ namespace LeanKit.ReleaseManager.Models.Releases
 
         public string CompletedFriendlyText { get; set; }
 
-        public double Duration { get; set; }
+        public string Duration { get; set; }
 
         public DateTime StartedAt { get; set; }
 

@@ -127,7 +127,7 @@ namespace LeanKit.ReleaseManager.Controllers
                 CompletedAt = releaseRecord.CompletedAt,
                 StartedFriendlyText = releaseRecord.StartedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
                 CompletedFriendlyText = releaseRecord.CompletedAt.ToFriendlyText(FRIENDLY_TEXT_DATE, FRIENDLY_TEXT_TIME),
-                Duration = (releaseRecord.CompletedAt - releaseRecord.StartedAt).TotalMinutes
+                Duration = (releaseRecord.CompletedAt - releaseRecord.StartedAt).TotalMinutes.ToString("0.00")
             };
         }
 

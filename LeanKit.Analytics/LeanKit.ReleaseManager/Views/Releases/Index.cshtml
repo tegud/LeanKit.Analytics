@@ -17,6 +17,7 @@
         <th class="actual-end-date">Actual End</th>
         <th class="actual-duration">Actual Duration</th>
         <th class="no-tickets">No. Tickets</th>
+        <th class="rolled-back">Rollback?</th>
     </tr>
     @foreach(var release in Model.Releases)
     {
@@ -29,6 +30,7 @@
             <td class="actual-end-date">@release.FormattedActualEndDate</td>
             <td class="actual-duration">@release.FormattedActualDuration</td>
             <td class="no-tickets">@release.NumberOfIncludedTickets</td>
+            <td class="rolled-back">@if (release.WasRolledBack) {<div class="releases-item-was-rolled-back" title="@release.RollbackReason"></div>}</td>
         </tr>
     }
 </table>
