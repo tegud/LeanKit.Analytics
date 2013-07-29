@@ -132,6 +132,7 @@
     <Compile Include="Controllers\EditRelease.cs" />
     <Compile Include="Controllers\EstimatesController.cs" />
     <Compile Include="Controllers\ProductOwnerDashboardController.cs" />
+    <Compile Include="Controllers\ReleaseDashboardController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\UpcomingReleasesController.cs" />
     <Compile Include="Controllers\NewReleaseController.cs" />
@@ -307,6 +308,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\QA.pubxml" />
+    <Content Include="Views\ReleaseDashboard\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
