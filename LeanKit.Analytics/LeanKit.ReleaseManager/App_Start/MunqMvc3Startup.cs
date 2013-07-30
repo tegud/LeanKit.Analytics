@@ -10,6 +10,7 @@ using LeanKit.IoC;
 using LeanKit.ReleaseManager.Controllers;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
+using LeanKit.ReleaseManager.Models.ReleaseDashboard;
 using LeanKit.ReleaseManager.Models.Releases;
 using LeanKit.ReleaseManager.Models.TimePeriods;
 using LeanKit.Utilities;
@@ -100,6 +101,7 @@ namespace LeanKit.ReleaseManager.App_Start
                                             i.Resolve<IMakeCycleTimeQueries>("CycleTime")));
 
             ioc.Register(i => new ReleasesController(i.Resolve<IGetReleasesFromTheDatabase>(), i.Resolve<IMakeTimePeriodViewModels>("CycleTime"), i.Resolve<IMakeCycleTimeQueries>("CycleTime")));
+            ioc.Register<IReleaseDashboardViewModelFactory>(i => new ReleaseDashboardViewModelFactory(i.Resolve<IGetReleasesFromTheDatabase>()));
 
             DataRegistry.Register(ioc);
             DataSqlRegistry.Register(ioc);

@@ -1,11 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using LeanKit.Data;
+using LeanKit.Data.SQL;
 
 namespace LeanKit.ReleaseManager.Models.ReleaseDashboard
 {
-    public class ReleaseDashboardViewModelFactory
+    public interface IReleaseDashboardViewModelFactory
     {
+        ReleaseDashboardViewModel Build();
+    }
+
+    public class ReleaseDashboardViewModelFactory : IReleaseDashboardViewModelFactory
+    {
+        private readonly IGetReleasesFromTheDatabase _releaseRepository;
+
+        public ReleaseDashboardViewModelFactory(IGetReleasesFromTheDatabase releaseRepository)
+        {
+            _releaseRepository = releaseRepository;
+        }
+
         public ReleaseDashboardViewModel Build()
         {
+            var allReleases = _releaseRepository.GetAllReleases(new CycleTimeQuery());
+            
             var webServers = new List<ServerViewModel>();
             var sslServers = new List<ServerViewModel>();
             var auServers = new List<ServerViewModel>();
@@ -27,6 +45,7 @@ namespace LeanKit.ReleaseManager.Models.ReleaseDashboard
 
             return new ReleaseDashboardViewModel
                 {
+                    LastRelease = allReleases.FirstOrDefault(r => r.StartedAt > DateTime.MinValue),
                     ServerStatus = new ServerStatusViewModel
                         {
                             DeploymentGroups = new List<DeploymentGroupViewModel>

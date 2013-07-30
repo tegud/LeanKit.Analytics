@@ -8,8 +8,8 @@
     <div id="refresh-progress"></div>
     <div id="refresh-text">0%</div>
 </div>
-<h2>Current Release</h2>
-<h3>SVN: 90527, Service-Now: CHG0006722, Started at: 14:00</h3>
+<h2>@(Model.LastRelease.CompletedAt > DateTime.MinValue ? "Last Completed" : "Current") Release</h2>
+<h3>SVN: <span id="release-svn-revision">@Model.LastRelease.SvnRevision</span>, Service-Now: @Model.LastRelease.ServiceNowId, Started at: @Model.LastRelease.StartedAt.ToString("HH:mm")@if(Model.LastRelease.CompletedAt > DateTime.MinValue){<text>, Completed at: @Model.LastRelease.CompletedAt.ToString("HH:mm")</text>}</h3>
 
 <ul class="release-progress">
     @foreach (var deploymentGroup in Model.ServerStatus.DeploymentGroups)
@@ -18,7 +18,7 @@
             <ul class="deployment-group-release-progress">
                 @foreach (var server in deploymentGroup.Servers)
                 {
-                    <li class="deployment-group-release-server">@server.Id</li>
+                    <li class="deployment-group-release-server" id="release-progress-server-@server.Id">@server.Id</li>
                 }
             </ul>
             <div>@deploymentGroup.Name</div>
@@ -27,14 +27,12 @@
     }
 </ul>
 
-0/@Model.ServerStatus.DeploymentGroups.Sum(g => g.Servers.Count()) servers updated.
-
 <h2>Server Status</h2>
 <h3>Web</h3>
 <ul class="server-list">
     @foreach (var server in Model.ServerStatus.DeploymentGroups.First(g => g.Name == "Web").Servers)
     {
-        <li class="server-item">
+        <li class="server-item" data-server-id="@server.Id">
             <a href="http://@(server.Host).tlrg.org" target="_blank">@server.Host.ToUpper()</a>
             <div class="server-status-indicator"></div>
             <div class="server-current-status">Unknown</div>
@@ -47,7 +45,7 @@
     <ul class="server-list">
         @foreach (var server in Model.ServerStatus.DeploymentGroups.First(g => g.Name == "SSL").Servers)
         {
-            <li class="server-item">
+            <li class="server-item" data-server-id="@server.Id">
                 <a href="http://@(server.Host).tlrg.org" target="_blank">@server.Host.ToUpper()</a>
                 <div class="server-status-indicator"></div>
                 <div class="server-current-status">Unknown</div>
@@ -61,7 +59,7 @@
     <ul class="server-list">
         @foreach (var server in Model.ServerStatus.DeploymentGroups.First(g => g.Name == "AU").Servers)
         {
-            <li class="server-item">
+            <li class="server-item" data-server-id="@server.Id">
                 <a href="http://@(server.Host).tlrg.org" target="_blank">@server.Host.ToUpper()</a>
                 <div class="server-status-indicator"></div>
                 <div class="server-current-status">Unknown</div>
@@ -77,13 +75,28 @@
             var allServers = $('.server-item');
             var timerProgress = $('#refresh-progress');
             var timerText = $('#refresh-text');
+            var svnRevision = $('#release-svn-revision').text();
             var deferreds = [];
-            var refreshAll = function () {
+            var updateReleaseProgressForServer = function(id, status, version) {
+                var releaseProgressItem = $('#release-progress-server-' + id);
+
+                status = status.toLowerCase();
+
+                if (!version || status === 'down' || status === 'timeout') {
+                    return;
+                }
+
+                if (status === 'deploying' || version === svnRevision) {
+                    releaseProgressItem[0].className = 'deployment-group-release-server ' + status;
+                }
+            };
+            var refreshAll = function() {
                 var progress = 0;
                 var outOf = allServers.size();
 
                 allServers.each(function() {
                     var item = $(this);
+                    var id = item.data('serverId');
                     var refreshIndicator = $('status-pending', item);
                     var url = $('a', item).text();
 
@@ -97,23 +110,26 @@
                             server: url
                         },
                         cache: false,
-                        success: function (data) {
+                        success: function(data) {
                             var status = data.Status;
+
                             $('.server-current-status', item).text(status);
                             $('.server-status-indicator', item)[0].className = 'server-status-indicator ' + status.toLowerCase();
                             $('.server-current-version', item).text(data.Version || '?');
                             progress++;
-                            
+
                             refreshIndicator.addClass('hidden');
 
                             var progressPercent = Math.floor((progress / outOf) * 100);
                             timerProgress.css('width', progressPercent + '%');
                             timerText.text(progressPercent + '%');
+
+                            updateReleaseProgressForServer(id, status, data.Version);
                         }
                     });
                 });
 
-                $.when.apply($, deferreds).then(function () {
+                $.when.apply($, deferreds).then(function() {
                     setTimeout(refreshAll, 1000);
                 });
             };

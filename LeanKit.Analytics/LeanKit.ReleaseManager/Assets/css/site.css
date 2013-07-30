@@ -323,6 +323,10 @@ td.ticket-cycle-time { width: 90px;}
 
 .deployment-group-release-server.deploying {background-color: #ffa500}
 
+.deployment-group-release-server.online {background-color: #008000}
+
+.deployment-group-release-server.down {background-color: #f00}
+
 .deployment-group-release-server-label { display: none;position: absolute;top: 40px;left: 0 }
 
 .deployment-group-release-server:first-child .deployment-group-release-server-label { display: block; }

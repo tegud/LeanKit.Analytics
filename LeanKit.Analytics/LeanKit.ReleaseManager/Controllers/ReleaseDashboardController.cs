@@ -6,9 +6,16 @@ namespace LeanKit.ReleaseManager.Controllers
 {
     public class ReleaseDashboardController : Controller
     {
+        private readonly IReleaseDashboardViewModelFactory _releaseDashboardViewModelFactory;
+
+        public ReleaseDashboardController(IReleaseDashboardViewModelFactory releaseDashboardViewModelFactory)
+        {
+            _releaseDashboardViewModelFactory = releaseDashboardViewModelFactory;
+        }
+
         public ActionResult Index()
         {
-            var viewModel = new ReleaseDashboardViewModelFactory().Build();
+            var viewModel = _releaseDashboardViewModelFactory.Build();
             return View("Index", viewModel);
         }
 
