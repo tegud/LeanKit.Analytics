@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web;
+﻿using System.Net;
 using System.Web.Mvc;
+using LeanKit.ReleaseManager.Models.ReleaseDashboard;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
@@ -11,7 +8,8 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            var viewModel = new ReleaseDashboardViewModelFactory().Build();
+            return View("Index", viewModel);
         }
 
         public ActionResult Status(string server)
@@ -26,45 +24,59 @@ namespace LeanKit.ReleaseManager.Controllers
             {
                 using (var response = request.GetResponse())
                 {
-                    var version = response.Headers["X-Version"];
+                    var version = GetCodeRevision(response.Headers["X-Version"]);
 
-                    return Json(new
-                        {
-                            Status = "Online",
-                            Version = version
-                        }, JsonRequestBehavior.AllowGet);
+                    return JsonResponseWithVersion(version, "Online");
                 }
             }
             catch (WebException ex)
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
-                    var httpWebException = (HttpWebResponse) ex.Response;
-                    if ((int) httpWebException.StatusCode == 418)
-                        return Json(new
-                        {
-                            Status = "Deploying"
-                        }, JsonRequestBehavior.AllowGet);
+                    var httpWebException = (HttpWebResponse)ex.Response;
 
-                    return Json(new
-                    {
-                        Status = "Down"
-                    }, JsonRequestBehavior.AllowGet);
+                    var version = GetCodeRevision(ex.Response.Headers["X-Version"]);
+
+                    if ((int)httpWebException.StatusCode == 418)
+                        return JsonResponseWithVersion(version, "Deploying");
+
+                    return JsonResponseWithoutVersion("Down");
                 }
 
                 if (ex.Status == WebExceptionStatus.Timeout)
                 {
-                    return Json(new
-                    {
-                        Status = "Timeout"
-                    }, JsonRequestBehavior.AllowGet);
+                    return JsonResponseWithoutVersion("Timeout");
                 }
 
-                return Json(new
-                {
-                    Status = "Error"
-                }, JsonRequestBehavior.AllowGet);
+                return JsonResponseWithoutVersion("Error");
             }
+        }
+
+        private JsonResult JsonResponseWithoutVersion(string status)
+        {
+            return Json(new
+                {
+                    Status = status
+                }, JsonRequestBehavior.AllowGet);
+        }
+
+        private JsonResult JsonResponseWithVersion(string version, string status)
+        {
+            return Json(new
+                {
+                    Status = status,
+                    Version = version
+                }, JsonRequestBehavior.AllowGet);
+        }
+
+        public string GetCodeRevision(string fullVersionString)
+        {
+            if (!fullVersionString.Contains("_"))
+            {
+                return fullVersionString;
+            }
+
+            return fullVersionString.Split('_')[0];
         }
     }
 }

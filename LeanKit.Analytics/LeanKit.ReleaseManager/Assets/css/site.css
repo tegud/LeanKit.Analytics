@@ -285,13 +285,13 @@ td.ticket-cycle-time { width: 90px;}
 
 .server-item { display: inline-block;width: 120px;height: 120px;padding: 10px;background-color: #ddd;margin: 2px;border-radius: 10px;position: relative; }
 
-.server-status-indicator { background-color: #999;width: 60px;height: 60px;margin: 10px auto;border-radius: 30px; }
+.server-status-indicator { background-color: #999;width: 50px;height: 50px;margin: 10px auto;border-radius: 30px; }
 
 .server-status-indicator.online { background-color: #008000 }
 
 .server-status-indicator.deploying { background-color: #ffa500 }
 
-.server-status-indicator.down { background-color: #ff0000 }
+.server-status-indicator.down { background-color: #f00 }
 
 #refresh-timer { float: right;margin: 10px;border: 1px solid #000;width: 96px;height: 12px;padding: 2px; }
 
@@ -301,7 +301,31 @@ td.ticket-cycle-time { width: 90px;}
 
 .status-pending { width: 10px;height: 10px;background-color: #000;border-radius: 5px;position: absolute;bottom: 15px;right: 15px; }
 
+.server-current-version { font-size: 0.9em;color: #888; }
+
 .half-width { display: inline-block;width: 588px; max-width: 588px; }
+
+.release-progress { list-style: none;margin: 0 auto 30px auto; padding:0;}
+
+.release-deployment-group { height: 34px; display: inline-block;}
+
+.release-deployment-group div { margin-top: 5px; }
+
+.deployment-group-release-progress { list-style: none;margin: 0; padding:0;border: solid 3px #000;overflow: hidden; }
+
+.release-deployment-group:first-child .deployment-group-release-progress { border-radius: 20px 0 0 20px; }
+
+.release-deployment-group:last-child .deployment-group-release-progress { border-radius: 0 20px 20px 0; }
+
+.deployment-group-release-server { width: 34px;height: 34px;background-color: #ddd;float: left;border-right: 1px solid #999;position: relative; }
+
+.deployment-group-release-server:last-child { border-right: 0 }
+
+.deployment-group-release-server.deploying {background-color: #ffa500}
+
+.deployment-group-release-server-label { display: none;position: absolute;top: 40px;left: 0 }
+
+.deployment-group-release-server:first-child .deployment-group-release-server-label { display: block; }
 
 .box line,
 .box rect,

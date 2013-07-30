@@ -179,6 +179,11 @@
     <Compile Include="Models\ISummariseTicketCycleTimeInformation.cs" />
     <Compile Include="Models\LaneColumn.cs" />
     <Compile Include="Models\PlannedDateParser.cs" />
+    <Compile Include="Models\ReleaseDashboard\DeploymentGroupViewModel.cs" />
+    <Compile Include="Models\ReleaseDashboard\ReleaseDashboardViewModel.cs" />
+    <Compile Include="Models\ReleaseDashboard\ReleaseDashboardViewModelFactory.cs" />
+    <Compile Include="Models\ReleaseDashboard\ServerStatusViewModel.cs" />
+    <Compile Include="Models\ReleaseDashboard\ServerViewModel.cs" />
     <Compile Include="Models\Releases\NewReleaseIncludedTicketsBuilders.cs" />
     <Compile Include="Models\Releases\ReleaseActualTime.cs" />
     <Compile Include="Models\Releases\ReleaseDetailIncludedTicketViewModel.cs" />
