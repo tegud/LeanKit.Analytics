@@ -10,23 +10,24 @@
 </div>
 <h2>@(Model.LastRelease.CompletedAt > DateTime.MinValue ? "Last Completed" : "Current") Release</h2>
 <h3>SVN: <span id="release-svn-revision">@Model.LastRelease.SvnRevision</span>, Service-Now: @Model.LastRelease.ServiceNowId, Started at: @Model.LastRelease.StartedAt.ToString("HH:mm")@if(Model.LastRelease.CompletedAt > DateTime.MinValue){<text>, Completed at: @Model.LastRelease.CompletedAt.ToString("HH:mm")</text>}</h3>
+@if (Model.LastRelease.CompletedAt == DateTime.MinValue)
+{
+    <ul class="release-progress">
+        @foreach (var deploymentGroup in Model.ServerStatus.DeploymentGroups)
+        {
+            <li class="release-deployment-group">
+                <ul class="deployment-group-release-progress">
+                    @foreach (var server in deploymentGroup.Servers)
+                    {
+                        <li class="deployment-group-release-server" id="release-progress-server-@server.Id">@server.Id</li>
+                    }
+                </ul>
+                <div>@deploymentGroup.Name</div>
+            </li>
 
-<ul class="release-progress">
-    @foreach (var deploymentGroup in Model.ServerStatus.DeploymentGroups)
-    {
-        <li class="release-deployment-group">
-            <ul class="deployment-group-release-progress">
-                @foreach (var server in deploymentGroup.Servers)
-                {
-                    <li class="deployment-group-release-server" id="release-progress-server-@server.Id">@server.Id</li>
-                }
-            </ul>
-            <div>@deploymentGroup.Name</div>
-        </li>
-        
-    }
-</ul>
-
+        }
+    </ul>
+}
 <h2>Server Status</h2>
 <h3>Web</h3>
 <ul class="server-list">
@@ -82,11 +83,11 @@
 
                 status = status.toLowerCase();
 
-                if (!version || status === 'down' || status === 'timeout') {
+                if (!version || status === 'timeout' || releaseProgressItem.length) {
                     return;
                 }
 
-                if (status === 'deploying' || version === svnRevision) {
+                if (status === 'deploying' || status === 'down' || version === svnRevision) {
                     releaseProgressItem[0].className = 'deployment-group-release-server ' + status;
                 }
             };
