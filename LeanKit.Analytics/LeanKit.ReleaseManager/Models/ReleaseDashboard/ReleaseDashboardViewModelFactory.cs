@@ -12,17 +12,17 @@ namespace LeanKit.ReleaseManager.Models.ReleaseDashboard
 
             for (var x = 1; x < 20; x++)
             {
-                webServers.Add(new ServerViewModel { Host = string.Format("telweb{0:000}P", x) });
+                webServers.Add(new ServerViewModel { Id = x });
             }
 
             for (var x = 107; x < 110; x++)
             {
-                sslServers.Add(new ServerViewModel { Host = string.Format("telweb{0:000}P", x) });
+                sslServers.Add(new ServerViewModel { Id = x });
             }
 
             for (var x = 320; x < 323; x++)
             {
-                auServers.Add(new ServerViewModel { Host = string.Format("telweb{0:000}P", x) });
+                auServers.Add(new ServerViewModel { Id = x });
             }
 
             return new ReleaseDashboardViewModel

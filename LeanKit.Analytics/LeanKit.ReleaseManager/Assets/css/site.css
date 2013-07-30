@@ -317,7 +317,7 @@ td.ticket-cycle-time { width: 90px;}
 
 .release-deployment-group:last-child .deployment-group-release-progress { border-radius: 0 20px 20px 0; }
 
-.deployment-group-release-server { width: 34px;height: 34px;background-color: #ddd;float: left;border-right: 1px solid #999;position: relative; }
+.deployment-group-release-server {cursor: default;width: 34px;height: 25px;padding: 9px 0 0 0;font-size: 0.8em;text-align: center;background-color: #ddd;float: left;border-right: 1px solid #999;position: relative; }
 
 .deployment-group-release-server:last-child { border-right: 0 }
 

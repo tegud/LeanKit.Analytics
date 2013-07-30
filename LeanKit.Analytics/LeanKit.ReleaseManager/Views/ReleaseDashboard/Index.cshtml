@@ -18,11 +18,7 @@
             <ul class="deployment-group-release-progress">
                 @foreach (var server in deploymentGroup.Servers)
                 {
-                    <li class="deployment-group-release-server">
-                        <div class="deployment-group-release-server-label">
-                            @server.Host
-                        </div>
-                    </li>
+                    <li class="deployment-group-release-server">@server.Id</li>
                 }
             </ul>
             <div>@deploymentGroup.Name</div>
@@ -30,6 +26,8 @@
         
     }
 </ul>
+
+0/@Model.ServerStatus.DeploymentGroups.Sum(g => g.Servers.Count()) servers updated.
 
 <h2>Server Status</h2>
 <h3>Web</h3>
