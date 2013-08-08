@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<title>Graphs are fun</title>
+	<link rel="stylesheet" href="assets/css/dashboard-graph.css">
+</head>
+<body>
+	<script src="assets/js/lib/jquery-1.9.1. min.js"></script>
+	<script src="assets/js/lib/d3.3.min.js"></script>
+	<script src="assets/js/lib/TLRGRP.core.js"></script>
+	<script src="assets/js/TLRGRP.dashboards.graphs.renderers.js"></script>
+	<script src="assets/js/TLRGRP.dashboards.graphs.ChartDimensions.js"></script>
+	<script src="assets/js/TLRGRP.dashboards.graphs.ChartCanvas.js"></script>
+	<script src="assets/js/TLRGRP.dashboards.graphs.Legend.js"></script>
+	<script src="assets/js/TLRGRP.dashboards.graphs.DashboardChart.js"></script>
+	<script src="assets/js/TLRGRP.dashboards.graphs.DashboardChartStore.js"></script>
+	<script>
+	(function() {
+		function getParameterByName(name) {
+			name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+			var regexS = "[\\?&]" + name + "=([^&#]*)";
+			var regex = new RegExp(regexS);
+			var results = regex.exec(window.location.search);
+			if(results == null) {
+				return "";
+			}
+			else {
+				return decodeURIComponent(results[1].replace(/\+/g, " "));
+			}
+		}
+	
+		var defaultChartOptions = {
+				dimensions: {
+					margin: { top: 10, right: 100, bottom: 20, left: 30 }
+				},
+				legend: {
+					position: 'right outside'
+				}
+			},
+			expressions = JSON.parse(getParameterByName('expressions')),
+			getChartOptions = function() {
+				var urlOptions = getParameterByName('chartOptions');
+				
+				if(!urlOptions) {
+					return $.extend(true, defaultChartOptions, { series: expressions });
+				}
+				
+				return $.extend(true, defaultChartOptions, JSON.parse(urlOptions), { series: expressions });
+			},
+			chart = new TLRGRP.dashboards.graphs.DashboardChart(getChartOptions()),
+			dataStore = new TLRGRP.dashboards.graphs.DashboardChartStore({
+				expressions: expressions,
+				server: 'http://172.31.168.140',
+				refreshRate: 250,
+				chart: chart
+			});
+	})();
+	</script>
+</body>
+</html>

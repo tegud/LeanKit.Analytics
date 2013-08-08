@@ -83,7 +83,7 @@
 
                 status = status.toLowerCase();
 
-                if (!version || status === 'timeout' || !releaseProgressItem.length) {
+                if ((!version && status !== 'down') || status === 'timeout' || !releaseProgressItem.length) {
                     return;
                 }
 

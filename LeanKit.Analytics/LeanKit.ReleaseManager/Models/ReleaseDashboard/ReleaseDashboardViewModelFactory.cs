@@ -45,7 +45,7 @@ namespace LeanKit.ReleaseManager.Models.ReleaseDashboard
 
             return new ReleaseDashboardViewModel
                 {
-                    LastRelease = allReleases.FirstOrDefault(r => r.StartedAt > DateTime.MinValue),
+                    LastRelease = allReleases.OrderByDescending(r => r.StartedAt).FirstOrDefault(r => r.StartedAt > DateTime.MinValue),
                     ServerStatus = new ServerStatusViewModel
                         {
                             DeploymentGroups = new List<DeploymentGroupViewModel>

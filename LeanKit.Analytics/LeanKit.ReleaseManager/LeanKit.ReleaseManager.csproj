@@ -133,6 +133,7 @@
     <Compile Include="Controllers\EstimatesController.cs" />
     <Compile Include="Controllers\ProductOwnerDashboardController.cs" />
     <Compile Include="Controllers\ReleaseDashboardController.cs" />
+    <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
     <Compile Include="Controllers\UpcomingReleasesController.cs" />
     <Compile Include="Controllers\NewReleaseController.cs" />
@@ -213,11 +214,16 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Content Include="Assets\css\dashboard-graph.css" />
     <Content Include="Assets\css\ladda.css" />
     <Content Include="Assets\css\site.css" />
+    <Content Include="Assets\graph.html" />
+    <Content Include="Assets\images\box.png" />
     <Content Include="Assets\images\glyphicons_040_stats.png" />
     <Content Include="Assets\images\glyphicons_119_table.png" />
+    <Content Include="Assets\images\line-chart.png" />
     <Content Include="Assets\images\logo.png" />
+    <Content Include="Assets\images\product-owner.png" />
     <Content Include="Assets\images\release-notes.png" />
     <Content Include="Assets\images\release_toolbar.png" />
     <Content Include="Assets\images\reschedule.png" />
@@ -234,8 +240,17 @@
     <Content Include="Assets\js\lib\d3.min.js" />
     <Content Include="Assets\js\lib\jquery-2.0.0.min.js" />
     <Content Include="Assets\js\lib\TLRGRP.core.js" />
+    <Content Include="Assets\js\page-capture.js" />
+    <Content Include="Assets\js\status-charts\TLRGRP.dashboards.Builder.js" />
+    <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.ChartCanvas.js" />
+    <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.ChartDimensions.js" />
+    <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.DashboardChart.js" />
+    <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.DashboardChartStore.js" />
+    <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.Legend.js" />
+    <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.renderers.js" />
     <Content Include="Global.asax" />
     <Content Include="Views\Estimates\Index.cshtml" />
+    <Content Include="Views\Status\graph.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -314,6 +329,7 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\QA.pubxml" />
     <Content Include="Views\ReleaseDashboard\Index.cshtml" />
+    <Content Include="Views\Status\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

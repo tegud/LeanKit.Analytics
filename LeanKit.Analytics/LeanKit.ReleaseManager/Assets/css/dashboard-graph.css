@@ -1,0 +1,9 @@
+body { font: 10px Arial; margin: 0 }
+
+.axis path, .axis line { fill:none; stroke: #000; shape-rendering: crispEdges }
+
+.x.axis path { display: none }
+
+.line { fill:none; stroke-width: 1.5px }
+
+#capture-graph {display:none;position: absolute;bottom: 20px;left: 5px;width: 20px;height: 20px;background-color: #eee;border-radius: 5px;cursor: pointer; }

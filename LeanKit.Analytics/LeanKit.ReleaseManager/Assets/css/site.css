@@ -331,6 +331,18 @@ td.ticket-cycle-time { width: 90px;}
 
 .deployment-group-release-server:first-child .deployment-group-release-server-label { display: block; }
 
+.all-dashboards-list { margin: 0;padding: 0 }
+
+.all-dashboards-list .dashboard-item { min-height: 128px;width: 170px;height: 170px;padding: 0 }
+
+.all-dashboards-list .dashboard-item a { display: block;text-align: center;width:170px;height: 25px;padding: 145px 0 0 0;background-repeat: no-repeat; background-position: center 10px }
+
+.all-dashboards-list .dashboard-item.product-owner a { background-image: url('../images/product-owner.png'); }
+
+.all-dashboards-list .dashboard-item.release a { background-image: url('../images/box.png'); }
+
+.all-dashboards-list .dashboard-item.status a { background-image: url('../images/line-chart.png'); }
+
 .box line,
 .box rect,
 .box circle { fill: #fff; stroke: #000; stroke-width: 1.5px; }

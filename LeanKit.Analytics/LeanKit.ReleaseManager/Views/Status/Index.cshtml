@@ -1,0 +1,176 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Layouts/_Layout.cshtml";
+}
+
+<h2>Live Status</h2>
+
+<ul id="metrics-list">
+    <li><a href="/Status">Overview</a></li>
+</ul>
+
+<div id="graphs"></div>
+
+@section Stylesheet
+{
+    <style>
+        h1 { margin: 0; }
+
+        iframe {width: 100%;height: 250px; }
+
+        .graph-container {margin-left: 0;background-color: transparent;padding: 0;height: auto }
+
+        .graph-container.half {width: 50%;float: left; }
+
+        .graph-title {font-size: 1.2em;min-height: 23px;font-weight: bold; }
+
+        #metrics-list {padding: 0;margin: 0;list-style: none;margin-bottom: 15px; }
+
+        #metrics-list > li {display: inline-block;margin: 0 5px 0 0; }
+
+        #metrics-list > li a,
+        #metrics-list > li.selected-metric {padding: 5px;background-color: #eee;border-radius: 5px; }
+
+        #metrics-list > li.selected-metric { background-color: #75A4FF;cursor: default }
+    </style>
+}
+
+@section Javascript
+{
+    <script src="~/assets/js/page-capture.js"></script>
+    <script src="~/assets/js/lib/jquery-2.0.0.min.js"></script>
+    <script src="~/assets/js/lib/TLRGRP.core.js"></script>
+    <script src="~/assets/js/status-charts/TLRGRP.dashboards.Builder.js"></script>
+	
+    <script type="text/javascript">
+        (function() {
+            var maxPerGroup = 5,
+                metricGroups = [],
+                currentMetricGroup = -1,
+                colors = ['steelblue', 'red', 'orange', 'green', 'purple'],
+                metrics = {
+                    'RequestsExecuting': {
+                        name: 'Requests Executing',
+                        metric: 'ASPNET2__Total_RequestsExecuting',
+                        group: 'ASPNET2',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            yAxisLabel: 'requests',
+                        }
+                    },
+                    'ExecutionTime': {
+                        name: 'Execution Time',
+                        metric: 'ASPNET2__Total_RequestExecutionTime',
+                        group: 'ASPNET2',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            dimensions: {
+                                margin: { left: 50 }
+                            },
+                            yAxisLabel: 'time (s)',
+                        }
+                    },
+                    'CPU': {
+                        name: 'CPU',
+                        metric: 'cpu__Total_PercentProcessorTime',
+                        group: 'cpu',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            axisExtents: {
+                                y: [0, 100]
+                            },
+                            yAxisLabel: '%',
+                        }
+                    }
+                },
+                currentMetric,
+                graphs = [],
+                metricsList = $('#metrics-list');
+
+            function getParameterByName(name) {
+                name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+                var regexS = "[\\?&]" + name + "=([^&#]*)";
+                var regex = new RegExp(regexS);
+                var results = regex.exec(window.location.search);
+                if (results == null) {
+                    return "";
+                } else {
+                    return decodeURIComponent(results[1].replace(/\+/g, " "));
+                }
+            }
+
+            function getMachineName(machineNumber) {
+                var machineNumberLength = (machineNumber + '').length;
+                var id = machineNumber;
+
+                for (var x = machineNumberLength; x < 3; x++) {
+                    id = '0' + id;
+                }
+
+                return 'TELWEB' + id + 'P';
+            }
+
+            function buildExpression(machineName) {
+                var metric = metrics[currentMetric].metric;
+                var metricGroup = metrics[currentMetric].group;
+                var eventType = metrics[currentMetric].eventType;
+
+                return 'sum(' + eventType + '(' + metric + ').eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))/sum(' + eventType + '.eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))&step=6e4&limit=60';
+            }
+
+            currentMetric = getParameterByName('metric') || 'CPU';
+
+            for (var m in metrics) {
+                if (!metrics.hasOwnProperty(m)) {
+                    continue;
+                }
+
+                if (currentMetric === m) {
+                    metricsList.append('<li class="selected-metric">' + metrics[m].name + '</li>');
+                } else {
+                    metricsList.append('<li><a href="/Status?metric=' + m + '">' + metrics[m].name + '</a></li>');
+                }
+            }
+
+            for (var i = 0; i < 19; i++) {
+                if (!(i % maxPerGroup)) {
+                    metricGroups[++currentMetricGroup] = [];
+                }
+
+                metricGroups[currentMetricGroup][metricGroups[currentMetricGroup].length] = i + 1;
+            }
+
+            for (var n = 0; n < metricGroups.length; n++) {
+                var expressions = [];
+                var title = metrics[currentMetric].name + ' by hosts ';
+
+                for (var m = 0; m < metricGroups[n].length; m++) {
+                    var machineId = metricGroups[n][m];
+                    var machineName = getMachineName(machineId);
+
+                    if (!m) {
+                        title += machineId + '-';
+                    } else if (m === metricGroups[n].length - 1) {
+                        title += machineId;
+                    }
+
+                    expressions[expressions.length] = {
+                        id: machineName,
+                        title: machineName,
+                        color: colors[m % colors.length],
+                        expression: buildExpression(machineName)
+                    };
+                }
+
+                graphs[graphs.length] = {
+                    title: title,
+                    'class': 'half',
+                    expressions: expressions,
+                    chartOptions: metrics[currentMetric].chartOptions || {}
+                };
+            }
+
+            new TLRGRP.dashboards.Builder($('#graphs'), graphs);
+        })();
+    </script>
+}
