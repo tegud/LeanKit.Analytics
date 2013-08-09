@@ -6,6 +6,7 @@
 <h2>Live Status</h2>
 
 <ul id="metrics-list">
+    <li class="stop-start" id="stop-start"></li>
     <li class="time-select">
         <select id="query-time-select">
             <option data-time-limit="step=6e4&limit=15">Last 15mins</option>
@@ -32,17 +33,6 @@
         .graph-container.half {width: 50%;float: left; }
 
         .graph-title {font-size: 1.2em;min-height: 23px;font-weight: bold; }
-
-        #metrics-list {padding: 0;margin: 0;list-style: none;margin-bottom: 15px; }
-
-        #metrics-list > li {display: inline-block;margin: 0 5px 0 0; }
-
-        #metrics-list > li a,
-        #metrics-list > li.selected-metric {padding: 5px;background-color: #eee;border-radius: 5px; }
-
-        #metrics-list > li.selected-metric {background-color: #75A4FF;cursor: default }
-
-        .time-select { float: right;padding: 3px 0 0 0; }
     </style>
 }
 
@@ -132,15 +122,15 @@
                 return 'sum(' + eventType + '(' + metric + ').eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))/sum(' + eventType + '.eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))&step=' + currentStep + '&limit=' + currentLimit;
             }
 
-            currentMetric = getParameterByName('metric') || 'CPU';
+            currentMetric = getParameterByName('metric') || 'RequestsExecuting';
             currentStep = getParameterByName('step') || '6e4';
             currentLimit = getParameterByName('limit') || 60;
 
             var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
 
-            timeSelect.children().each(function () {
+            timeSelect.children().each(function() {
                 var currentItem = $(this);
-                
+
                 if (currentItem.data('timeLimit') === currentTimitSelectDataString) {
                     currentItem.prop('selected', true);
                     return false;
@@ -201,6 +191,22 @@
                     chartOptions: metrics[currentMetric].chartOptions || {}
                 };
             }
+
+            $('#stop-start').on('click', function() {
+                var button = $(this),
+                    stop;
+
+                if (button.hasClass('stopped')) {
+                    button.removeClass('stopped');
+                } else {
+                    button.addClass('stopped');
+                    stop = true;
+                }
+                
+                for (var x = 0; x < window.frames.length; x++) {
+                    window.frames[x].postMessage(stop ? 'stop' : 'start', '*');
+                }
+            });
 
             new TLRGRP.dashboards.Builder($('#graphs'), graphs);
         })();

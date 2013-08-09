@@ -223,7 +223,9 @@
     <Content Include="Assets\images\glyphicons_119_table.png" />
     <Content Include="Assets\images\line-chart.png" />
     <Content Include="Assets\images\logo.png" />
+    <Content Include="Assets\images\package.png" />
     <Content Include="Assets\images\product-owner.png" />
+    <Content Include="Assets\images\refresh-controls.png" />
     <Content Include="Assets\images\release-notes.png" />
     <Content Include="Assets\images\release_toolbar.png" />
     <Content Include="Assets\images\reschedule.png" />
