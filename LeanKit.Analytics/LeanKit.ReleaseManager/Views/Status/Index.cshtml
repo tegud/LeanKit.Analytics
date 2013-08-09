@@ -7,12 +7,12 @@
 
 <ul id="metrics-list">
     <li class="time-select">
-        <select>
-            <option data-time-limit="step=6e4&limit=60">Last 15mins</option>
-            <option data-time-limit="step=6e4&limit=60">Last 30mins</option>
-            <option data-time-limit="step=6e4&limit=60" selected>Last Hour</option>
-            <option data-time-limit="step=6e4&limit=60">Last 4 Hours</option>
-            <option data-time-limit="step=6e4&limit=60">Last 24 Hours</option>
+        <select id="query-time-select">
+            <option data-time-limit="step=6e4&limit=15">Last 15mins</option>
+            <option data-time-limit="step=6e4&limit=30">Last 30mins</option>
+            <option data-time-limit="step=6e4&limit=60">Last Hour</option>
+            <option data-time-limit="step=3e5&limit=48">Last 4 Hours</option>
+            <option data-time-limit="step=36e5&limit=25">Last 24 Hours</option>
         </select>
     </li>
     <li><a href="/Status">Overview</a></li>
@@ -42,7 +42,7 @@
 
         #metrics-list > li.selected-metric {background-color: #75A4FF;cursor: default }
 
-        .time-select { float: right; }
+        .time-select { float: right;padding: 3px 0 0 0; }
     </style>
 }
 
@@ -95,8 +95,11 @@
                     }
                 },
                 currentMetric,
+                currentStep,
+                currentLimit,
                 graphs = [],
-                metricsList = $('#metrics-list');
+                metricsList = $('#metrics-list'),
+                timeSelect = $('#query-time-select');
 
             function getParameterByName(name) {
                 name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -126,10 +129,28 @@
                 var metricGroup = metrics[currentMetric].group;
                 var eventType = metrics[currentMetric].eventType;
 
-                return 'sum(' + eventType + '(' + metric + ').eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))/sum(' + eventType + '.eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))&step=6e4&limit=60';
+                return 'sum(' + eventType + '(' + metric + ').eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))/sum(' + eventType + '.eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))&step=' + currentStep + '&limit=' + currentLimit;
             }
 
             currentMetric = getParameterByName('metric') || 'CPU';
+            currentStep = getParameterByName('step') || '6e4';
+            currentLimit = getParameterByName('limit') || 60;
+
+            var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
+
+            timeSelect.children().each(function () {
+                var currentItem = $(this);
+                
+                if (currentItem.data('timeLimit') === currentTimitSelectDataString) {
+                    currentItem.prop('selected', true);
+                    return false;
+                }
+            });
+
+            timeSelect.on('change', function() {
+                var timeLimit = '&' + $(this).children(':selected:first').data('timeLimit');
+                window.location = '/Status?metric=' + currentMetric + timeLimit;
+            });
 
             for (var m in metrics) {
                 if (!metrics.hasOwnProperty(m)) {
