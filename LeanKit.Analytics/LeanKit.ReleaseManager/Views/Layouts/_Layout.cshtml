@@ -29,6 +29,8 @@
                 <input type="text" id="omnibar" placeholder="Enter Release ID, Ticket ID or Date of release" disabled />
             </div>
         </header>
+        
+        <div id="toggle-menu" title="Toggle menu bar"></div>
 
         <div class="main-body">
             @RenderBody()
@@ -36,7 +38,8 @@
         
         <script type="text/javascript" src="~/Assets/js/lib/jquery-2.0.0.min.js"></script>
         <script type="text/javascript" src="~/Assets/js/ladda.js"></script>
-    
+        <script type="text/javascript" src="~/Assets/js/menu.js"></script>
+
         @RenderSection("Javascript", false)
     </body>
 </html>

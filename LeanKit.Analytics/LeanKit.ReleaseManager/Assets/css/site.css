@@ -1,6 +1,6 @@
 ﻿body { font-family: Helvetica, arial, freesans, clean, sans-serif;padding: 0;margin: 0 }
 
-#top-bar {background-color: #eee; background-image: linear-gradient(#e6e6e6, #eee);border-bottom: solid 1px #ddd;  }
+#top-bar { background-color: #eee; background-image: linear-gradient(#e6e6e6, #eee);border-bottom: solid 1px #ddd;overflow: hidden; }
 
 #top-bar-logo { background-image: url('../images/logo.png');width: 24px;height:24px;display: inline-block;margin: 10px 8px 5px 10px; }
 
@@ -14,7 +14,13 @@
 
 #top-bar li a:hover { color: #75A4FF }
 
+#top-bar.collapsed { height: 0; }
+
 #omnibar { font-size: 1em;margin: 10px;width: 400px; }
+
+#toggle-menu { position: absolute;top: 13px;right: 13px;width: 19px;height: 19px;background-image: url('../images/togglemenu.png');cursor: pointer; }
+
+#toggle-menu.collapsed { background-position: 0 19px; }
 
 .main-body { margin: 0 14px; }
 

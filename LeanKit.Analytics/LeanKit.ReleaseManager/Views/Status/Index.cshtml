@@ -13,7 +13,7 @@
             <option data-time-limit="step=6e4&limit=30">Last 30mins</option>
             <option data-time-limit="step=6e4&limit=60">Last Hour</option>
             <option data-time-limit="step=3e5&limit=48">Last 4 Hours</option>
-            <option data-time-limit="step=36e5&limit=25">Last 24 Hours</option>
+            <option data-time-limit="step=36e5&limit=24">Last 24 Hours</option>
         </select>
     </li>
     <li><a href="/Status">Overview</a></li>
@@ -118,8 +118,13 @@
                 var metric = metrics[currentMetric].metric;
                 var metricGroup = metrics[currentMetric].group;
                 var eventType = metrics[currentMetric].eventType;
+                var stepAndLimit = '&step=' + currentStep + '&limit=' + currentLimit;
 
-                return 'sum(' + eventType + '(' + metric + ').eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))/sum(' + eventType + '.eq(source_host,\"' + machineName + '\").eq(metricGroup,\"' + metricGroup + '\"))&step=' + currentStep + '&limit=' + currentLimit;
+                // use median dumb ass
+                return ['median(' + eventType + '(' + metric + ')',
+                    '.eq(source_host,"' + machineName + '")',
+                    '.eq(metricGroup,"' + metricGroup + '"))',
+                    stepAndLimit].join('');
             }
 
             currentMetric = getParameterByName('metric') || 'RequestsExecuting';

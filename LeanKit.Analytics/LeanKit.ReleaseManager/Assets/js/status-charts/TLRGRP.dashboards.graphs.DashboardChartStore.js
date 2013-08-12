@@ -9,9 +9,10 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
 		};
 
     TLRGRP.dashboards.graphs.DashboardChartStore = function(options) {
-        var expressions,
-            chart,
-            timeout;
+        var expressions;
+        var chart;
+        var timeout;
+        var stopped;
 
         options = $.extend({}, defaultOptions, options);
 
@@ -20,12 +21,13 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
 
         function getData() {
             var deferreds = [];
-            var datasetcount = expressions.length;
+            var datasetCount = expressions.length;
             var evaluator = options.evaluator;
             var server = options.server;
             var retrievedData = {};
+            var n = 0;
 
-            for (n = 0; n < datasetcount; n++) {
+            for (n; n < datasetCount; n++) {
                 (function(expression) {
                     var deferred = deferreds[deferreds.length] = $.Deferred();
 
@@ -40,12 +42,11 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
                     });
                 })(expressions[n]);
             }
-            ;
 
             $.when.apply(this, deferreds).then(function() {
                 chart.drawChart(retrievedData);
 
-                if (options.refreshRate) {
+                if (options.refreshRate && !stopped) {
                     timeout = setTimeout(getData, options.refreshRate);
                 }
             });
@@ -55,10 +56,13 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
 
         return {
             start: function () {
+                stopped = false;
                 getData();
             },
-            stop: function() {
+            stop: function () {
+                stopped = true;
                 clearTimeout(timeout);
+                timeout = null;
             }
         };
     };
