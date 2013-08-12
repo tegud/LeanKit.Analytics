@@ -120,7 +120,6 @@
                 var eventType = metrics[currentMetric].eventType;
                 var stepAndLimit = '&step=' + currentStep + '&limit=' + currentLimit;
 
-                // use median dumb ass
                 return ['median(' + eventType + '(' + metric + ')',
                     '.eq(source_host,"' + machineName + '")',
                     '.eq(metricGroup,"' + metricGroup + '"))',

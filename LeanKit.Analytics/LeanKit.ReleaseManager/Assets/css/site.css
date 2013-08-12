@@ -299,7 +299,7 @@ td.ticket-cycle-time { width: 90px;}
 
 .server-status-indicator.down { background-color: #f00 }
 
-#refresh-timer { float: right;margin: 10px;border: 1px solid #000;width: 96px;height: 12px;padding: 2px; }
+#refresh-timer { float: right;margin: 10px 30px 10px 10px;border: 1px solid #000;width: 96px;height: 12px;padding: 2px; }
 
 #refresh-progress { width: 0%;height: 12px;background-color: #000; }
 

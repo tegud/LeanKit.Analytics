@@ -221,6 +221,8 @@
     <Content Include="Assets\images\box.png" />
     <Content Include="Assets\images\glyphicons_040_stats.png" />
     <Content Include="Assets\images\glyphicons_119_table.png" />
+    <Content Include="Assets\images\glyphicons_367_expand.png" />
+    <Content Include="Assets\images\glyphicons_369_collapse_top.png" />
     <Content Include="Assets\images\line-chart.png" />
     <Content Include="Assets\images\logo.png" />
     <Content Include="Assets\images\package.png" />
@@ -230,6 +232,7 @@
     <Content Include="Assets\images\release_toolbar.png" />
     <Content Include="Assets\images\reschedule.png" />
     <Content Include="Assets\images\rolledback.png" />
+    <Content Include="Assets\images\togglemenu.png" />
     <Content Include="Assets\js\charts\TLRGRP.dashboards.Builder.js" />
     <Content Include="Assets\js\charts\TLRGRP.dashboards.graphs.ChartCanvas.js" />
     <Content Include="Assets\js\charts\TLRGRP.dashboards.graphs.ChartDimensions.js" />
@@ -242,6 +245,7 @@
     <Content Include="Assets\js\lib\d3.min.js" />
     <Content Include="Assets\js\lib\jquery-2.0.0.min.js" />
     <Content Include="Assets\js\lib\TLRGRP.core.js" />
+    <Content Include="Assets\js\menu.js" />
     <Content Include="Assets\js\page-capture.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.Builder.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.ChartCanvas.js" />

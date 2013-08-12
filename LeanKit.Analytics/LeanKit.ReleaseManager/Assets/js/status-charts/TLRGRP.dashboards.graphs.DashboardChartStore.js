@@ -34,7 +34,7 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
                     d3.json(server + evaluator + expression.expression, function(data) {
                         data.forEach(function(d) {
                             d.time = new Date(d.time);
-                            d.value = +d.value;
+                            d.value = +(d.value || 0);
                         });
 
                         retrievedData[expression.id] = data;
