@@ -49,6 +49,12 @@
                 metricGroups = [],
                 currentMetricGroup = -1,
                 colors = ['steelblue', 'red', 'orange', 'green', 'purple'],
+                diskExpression = function (eventType, metric, machineName, metricGroup, stepAndLimit) {
+                    return ['min(' + eventType + '(' + metric + ')',
+                        '.eq(source_host,"' + machineName + '")',
+                        '.eq(metricGroup,"' + metricGroup + '")) / 1073741824',
+                        stepAndLimit].join('');
+                },
                 metrics = {
                     'RequestsExecuting': {
                         name: 'Requests Executing',
@@ -82,6 +88,34 @@
                             },
                             yAxisLabel: '%',
                         }
+                    },
+                    'DiskSpaceC': {
+                        name: 'Disk (C:)',
+                        metric: 'disk_0_FreeSpace',
+                        group: 'disk',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            yAxisLabel: 'GB Remaining',
+                        },
+                        defaults: {
+                            step: '3e5',
+                            limit: 48
+                        },
+                        expressionBuilder: diskExpression
+                    },
+                    'DiskSpaceD': {
+                        name: 'Disk (D:)',
+                        metric: 'disk_1_FreeSpace',
+                        group: 'disk',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            yAxisLabel: 'GB Remaining',
+                        },
+                        defaults: {
+                            step: '3e5',
+                            limit: 48
+                        },
+                        expressionBuilder: diskExpression
                     }
                 },
                 currentMetric,
@@ -120,6 +154,10 @@
                 var eventType = metrics[currentMetric].eventType;
                 var stepAndLimit = '&step=' + currentStep + '&limit=' + currentLimit;
 
+                if (metrics[currentMetric].expressionBuilder && $.isFunction(metrics[currentMetric].expressionBuilder)) {
+                    return metrics[currentMetric].expressionBuilder(eventType, metric, machineName, metricGroup, stepAndLimit);
+                }
+
                 return ['median(' + eventType + '(' + metric + ')',
                     '.eq(source_host,"' + machineName + '")',
                     '.eq(metricGroup,"' + metricGroup + '"))',
@@ -127,8 +165,8 @@
             }
 
             currentMetric = getParameterByName('metric') || 'RequestsExecuting';
-            currentStep = getParameterByName('step') || '6e4';
-            currentLimit = getParameterByName('limit') || 60;
+            currentStep = getParameterByName('step') || (metrics[currentMetric].defaults && metrics[currentMetric].defaults.step ? metrics[currentMetric].defaults.step : '6e4');
+            currentLimit = getParameterByName('limit') || (metrics[currentMetric].defaults && metrics[currentMetric].defaults.limit ? metrics[currentMetric].defaults.limit : 60);
 
             var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
 
@@ -206,7 +244,7 @@
                     button.addClass('stopped');
                     stop = true;
                 }
-                
+
                 for (var x = 0; x < window.frames.length; x++) {
                     window.frames[x].postMessage(stop ? 'stop' : 'start', '*');
                 }
