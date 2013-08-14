@@ -349,19 +349,29 @@ td.ticket-cycle-time { width: 90px;}
 
 .all-dashboards-list .dashboard-item.status a { background-image: url('../images/line-chart.png'); }
 
-#metrics-list {padding: 0;margin: 0;list-style: none;margin-bottom: 15px; }
+#metric-drilldown-list,
+#metric-title { display: inline-block; margin: 0 }
 
-#metrics-list > li {display: inline-block;margin: 0 5px 0 0; }
+#metrics-list,
+#metric-drilldown-list {padding: 0;margin: 0;list-style: none;margin-bottom: 15px; }
+
+#metric-drilldown-list { padding: 0 0 0 10px; }
+
+#metrics-list > li,
+#metric-drilldown-list > li {display: inline-block;margin: 0 5px 0 0; }
 
 #metrics-list > li a,
 #metrics-list > li.selected-metric,
-#metrics-list > li.stop-start {padding: 5px;background-color: #eee;border-radius: 5px;}
+#metrics-list > li.stop-start,
+#metric-drilldown-list > li a,
+#metric-drilldown-list > li.selected-metric {padding: 5px;background-color: #eee;border-radius: 5px;}
 
 #metrics-list > li.stop-start { width:19px; height:19px;float: right;background-image: url('../images/refresh-controls.png');background-repeat: no-repeat;background-position: 6px -22px;cursor: pointer; }
 
 #metrics-list > li.stop-start.stopped { background-position: center 2px; }
 
-#metrics-list > li.selected-metric {background-color: #75A4FF;cursor: default }
+#metrics-list > li.selected-metric,
+#metric-drilldown-list > li.selected-metric {background-color: #75A4FF;cursor: default }
 
 .time-select {float: right;padding: 3px 0 0 0; }
 

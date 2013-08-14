@@ -19,6 +19,9 @@
     <li><a href="/Status">Overview</a></li>
 </ul>
 
+<h3 id="metric-title">&nbsp;</h3>
+<ul id="metric-drilldown-list"></ul>
+
 <div id="graphs"></div>
 
 @section Stylesheet
@@ -28,7 +31,7 @@
 
         iframe {width: 100%;height: 250px; }
 
-        .graph-container {margin-left: 0;background-color: transparent;padding: 0;height: auto }
+        .graph-container {margin-left: 0;background-color: transparent;padding: 0;height: auto; width: auto; }
 
         .graph-container.half {width: 50%;float: left; }
 
@@ -45,83 +48,106 @@
 	
     <script type="text/javascript">
         (function() {
-            var maxPerGroup = 5,
-                metricGroups = [],
-                currentMetricGroup = -1,
-                colors = ['steelblue', 'red', 'orange', 'green', 'purple'],
-                diskExpression = function (eventType, metric, machineName, metricGroup, stepAndLimit) {
+            var colors = ['steelblue', 'red', 'orange', 'green', 'purple'],
+                diskExpression = function(eventType, metric, machineName, metricGroup, stepAndLimit) {
                     return ['min(' + eventType + '(' + metric + ')',
                         '.eq(source_host,"' + machineName + '")',
                         '.eq(metricGroup,"' + metricGroup + '")) / 1073741824',
                         stepAndLimit].join('');
                 },
-                metrics = {
-                    'RequestsExecuting': {
-                        name: 'Requests Executing',
-                        metric: 'ASPNET2__Total_RequestsExecuting',
-                        group: 'ASPNET2',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            yAxisLabel: 'requests',
-                        }
-                    },
-                    'ExecutionTime': {
-                        name: 'Execution Time',
-                        metric: 'ASPNET2__Total_RequestExecutionTime',
-                        group: 'ASPNET2',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            dimensions: {
-                                margin: { left: 50 }
+                dashboards = {
+                    'Requests': {
+                        defaultSubMetric: 'RequestsExecuting',
+                        subMetrics: {
+                            'RequestsExecuting': {
+                                name: 'Requests Executing',
+                                metric: 'ASPNET2__Total_RequestsExecuting',
+                                group: 'ASPNET2',
+                                eventType: 'lr_web_wmi',
+                                chartOptions: {
+                                    yAxisLabel: 'requests',
+                                }
                             },
-                            yAxisLabel: 'time (s)',
-                        }
-                    },
-                    'CPU': {
-                        name: 'CPU',
-                        metric: 'cpu__Total_PercentProcessorTime',
-                        group: 'cpu',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            axisExtents: {
-                                y: [0, 100]
+                            'RequestsPerSec': {
+                                name: 'Requests /s',
+                                metric: 'ASPNET2__Total_RequestsPerSec',
+                                group: 'ASPNET2',
+                                eventType: 'lr_web_wmi',
+                                chartOptions: {
+                                    yAxisLabel: 'requests',
+                                }
                             },
-                            yAxisLabel: '%',
+                            'ExecutionTime': {
+                                name: 'Execution Time',
+                                metric: 'ASPNET2__Total_RequestExecutionTime',
+                                group: 'ASPNET2',
+                                eventType: 'lr_web_wmi',
+                                chartOptions: {
+                                    dimensions: {
+                                        margin: { left: 50 }
+                                    },
+                                    yAxisLabel: 'time (s)',
+                                }
+                            }
                         }
                     },
-                    'DiskSpaceC': {
-                        name: 'Disk (C:)',
-                        metric: 'disk_0_FreeSpace',
-                        group: 'disk',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            yAxisLabel: 'GB Remaining',
-                        },
-                        defaults: {
-                            step: '3e5',
-                            limit: 48
-                        },
-                        expressionBuilder: diskExpression
+                    'Performance': {
+                        defaultSubMetric: 'CPU',
+                        subMetrics: {
+                            'CPU': {
+                                name: 'CPU',
+                                metric: 'cpu__Total_PercentProcessorTime',
+                                group: 'cpu',
+                                eventType: 'lr_web_wmi',
+                                chartOptions: {
+                                    axisExtents: {
+                                        y: [0, 100]
+                                    },
+                                    yAxisLabel: '%',
+                                }
+                            }
+                        }
                     },
-                    'DiskSpaceD': {
-                        name: 'Disk (D:)',
-                        metric: 'disk_1_FreeSpace',
-                        group: 'disk',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            yAxisLabel: 'GB Remaining',
-                        },
-                        defaults: {
-                            step: '3e5',
-                            limit: 48
-                        },
-                        expressionBuilder: diskExpression
+                    'Disk': {
+                        defaultSubMetric: 'DiskSpaceD',
+                        subMetrics: {
+                            'DiskSpaceC': {
+                                name: 'Disk (C:)',
+                                metric: 'disk_0_FreeSpace',
+                                group: 'disk',
+                                eventType: 'lr_web_wmi',
+                                chartOptions: {
+                                    yAxisLabel: 'GB Remaining',
+                                },
+                                defaults: {
+                                    step: '3e5',
+                                    limit: 48
+                                },
+                                expressionBuilder: diskExpression
+                            },
+                            'DiskSpaceD': {
+                                name: 'Disk (D:)',
+                                metric: 'disk_1_FreeSpace',
+                                group: 'disk',
+                                eventType: 'lr_web_wmi',
+                                chartOptions: {
+                                    yAxisLabel: 'GB Remaining',
+                                },
+                                defaults: {
+                                    step: '3e5',
+                                    limit: 48
+                                },
+                                expressionBuilder: diskExpression
+                            }
+                        }
                     }
                 },
                 currentMetric,
+                currentSubmetric,
+                selectedDashboard,
                 currentStep,
                 currentLimit,
-                graphs = [],
+                graphs,
                 metricsList = $('#metrics-list'),
                 timeSelect = $('#query-time-select');
 
@@ -149,13 +175,13 @@
             }
 
             function buildExpression(machineName) {
-                var metric = metrics[currentMetric].metric;
-                var metricGroup = metrics[currentMetric].group;
-                var eventType = metrics[currentMetric].eventType;
+                var metric = selectedDashboard.metric;
+                var metricGroup = selectedDashboard.group;
+                var eventType = selectedDashboard.eventType;
                 var stepAndLimit = '&step=' + currentStep + '&limit=' + currentLimit;
 
-                if (metrics[currentMetric].expressionBuilder && $.isFunction(metrics[currentMetric].expressionBuilder)) {
-                    return metrics[currentMetric].expressionBuilder(eventType, metric, machineName, metricGroup, stepAndLimit);
+                if (selectedDashboard.expressionBuilder && $.isFunction(selectedDashboard.expressionBuilder)) {
+                    return selectedDashboard.expressionBuilder(eventType, metric, machineName, metricGroup, stepAndLimit);
                 }
 
                 return ['median(' + eventType + '(' + metric + ')',
@@ -164,11 +190,69 @@
                     stepAndLimit].join('');
             }
 
-            currentMetric = getParameterByName('metric') || 'RequestsExecuting';
-            currentStep = getParameterByName('step') || (metrics[currentMetric].defaults && metrics[currentMetric].defaults.step ? metrics[currentMetric].defaults.step : '6e4');
-            currentLimit = getParameterByName('limit') || (metrics[currentMetric].defaults && metrics[currentMetric].defaults.limit ? metrics[currentMetric].defaults.limit : 60);
+            function metricGroupedByHost() {
+                var maxPerGroup = 5;
+                var metricGroups = [];
+                var currentMetricGroup = -1;
+                var graphs = [];
+
+                for (var i = 0; i < 19; i++) {
+                    if (!(i % maxPerGroup)) {
+                        metricGroups[++currentMetricGroup] = [];
+                    }
+
+                    metricGroups[currentMetricGroup][metricGroups[currentMetricGroup].length] = i + 1;
+                }
+
+                for (var n = 0; n < metricGroups.length; n++) {
+                    var expressions = [];
+                    var title = selectedDashboard.name + ' by hosts ';
+
+                    for (var m = 0; m < metricGroups[n].length; m++) {
+                        var machineId = metricGroups[n][m];
+                        var machineName = getMachineName(machineId);
+
+                        if (!m) {
+                            title += machineId + '-';
+                        } else if (m === metricGroups[n].length - 1) {
+                            title += machineId;
+                        }
+
+                        expressions[expressions.length] = {
+                            id: machineName,
+                            title: machineName,
+                            color: colors[m % colors.length],
+                            expression: buildExpression(machineName)
+                        };
+                    }
+
+                    graphs[graphs.length] = {
+                        title: title,
+                        'class': 'half',
+                        expressions: expressions,
+                        chartOptions: dashboards[currentMetric].chartOptions || {}
+                    };
+                }
+
+                return graphs;
+            }
+
+            currentMetric = getParameterByName('metric') || 'Overview';
+            currentSubmetric = getParameterByName('subMetric');
+
+            if (!currentSubmetric && dashboards[currentMetric] && dashboards[currentMetric].defaultSubMetric) {
+                currentSubmetric = dashboards[currentMetric].defaultSubMetric;
+            }
+
+            if (dashboards[currentMetric].subMetrics[currentSubmetric]) {
+                selectedDashboard = dashboards[currentMetric].subMetrics[currentSubmetric];
+            }
+
+            currentStep = getParameterByName('step') || (dashboards[currentMetric] && dashboards[currentMetric].defaults && dashboards[currentMetric].defaults.step ? dashboards[currentMetric].defaults.step : '6e4');
+            currentLimit = getParameterByName('limit') || (dashboards[currentMetric] && dashboards[currentMetric].defaults && dashboards[currentMetric].defaults.limit ? dashboards[currentMetric].defaults.limit : 60);
 
             var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
+
 
             timeSelect.children().each(function() {
                 var currentItem = $(this);
@@ -179,60 +263,44 @@
                 }
             });
 
-            timeSelect.on('change', function() {
-                var timeLimit = '&' + $(this).children(':selected:first').data('timeLimit');
-                window.location = '/Status?metric=' + currentMetric + timeLimit;
-            });
+            for (var m in dashboards) {
+                var name = dashboards[m].name || m;
 
-            for (var m in metrics) {
-                if (!metrics.hasOwnProperty(m)) {
+                if (!dashboards.hasOwnProperty(m)) {
                     continue;
                 }
 
                 if (currentMetric === m) {
-                    metricsList.append('<li class="selected-metric">' + metrics[m].name + '</li>');
+                    metricsList.append('<li class="selected-metric">' + name + '</li>');
                 } else {
-                    metricsList.append('<li><a href="/Status?metric=' + m + '">' + metrics[m].name + '</a></li>');
+                    metricsList.append('<li><a href="/Status?metric=' + m + '">' + name + '</a></li>');
                 }
             }
 
-            for (var i = 0; i < 19; i++) {
-                if (!(i % maxPerGroup)) {
-                    metricGroups[++currentMetricGroup] = [];
-                }
+            $('#metric-title').text(currentMetric);
 
-                metricGroups[currentMetricGroup][metricGroups[currentMetricGroup].length] = i + 1;
-            }
+            if (dashboards[currentMetric] && dashboards[currentMetric].subMetrics) {
+                var subMetricList = $('#metric-drilldown-list');
 
-            for (var n = 0; n < metricGroups.length; n++) {
-                var expressions = [];
-                var title = metrics[currentMetric].name + ' by hosts ';
+                for (var sm in dashboards[currentMetric].subMetrics) {
+                    var name = dashboards[currentMetric].subMetrics[sm].name || sm;
 
-                for (var m = 0; m < metricGroups[n].length; m++) {
-                    var machineId = metricGroups[n][m];
-                    var machineName = getMachineName(machineId);
-
-                    if (!m) {
-                        title += machineId + '-';
-                    } else if (m === metricGroups[n].length - 1) {
-                        title += machineId;
+                    if (!dashboards[currentMetric].subMetrics.hasOwnProperty(sm)) {
+                        continue;
                     }
 
-                    expressions[expressions.length] = {
-                        id: machineName,
-                        title: machineName,
-                        color: colors[m % colors.length],
-                        expression: buildExpression(machineName)
-                    };
+                    if (currentSubmetric === sm) {
+                        subMetricList.append('<li class="selected-metric">' + name + '</li>');
+                    } else {
+                        subMetricList.append('<li><a href="/Status?metric=' + currentMetric + '&subMetric=' + sm + '">' + name + '</a></li>');
+                    }
                 }
-
-                graphs[graphs.length] = {
-                    title: title,
-                    'class': 'half',
-                    expressions: expressions,
-                    chartOptions: metrics[currentMetric].chartOptions || {}
-                };
             }
+
+            timeSelect.on('change', function() {
+                var timeLimit = '&' + $(this).children(':selected:first').data('timeLimit');
+                window.location = '/Status?metric=' + currentMetric + timeLimit;
+            });
 
             $('#stop-start').on('click', function() {
                 var button = $(this),
@@ -249,6 +317,49 @@
                     window.frames[x].postMessage(stop ? 'stop' : 'start', '*');
                 }
             });
+
+            if (currentMetric === 'Overview') {
+                graphs = [{
+                        title: 'Traffic by Type',
+                        'class': 'half',
+                        expressions: [{
+                                id: 'iis-all',
+                                title: 'All Requests',
+                                color: colors[0],
+                                expression: 'sum(lr_web_request)&' + currentTimitSelectDataString
+                            },
+                            {
+                                id: 'iis-bot',
+                                title: 'Bot Requests',
+                                color: colors[1],
+                                expression: 'sum(lr_web_request.eq(isbot,true))&' + currentTimitSelectDataString
+                            },
+                            {
+                                id: 'iis-mobile',
+                                title: 'Mobile Requests',
+                                color: colors[4],
+                                expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile,true))&' + currentTimitSelectDataString
+                            }],
+                        chartOptions: {
+                            dimensions: {
+                                margin: { left: 50 }
+                            }
+                        }
+                    },
+                    {
+                        title: 'Traffic by Type (IIS)',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'iis-main-all',
+                            title: 'All Requests',
+                            color: colors[0],
+                            expression: 'sum(lr_web_iis)&' + currentTimitSelectDataString
+                        }],
+                        chartOptions: {}
+                    }];
+            } else {
+                graphs = metricGroupedByHost();
+            }
 
             new TLRGRP.dashboards.Builder($('#graphs'), graphs);
         })();
