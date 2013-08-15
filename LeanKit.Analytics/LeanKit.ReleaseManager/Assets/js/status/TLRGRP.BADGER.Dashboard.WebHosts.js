@@ -14,11 +14,10 @@
         return 'TELWEB' + id + 'P';
     }
 
-    function buildExpression(selectedView, machineName, currentStep, currentLimit) {
+    function buildExpression(selectedView, machineName, stepAndLimit) {
         var metric = selectedView.metric;
         var metricGroup = selectedView.group;
         var eventType = selectedView.eventType;
-        var stepAndLimit = '&step=' + currentStep + '&limit=' + currentLimit;
 
         if (selectedView.expressionBuilder && $.isFunction(selectedView.expressionBuilder)) {
             return selectedView.expressionBuilder(eventType, metric, machineName, metricGroup, stepAndLimit);
@@ -26,12 +25,12 @@
 
         return ['median(' + eventType + '(' + metric + ')',
             '.eq(source_host,"' + machineName + '")',
-            '.eq(metricGroup,"' + metricGroup + '"))',
+            '.eq(metricGroup,"' + metricGroup + '"))&',
             stepAndLimit].join('');
     }
     
     TLRGRP.BADGER.Dashboard.WebHosts = function () {
-        function metricGroupedByHost(selectedView, currentStep, currentLimit) {
+        function metricGroupedByHost(selectedView, currentTimitSelectDataString) {
             var maxPerGroup = 5;
             var metricGroups = [];
             var currentMetricGroup = -1;
@@ -63,7 +62,7 @@
                         id: machineName,
                         title: machineName,
                         color: colors[m % colors.length],
-                        expression: buildExpression(selectedView, machineName, currentStep, currentLimit)
+                        expression: buildExpression(selectedView, machineName, currentTimitSelectDataString)
                     };
                 }
 

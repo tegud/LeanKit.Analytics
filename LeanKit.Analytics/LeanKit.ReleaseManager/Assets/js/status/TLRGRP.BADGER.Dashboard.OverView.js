@@ -1,4 +1,4 @@
-﻿(function() {
+﻿(function () {
     TLRGRP.namespace('TLRGRP.BADGER.Dashboard');
 
     var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
@@ -7,53 +7,122 @@
         return {
             appendViews: function (allViews) {
                 return $.extend(allViews, {
-                    'Overview': { }
+                    'Overview': {}
                 });
             },
-            getGraphs: function (selectedView, currentStep, currentLimit) {
-                var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
+            getGraphs: function (selectedView, currentTimitSelectDataString) {
                 var graphs = [{
                     title: 'Traffic by Type',
                     'class': 'half',
                     expressions: [{
                         id: 'iis-all',
-                        title: 'All Requests',
+                        title: 'All',
                         color: colors[0],
                         expression: 'sum(lr_web_request)&' + currentTimitSelectDataString
                     },
                         {
                             id: 'iis-bot',
-                            title: 'Bot Requests',
+                            title: 'Bot',
                             color: colors[1],
                             expression: 'sum(lr_web_request.eq(isbot,true))&' + currentTimitSelectDataString
                         },
                         {
                             id: 'iis-mobile',
-                            title: 'Mobile Requests',
+                            title: 'Mobile',
                             color: colors[4],
                             expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile,true))&' + currentTimitSelectDataString
                         }],
                     chartOptions: {
+                        yAxisLabel: 'requests',
                         dimensions: {
                             margin: { left: 50 }
                         }
                     }
-                }, {
-                    title: 'IIS Traffic',
-                    'class': 'half',
-                    expressions: [{
-                        id: 'iis-base-all',
-                        title: 'All Requests',
-                        color: colors[0],
-                        expression: 'sum(lr_web_iis)&' + currentTimitSelectDataString
-                    }],
-                    chartOptions: {
-                        dimensions: {
-                            margin: { left: 50 }
+                },
+                    {
+                        title: 'Traffic by Page',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'page-requests-home-page',
+                            title: 'Home Page',
+                            color: colors[0],
+                            expression: 'sum(lr_web_request.eq(pagetype,"home-page"))&' + currentTimitSelectDataString
+                        },
+                            {
+                                id: 'page-requests-search',
+                                title: 'Search',
+                                color: colors[2],
+                                expression: 'sum(lr_web_request.eq(pagetype,"search"))&' + currentTimitSelectDataString
+                            },
+                            {
+                                id: 'page-requests-hotel-details',
+                                title: 'Hotel Details',
+                                color: colors[4],
+                                expression: 'sum(lr_web_request.eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
+                            }],
+                        chartOptions: {
+                            yAxisLabel: 'requests',
+                            dimensions: {
+                                margin: { left: 50 }
+                            }
                         }
-                    }
-                }];
-                
+                    },
+                    {
+                        title: 'Traffic by Channel',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'page-requests-web',
+                            title: 'Direct',
+                            color: colors[0],
+                            expression: 'sum(lr_web_request.eq(pagechannel,"web"))&' + currentTimitSelectDataString
+                        },
+                            {
+                                id: 'page-requests-mobile',
+                                title: 'Mobile',
+                                color: colors[2],
+                                expression: 'sum(lr_web_request.eq(pagechannel,"mobile"))&' + currentTimitSelectDataString
+                            },
+                            {
+                                id: 'page-requests-affiliate',
+                                title: 'Affiliate',
+                                color: colors[4],
+                                expression: 'sum(lr_web_request.eq(pagechannel,"affiliate"))&' + currentTimitSelectDataString
+                            }],
+                        chartOptions: {
+                            yAxisLabel: 'requests',
+                            dimensions: {
+                                margin: { left: 50 }
+                            }
+                        }
+                    }, {
+                        title: 'Response Time by Page',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'page-requests-home-page',
+                            title: 'Home Page',
+                            color: colors[0],
+                            expression: 'median(lr_web_request(duration).eq(pagetype,"home-page"))&' + currentTimitSelectDataString
+                        },
+                        {
+                            id: 'page-requests-search',
+                            title: 'Search',
+                            color: colors[2],
+                            expression: 'median(lr_web_request(duration).eq(pagetype,"search"))&' + currentTimitSelectDataString
+                        },
+                        {
+                            id: 'page-requests-hotel-details',
+                            title: 'Hotel Details',
+                            color: colors[4],
+                            expression: 'median(lr_web_request(duration).eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
+                        }],
+                        chartOptions: {
+                            yAxisLabel: 'request time (ms)',
+                            dimensions: {
+                                margin: { left: 50 }
+                            }
+                        }
+                    }];
+
                 return graphs;
             }
         };
