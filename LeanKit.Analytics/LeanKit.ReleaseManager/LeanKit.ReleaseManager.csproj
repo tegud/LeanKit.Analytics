@@ -242,6 +242,7 @@
     <Content Include="Assets\js\charts\TLRGRP.dashboards.graphs.renderers.js" />
     <Content Include="Assets\js\d3.box.js" />
     <Content Include="Assets\js\ladda.js" />
+    <Content Include="Assets\js\lib\TLRGRP.BADGER.utilities.js" />
     <Content Include="Assets\js\lib\d3.min.js" />
     <Content Include="Assets\js\lib\jquery-2.0.0.min.js" />
     <Content Include="Assets\js\lib\TLRGRP.core.js" />
@@ -254,6 +255,8 @@
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.DashboardChartStore.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.Legend.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.renderers.js" />
+    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.OverView.js" />
+    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.WebHosts.js" />
     <Content Include="Global.asax" />
     <Content Include="Views\Estimates\Index.cshtml" />
     <Content Include="Views\Status\graph.html" />

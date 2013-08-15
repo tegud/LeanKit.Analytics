@@ -22,6 +22,8 @@
 
 #toggle-menu.collapsed { background-position: 0 19px; }
 
+.menu-collapsed h2 { display: none; }
+
 .main-body { margin: 0 14px; }
 
 h1 { font-size: 1.6em;margin: 5px 0; }
@@ -373,7 +375,14 @@ td.ticket-cycle-time { width: 90px;}
 #metrics-list > li.selected-metric,
 #metric-drilldown-list > li.selected-metric {background-color: #75A4FF;cursor: default }
 
+.menu-collapsed #metrics-list { display: none; }
+
+.menu-collapsed #metric-drilldown-list { display: none; }
+
+.menu-collapsed #metric-title { padding: 5px 0 }
+
 .time-select {float: right;padding: 3px 0 0 0; }
+
 
 .box line,
 .box rect,
