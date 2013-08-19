@@ -45,115 +45,107 @@
     <script src="~/assets/js/lib/TLRGRP.core.js"></script>
     <script src="~/assets/js/lib/TLRGRP.BADGER.utilities.js"></script>
     <script src="~/assets/js/status-charts/TLRGRP.dashboards.Builder.js"></script>
+    <script src="~/assets/js/status/TLRGRP.BADGER.DashboardCollection.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.WebHosts.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.Overview.js"></script>
+    <script src="~/assets/js/status/TLRGRP.BADGER.TimeSelect.js"></script>
+    <script src="~/assets/js/status/TLRGRP.BADGER.StopStart.js"></script>
 	
     <script type="text/javascript">
         (function() {
-            var allViews = {};
-            var dashboards = {
-                'Overview': new TLRGRP.BADGER.Dashboard.Overview(),
-                'Webhosts': new TLRGRP.BADGER.Dashboard.WebHosts()
-            };
-            var currentMetric = TLRGRP.BADGER.Utilities.getParameterByName('metric') || 'Overview';
-            var currentSubmetric = TLRGRP.BADGER.Utilities.getParameterByName('subMetric');
+            var dashboardCollection = new TLRGRP.BADGER.DashboardCollection([
+                new TLRGRP.BADGER.Dashboard.Overview(),
+                new TLRGRP.BADGER.Dashboard.WebHosts()
+            ]);
             var selectedView;
             var currentStep;
             var currentLimit;
-            var graphs;
-            var metricsList = $('#metrics-list');
-            var timeSelect = $('#query-time-select');
 
-            for (var dashboard in dashboards) {
-                if (!dashboards.hasOwnProperty(dashboard)) {
-                    continue;
+            var MetricsRequest = function() {
+                var getParameterByName = TLRGRP.BADGER.Utilities.getParameterByName;
+                var dashboard = getParameterByName('metric') || 'Overview';
+                var currentSubmetric = getParameterByName('subMetric');
+
+                return {
+                    dashboard: function() {
+                        return dashboard;
+                    },
+                    subMetric: function() {
+                        return currentSubmetric;
+                    }
+                };
+            };
+
+            var request = new MetricsRequest();
+            var currentDashboard = request.dashboard();
+            var currentSubmetric = request.subMetric();
+
+            var allViews = dashboardCollection.allViews();
+
+            (function(request) {
+                var currentMetric = request.dashboard();
+                var metricsList = $('#metrics-list');
+                var subMetricList = $('#metric-drilldown-list');
+
+                if (!currentSubmetric && allViews[currentMetric] && allViews[currentMetric].defaultSubMetric) {
+                    currentSubmetric = allViews[currentMetric].defaultSubMetric;
                 }
-                
-                dashboards[dashboard].appendViews(allViews);
-            }
 
-            if (!currentSubmetric && allViews[currentMetric] && allViews[currentMetric].defaultSubMetric) {
-                currentSubmetric = allViews[currentMetric].defaultSubMetric;
-            }
-
-            if (allViews[currentMetric]) {
-                if (allViews[currentMetric].subMetrics && allViews[currentMetric].subMetrics[currentSubmetric]) {
-                    selectedView = allViews[currentMetric].subMetrics[currentSubmetric];
-                } else {
-                    selectedView = 'Overview';
+                if (allViews[currentMetric]) {
+                    if (allViews[currentMetric].subMetrics && allViews[currentMetric].subMetrics[currentSubmetric]) {
+                        selectedView = allViews[currentMetric].subMetrics[currentSubmetric];
+                    } else {
+                        selectedView = 'Overview';
+                    }
                 }
-            }
+
+                for (var m in allViews) {
+                    var name = allViews[m].name || m;
+
+                    if (!allViews.hasOwnProperty(m)) {
+                        continue;
+                    }
+
+                    if (currentMetric === m) {
+                        metricsList.append('<li class="selected-metric">' + name + '</li>');
+                    } else {
+                        metricsList.append('<li><a href="/Status?metric=' + m + '">' + name + '</a></li>');
+                    }
+                }
+
+                if (allViews[currentMetric] && allViews[currentMetric].subMetrics) {
+                    for (var sm in allViews[currentMetric].subMetrics) {
+                        var name = allViews[currentMetric].subMetrics[sm].name || sm;
+
+                        if (!allViews[currentMetric].subMetrics.hasOwnProperty(sm)) {
+                            continue;
+                        }
+
+                        if (currentSubmetric === sm) {
+                            subMetricList.append('<li class="selected-metric">' + name + '</li>');
+                        } else {
+                            subMetricList.append('<li><a href="/Status?metric=' + currentMetric + '&subMetric=' + sm + '">' + name + '</a></li>');
+                        }
+                    }
+                }
+
+                $('#metric-title').text(currentMetric);
+            })(request);
 
             currentStep = TLRGRP.BADGER.Utilities.getParameterByName('step') || (selectedView && selectedView.defaults && selectedView.defaults.step ? selectedView.defaults.step : '6e4');
             currentLimit = TLRGRP.BADGER.Utilities.getParameterByName('limit') || (selectedView && selectedView.defaults && selectedView.defaults.limit ? selectedView.defaults.limit : 60);
 
             var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
+            var myDashboard = dashboardCollection.getDashboardByView(currentDashboard);
+            var graphs = myDashboard.getGraphs(selectedView, currentTimitSelectDataString);
 
-            timeSelect.children().each(function() {
-                var currentItem = $(this);
-
-                if (currentItem.data('timeLimit') === currentTimitSelectDataString) {
-                    currentItem.prop('selected', true);
-                    return false;
-                }
-            });
-
-            for (var m in allViews) {
-                var name = allViews[m].name || m;
-
-                if (!allViews.hasOwnProperty(m)) {
-                    continue;
-                }
-
-                if (currentMetric === m) {
-                    metricsList.append('<li class="selected-metric">' + name + '</li>');
-                } else {
-                    metricsList.append('<li><a href="/Status?metric=' + m + '">' + name + '</a></li>');
-                }
-            }
-
-            $('#metric-title').text(currentMetric);
-
-            if (allViews[currentMetric] && allViews[currentMetric].subMetrics) {
-                var subMetricList = $('#metric-drilldown-list');
-
-                for (var sm in allViews[currentMetric].subMetrics) {
-                    var name = allViews[currentMetric].subMetrics[sm].name || sm;
-
-                    if (!allViews[currentMetric].subMetrics.hasOwnProperty(sm)) {
-                        continue;
-                    }
-
-                    if (currentSubmetric === sm) {
-                        subMetricList.append('<li class="selected-metric">' + name + '</li>');
-                    } else {
-                        subMetricList.append('<li><a href="/Status?metric=' + currentMetric + '&subMetric=' + sm + '">' + name + '</a></li>');
-                    }
-                }
-            }
-
-            timeSelect.on('change', function() {
-                var timeLimit = '&' + $(this).children(':selected:first').data('timeLimit');
-                window.location = '/Status?metric=' + currentMetric + timeLimit;
-            });
-
-            $('#stop-start').on('click', function() {
-                var button = $(this),
-                    stop;
-
-                if (button.hasClass('stopped')) {
-                    button.removeClass('stopped');
-                } else {
-                    button.addClass('stopped');
-                    stop = true;
-                }
-
-                for (var x = 0; x < window.frames.length; x++) {
-                    window.frames[x].postMessage(stop ? 'stop' : 'start', '*');
-                }
-            });
-
-            graphs = (currentMetric === 'Overview' ? dashboards['Overview'] : dashboards['Webhosts']).getGraphs(selectedView, currentTimitSelectDataString);
+            (function () {
+                new TLRGRP.BADGER.TimeSelect($('#query-time-select'), {
+                    currentMetric: currentDashboard,
+                    currentTimeString: currentTimitSelectDataString
+                });
+                new TLRGRP.BADGER.StopStart($('#stop-start'));
+            })();
 
             new TLRGRP.dashboards.Builder($('#graphs'), graphs);
         })();

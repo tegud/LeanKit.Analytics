@@ -5,10 +5,16 @@
 
     TLRGRP.BADGER.Dashboard.Overview = function () {
         return {
+            toString: function () {
+                return 'Overview';
+            },
             appendViews: function (allViews) {
                 return $.extend(allViews, {
                     'Overview': {}
                 });
+            },
+            supportsView: function(view) {
+                return view === 'Overview';
             },
             getGraphs: function (selectedView, currentTimitSelectDataString) {
                 var graphs = [{

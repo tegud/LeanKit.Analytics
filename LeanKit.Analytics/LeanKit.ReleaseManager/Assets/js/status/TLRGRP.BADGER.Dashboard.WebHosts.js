@@ -77,102 +77,113 @@
             return graphs;
         }
 
-        return {
-            appendViews: function (allViews) {
-                var diskExpression = function(eventType, metric, machineName, metricGroup, stepAndLimit) {
-                    return ['min(' + eventType + '(' + metric + ')',
-                        '.eq(source_host,"' + machineName + '")',
-                        '.eq(metricGroup,"' + metricGroup + '")) / 1073741824',
-                        stepAndLimit].join('');
-                };
-                var views = {
-                    'Requests': {
-                        defaultSubMetric: 'RequestsExecuting',
-                        subMetrics: {
-                            'RequestsExecuting': {
-                                name: 'Requests Executing',
-                                metric: 'ASPNET2__Total_RequestsExecuting',
-                                group: 'ASPNET2',
-                                eventType: 'lr_web_wmi',
-                                chartOptions: {
-                                    yAxisLabel: 'requests',
-                                    }
-                            },
-                            'RequestsPerSec': {
-                                name: 'Requests /s',
-                                metric: 'ASPNET2__Total_RequestsPerSec',
-                                group: 'ASPNET2',
-                                eventType: 'lr_web_wmi',
-                                chartOptions: {
-                                    yAxisLabel: 'requests',
-                                    }
-                            },
-                            'ExecutionTime': {
-                                name: 'Execution Time',
-                                metric: 'ASPNET2__Total_RequestExecutionTime',
-                                group: 'ASPNET2',
-                                eventType: 'lr_web_wmi',
-                                chartOptions: {
-                                    dimensions: {
-                                            margin: { left: 50 }
-                                    },
-                                    yAxisLabel: 'time (s)',
-                                    }
-                            }
+        var diskExpression = function (eventType, metric, machineName, metricGroup, stepAndLimit) {
+            return ['min(' + eventType + '(' + metric + ')',
+                '.eq(source_host,"' + machineName + '")',
+                '.eq(metricGroup,"' + metricGroup + '")) / 1073741824',
+                stepAndLimit].join('');
+        };
+        
+        var views = {
+            'Requests': {
+                defaultSubMetric: 'RequestsExecuting',
+                subMetrics: {
+                    'RequestsExecuting': {
+                        name: 'Requests Executing',
+                        metric: 'ASPNET2__Total_RequestsExecuting',
+                        group: 'ASPNET2',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            yAxisLabel: 'requests',
                         }
                     },
-                    'Performance': {
-                        defaultSubMetric: 'CPU',
-                        subMetrics: {
-                            'CPU': {
-                                name: 'CPU',
-                                metric: 'cpu__Total_PercentProcessorTime',
-                                group: 'cpu',
-                                eventType: 'lr_web_wmi',
-                                chartOptions: {
-                                    axisExtents: {
-                                            y: [0, 100]
-                                    },
-                                    yAxisLabel: '%',
-                                    }
-                            }
+                    'RequestsPerSec': {
+                        name: 'Requests /s',
+                        metric: 'ASPNET2__Total_RequestsPerSec',
+                        group: 'ASPNET2',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            yAxisLabel: 'requests',
                         }
                     },
-                    'Disk': {
-                        defaultSubMetric: 'DiskSpaceD',
-                        subMetrics: {
-                            'DiskSpaceC': {
-                                name: 'Disk (C:)',
-                                metric: 'disk_0_FreeSpace',
-                                group: 'disk',
-                                eventType: 'lr_web_wmi',
-                                chartOptions: {
-                                    yAxisLabel: 'GB Remaining',
-                                    },
-                                defaults: {
-                                    step: '3e5',
-                                    limit: 48
-                                },
-                                expressionBuilder: diskExpression
+                    'ExecutionTime': {
+                        name: 'Execution Time',
+                        metric: 'ASPNET2__Total_RequestExecutionTime',
+                        group: 'ASPNET2',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            dimensions: {
+                                margin: { left: 50 }
                             },
-                            'DiskSpaceD': {
-                                name: 'Disk (D:)',
-                                metric: 'disk_1_FreeSpace',
-                                group: 'disk',
-                                eventType: 'lr_web_wmi',
-                                chartOptions: {
-                                    yAxisLabel: 'GB Remaining',
-                                    },
-                                defaults: {
-                                    step: '3e5',
-                                    limit: 48
-                                },
-                                expressionBuilder: diskExpression
-                            }
+                            yAxisLabel: 'time (s)',
                         }
                     }
-                };
+                }
+            },
+            'Performance': {
+                defaultSubMetric: 'CPU',
+                subMetrics: {
+                    'CPU': {
+                        name: 'CPU',
+                        metric: 'cpu__Total_PercentProcessorTime',
+                        group: 'cpu',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            axisExtents: {
+                                y: [0, 100]
+                            },
+                            yAxisLabel: '%',
+                        }
+                    }
+                }
+            },
+            'Disk': {
+                defaultSubMetric: 'DiskSpaceD',
+                subMetrics: {
+                    'DiskSpaceC': {
+                        name: 'Disk (C:)',
+                        metric: 'disk_0_FreeSpace',
+                        group: 'disk',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            yAxisLabel: 'GB Remaining',
+                        },
+                        defaults: {
+                            step: '3e5',
+                            limit: 48
+                        },
+                        expressionBuilder: diskExpression
+                    },
+                    'DiskSpaceD': {
+                        name: 'Disk (D:)',
+                        metric: 'disk_1_FreeSpace',
+                        group: 'disk',
+                        eventType: 'lr_web_wmi',
+                        chartOptions: {
+                            yAxisLabel: 'GB Remaining',
+                        },
+                        defaults: {
+                            step: '3e5',
+                            limit: 48
+                        },
+                        expressionBuilder: diskExpression
+                    }
+                }
+            }
+        };
 
+        return {
+            toString: function () {
+                return 'Webhosts';
+            },
+            supportsView: function (view) {
+                if (views[view]) {
+                    return true;
+                }
+
+                return false;
+            },
+            appendViews: function (allViews) {
                 return $.extend(allViews, views);
             },
             getGraphs: metricGroupedByHost
