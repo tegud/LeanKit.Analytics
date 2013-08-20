@@ -64,7 +64,7 @@
 
             var MetricsRequest = function() {
                 var getParameterByName = TLRGRP.BADGER.Utilities.getParameterByName;
-                var dashboard = getParameterByName('metric') || 'Overview';
+                var dashboard = getParameterByName('metric');
                 var currentSubmetric = getParameterByName('subMetric');
 
                 return {
@@ -73,13 +73,22 @@
                     },
                     subMetric: function() {
                         return currentSubmetric;
+                    },
+                    step: function() {
+                        return TLRGRP.BADGER.Utilities.getParameterByName('step');
+                    },
+                    limit: function() {
+                        return TLRGRP.BADGER.Utilities.getParameterByName('limit');
                     }
                 };
             };
 
             var request = new MetricsRequest();
-            var currentDashboard = request.dashboard();
+            var currentDashboard = request.dashboard() || 'Overview';
             var allViews = dashboardCollection.allViews();
+
+            dashboardCollection.setCurrent(request);
+
             var myDashboard = dashboardCollection.getDashboardByView(currentDashboard);
             var currentSubmetric = myDashboard.getView(currentDashboard, request.subMetric());
 
@@ -90,7 +99,7 @@
                     selectedView = 'Overview';
                 }
             }
-            
+
             var defaultStep = (selectedView && selectedView.defaults && selectedView.defaults.step ? selectedView.defaults.step : '6e4');
             var defaultLimit = (selectedView && selectedView.defaults && selectedView.defaults.limit ? selectedView.defaults.limit : 60);
 
@@ -98,11 +107,11 @@
             currentLimit = TLRGRP.BADGER.Utilities.getParameterByName('limit') || defaultLimit;
 
             var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
-            var graphs = myDashboard.getGraphs(selectedView, currentTimitSelectDataString);
+            var graphs = dashboardCollection.currentView().getGraphs(currentTimitSelectDataString);
 
-            (function () {
+            (function() {
                 new TLRGRP.BADGER.DashboardList(request, currentSubmetric, allViews);
-                
+
                 new TLRGRP.BADGER.TimeSelect($('#query-time-select'), {
                     currentMetric: currentDashboard,
                     currentTimeString: currentTimitSelectDataString

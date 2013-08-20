@@ -36,7 +36,6 @@
                 '.eq(metricGroup,"' + metricGroup + '")) / 1073741824',
                 stepAndLimit].join('');
         };
-        
         var views = {
             'Requests': {
                 defaultSubMetric: 'RequestsExecuting',
@@ -124,7 +123,9 @@
                 }
             }
         };
-
+        var currentView;
+        var currentSubMetric;
+        
         return {
             toString: function () {
                 return 'Webhosts';
@@ -148,7 +149,13 @@
 
                 return subMetric;
             },
-            getGraphs: function (selectedView, currentTimitSelectDataString) {
+            setView: function(view, subMetric) {
+                currentView = views[view];
+                currentSubMetric = currentView.subMetrics[subMetric || currentView.defaultSubMetric];
+            },
+            setTimePeriod: function() {
+            },
+            getGraphs: function (currentTimitSelectDataString) {
                 var maxPerGroup = 5;
                 var metricGroups = [];
                 var currentMetricGroup = -1;
@@ -164,7 +171,7 @@
 
                 for (var n = 0; n < metricGroups.length; n++) {
                     var expressions = [];
-                    var title = selectedView.name + ' by hosts ';
+                    var title = currentSubMetric.name + ' by hosts ';
 
                     for (var m = 0; m < metricGroups[n].length; m++) {
                         var machineId = metricGroups[n][m];
@@ -180,7 +187,7 @@
                             id: machineName,
                             title: machineName,
                             color: colors[m % colors.length],
-                            expression: buildExpression(selectedView, machineName, currentTimitSelectDataString)
+                            expression: buildExpression(currentSubMetric, machineName, currentTimitSelectDataString)
                         };
                     }
 
@@ -188,7 +195,7 @@
                         title: title,
                         'class': 'half',
                         expressions: expressions,
-                        chartOptions: selectedView.chartOptions || {}
+                        chartOptions: currentSubMetric.chartOptions || {}
                     };
                 }
 

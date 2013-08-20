@@ -4,6 +4,9 @@
     var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
 
     TLRGRP.BADGER.Dashboard.Overview = function () {
+        var currentStep = '';
+        var currentLimit = '';
+
         return {
             toString: function () {
                 return 'Overview';
@@ -13,13 +16,16 @@
                     'Overview': {}
                 });
             },
-            supportsView: function(view) {
+            supportsView: function (view) {
                 return view === 'Overview';
             },
             getView: function () {
                 return '';
             },
-            getGraphs: function (selectedView, currentTimitSelectDataString) {
+            setView: function () { },
+            setTimePeriod: function () {
+            },
+            getGraphs: function (currentTimitSelectDataString) {
                 var graphs = [{
                     title: 'Traffic by Type',
                     'class': 'half',
