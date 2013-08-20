@@ -1,7 +1,7 @@
 ﻿(function () {
     TLRGRP.namespace('TLRGRP.BADGER');
 
-    TLRGRP.BADGER.DashboardCollection = function (dashboards) {
+    TLRGRP.BADGER.DashboardCollection = function (dashboards, defaultDashboard) {
         var x;
         var dashboardsLength = dashboards.length;
         var dashboardLookup = {};

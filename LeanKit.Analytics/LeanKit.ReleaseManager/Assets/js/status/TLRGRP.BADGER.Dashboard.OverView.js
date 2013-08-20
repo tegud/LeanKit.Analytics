@@ -16,6 +16,9 @@
             supportsView: function(view) {
                 return view === 'Overview';
             },
+            getView: function () {
+                return '';
+            },
             getGraphs: function (selectedView, currentTimitSelectDataString) {
                 var graphs = [{
                     title: 'Traffic by Type',

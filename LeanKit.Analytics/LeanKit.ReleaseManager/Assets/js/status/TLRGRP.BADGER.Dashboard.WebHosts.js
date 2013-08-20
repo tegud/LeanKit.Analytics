@@ -30,53 +30,6 @@
     }
     
     TLRGRP.BADGER.Dashboard.WebHosts = function () {
-        function metricGroupedByHost(selectedView, currentTimitSelectDataString) {
-            var maxPerGroup = 5;
-            var metricGroups = [];
-            var currentMetricGroup = -1;
-            var graphs = [];
-
-            for (var i = 0; i < 19; i++) {
-                if (!(i % maxPerGroup)) {
-                    metricGroups[++currentMetricGroup] = [];
-                }
-
-                metricGroups[currentMetricGroup][metricGroups[currentMetricGroup].length] = i + 1;
-            }
-
-            for (var n = 0; n < metricGroups.length; n++) {
-                var expressions = [];
-                var title = selectedView.name + ' by hosts ';
-
-                for (var m = 0; m < metricGroups[n].length; m++) {
-                    var machineId = metricGroups[n][m];
-                    var machineName = getMachineName(machineId);
-
-                    if (!m) {
-                        title += machineId + '-';
-                    } else if (m === metricGroups[n].length - 1) {
-                        title += machineId;
-                    }
-
-                    expressions[expressions.length] = {
-                        id: machineName,
-                        title: machineName,
-                        color: colors[m % colors.length],
-                        expression: buildExpression(selectedView, machineName, currentTimitSelectDataString)
-                    };
-                }
-
-                graphs[graphs.length] = {
-                    title: title,
-                    'class': 'half',
-                    expressions: expressions,
-                    chartOptions: selectedView.chartOptions || {}
-                };
-            }
-
-            return graphs;
-        }
-
         var diskExpression = function (eventType, metric, machineName, metricGroup, stepAndLimit) {
             return ['min(' + eventType + '(' + metric + ')',
                 '.eq(source_host,"' + machineName + '")',
@@ -186,7 +139,61 @@
             appendViews: function (allViews) {
                 return $.extend(allViews, views);
             },
-            getGraphs: metricGroupedByHost
+            getView: function (view, subMetric) {
+                var selectedView = views[view];
+                
+                if (!subMetric || !selectedView.subMetrics || !selectedView.subMetrics[subMetric]) {
+                    subMetric = selectedView.defaultSubMetric;
+                }
+
+                return subMetric;
+            },
+            getGraphs: function (selectedView, currentTimitSelectDataString) {
+                var maxPerGroup = 5;
+                var metricGroups = [];
+                var currentMetricGroup = -1;
+                var graphs = [];
+
+                for (var i = 0; i < 19; i++) {
+                    if (!(i % maxPerGroup)) {
+                        metricGroups[++currentMetricGroup] = [];
+                    }
+
+                    metricGroups[currentMetricGroup][metricGroups[currentMetricGroup].length] = i + 1;
+                }
+
+                for (var n = 0; n < metricGroups.length; n++) {
+                    var expressions = [];
+                    var title = selectedView.name + ' by hosts ';
+
+                    for (var m = 0; m < metricGroups[n].length; m++) {
+                        var machineId = metricGroups[n][m];
+                        var machineName = getMachineName(machineId);
+
+                        if (!m) {
+                            title += machineId + '-';
+                        } else if (m === metricGroups[n].length - 1) {
+                            title += machineId;
+                        }
+
+                        expressions[expressions.length] = {
+                            id: machineName,
+                            title: machineName,
+                            color: colors[m % colors.length],
+                            expression: buildExpression(selectedView, machineName, currentTimitSelectDataString)
+                        };
+                    }
+
+                    graphs[graphs.length] = {
+                        title: title,
+                        'class': 'half',
+                        expressions: expressions,
+                        chartOptions: selectedView.chartOptions || {}
+                    };
+                }
+
+                return graphs;
+            }
         };
     };
 })();
