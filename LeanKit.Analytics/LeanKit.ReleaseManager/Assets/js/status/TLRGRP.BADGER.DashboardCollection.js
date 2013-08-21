@@ -82,7 +82,16 @@
             },
             setUpUi: function () {
                 var viewModel = buildViewModel();
+                
                 new TLRGRP.BADGER.DashboardList(viewModel);
+
+                new TLRGRP.BADGER.TimeSelect($('#query-time-select'), {
+                    currentMetric: currentDashboard,
+                    currentTimeString: ''
+                });
+                
+                new TLRGRP.BADGER.StopStart($('#stop-start'));
+
                 $('#metric-title').text(viewModel.pageName);
             }
         };

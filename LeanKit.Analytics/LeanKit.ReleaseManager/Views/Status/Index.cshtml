@@ -51,51 +51,20 @@
     <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.Overview.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.TimeSelect.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.StopStart.js"></script>
+    <script src="~/assets/js/status/TLRGRP.BADGER.MetricRequest.js"></script>
 	
     <script type="text/javascript">
         (function () {
-            var MetricsRequest = function () {
-                var getParameterByName = TLRGRP.BADGER.Utilities.getParameterByName;
-                var dashboard = getParameterByName('metric');
-                var currentSubmetric = getParameterByName('subMetric');
-
-                return {
-                    dashboard: function () {
-                        return dashboard;
-                    },
-                    subMetric: function () {
-                        return currentSubmetric;
-                    },
-                    step: function () {
-                        return TLRGRP.BADGER.Utilities.getParameterByName('step');
-                    },
-                    limit: function () {
-                        return TLRGRP.BADGER.Utilities.getParameterByName('limit');
-                    }
-                };
-            };
-            
             var dashboardCollection = new TLRGRP.BADGER.DashboardCollection([
                 new TLRGRP.BADGER.Dashboard.Overview(),
                 new TLRGRP.BADGER.Dashboard.WebHosts()
             ], 'Overview');
-            var request = new MetricsRequest();
-            var currentDashboard = request.dashboard() || 'Overview';
-
+            var request = new TLRGRP.BADGER.MetricsRequest();
+            var graphs;
             dashboardCollection.setCurrent(request);
             dashboardCollection.setUpUi();
 
-            var graphs = dashboardCollection.currentView().getGraphs();
-
-            (function() {
-
-                new TLRGRP.BADGER.TimeSelect($('#query-time-select'), {
-                    currentMetric: currentDashboard,
-                    currentTimeString: ''
-                });
-                
-                new TLRGRP.BADGER.StopStart($('#stop-start'));
-            })();
+            graphs = dashboardCollection.currentView().getGraphs();
 
             new TLRGRP.dashboards.Builder($('#graphs'), graphs);
         })();
