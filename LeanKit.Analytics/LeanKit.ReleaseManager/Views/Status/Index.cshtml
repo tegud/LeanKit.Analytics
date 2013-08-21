@@ -53,69 +53,47 @@
     <script src="~/assets/js/status/TLRGRP.BADGER.StopStart.js"></script>
 	
     <script type="text/javascript">
-        (function() {
-            var dashboardCollection = new TLRGRP.BADGER.DashboardCollection([
-                new TLRGRP.BADGER.Dashboard.Overview(),
-                new TLRGRP.BADGER.Dashboard.WebHosts()
-            ], 'Overview');
-            var selectedView;
-            var currentStep;
-            var currentLimit;
-
-            var MetricsRequest = function() {
+        (function () {
+            var MetricsRequest = function () {
                 var getParameterByName = TLRGRP.BADGER.Utilities.getParameterByName;
                 var dashboard = getParameterByName('metric');
                 var currentSubmetric = getParameterByName('subMetric');
 
                 return {
-                    dashboard: function() {
+                    dashboard: function () {
                         return dashboard;
                     },
-                    subMetric: function() {
+                    subMetric: function () {
                         return currentSubmetric;
                     },
-                    step: function() {
+                    step: function () {
                         return TLRGRP.BADGER.Utilities.getParameterByName('step');
                     },
-                    limit: function() {
+                    limit: function () {
                         return TLRGRP.BADGER.Utilities.getParameterByName('limit');
                     }
                 };
             };
-
+            
+            var dashboardCollection = new TLRGRP.BADGER.DashboardCollection([
+                new TLRGRP.BADGER.Dashboard.Overview(),
+                new TLRGRP.BADGER.Dashboard.WebHosts()
+            ], 'Overview');
             var request = new MetricsRequest();
             var currentDashboard = request.dashboard() || 'Overview';
-            var allViews = dashboardCollection.allViews();
 
             dashboardCollection.setCurrent(request);
+            dashboardCollection.setUpUi();
 
-            var myDashboard = dashboardCollection.getDashboardByView(currentDashboard);
-            var currentSubmetric = myDashboard.getView(currentDashboard, request.subMetric());
-
-            if (allViews[currentDashboard]) {
-                if (allViews[currentDashboard].subMetrics && allViews[currentDashboard].subMetrics[currentSubmetric]) {
-                    selectedView = allViews[currentDashboard].subMetrics[currentSubmetric];
-                } else {
-                    selectedView = 'Overview';
-                }
-            }
-
-            var defaultStep = (selectedView && selectedView.defaults && selectedView.defaults.step ? selectedView.defaults.step : '6e4');
-            var defaultLimit = (selectedView && selectedView.defaults && selectedView.defaults.limit ? selectedView.defaults.limit : 60);
-
-            currentStep = TLRGRP.BADGER.Utilities.getParameterByName('step') || defaultStep;
-            currentLimit = TLRGRP.BADGER.Utilities.getParameterByName('limit') || defaultLimit;
-
-            var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
-            var graphs = dashboardCollection.currentView().getGraphs(currentTimitSelectDataString);
+            var graphs = dashboardCollection.currentView().getGraphs();
 
             (function() {
-                new TLRGRP.BADGER.DashboardList(request, currentSubmetric, allViews);
 
                 new TLRGRP.BADGER.TimeSelect($('#query-time-select'), {
                     currentMetric: currentDashboard,
-                    currentTimeString: currentTimitSelectDataString
+                    currentTimeString: ''
                 });
+                
                 new TLRGRP.BADGER.StopStart($('#stop-start'));
             })();
 

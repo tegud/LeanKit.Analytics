@@ -6,10 +6,29 @@
         var dashboardsLength = dashboards.length;
         var dashboardLookup = {};
         var currentDashboard;
+        
+
+        function buildViewModel() {
+            var viewModel = {
+                dashboardViews: [],
+                subMetrics: []
+            };
+                
+            for (x = 0; x < dashboardsLength; x++) {
+                dashboards[x].appendViewModel(viewModel);
+            }
+
+            return viewModel;
+        }
 
         function setView(view, subMetric) {
             currentDashboard = getDashboardByView(view);
             currentDashboard.setView(view, subMetric);
+            for (x = 0; x < dashboardsLength; x++) {
+                if (currentDashboard.toString() !== dashboards[x].toString()) {
+                    dashboards[x].clearView('', '');   
+                }
+            }
         }
         
         function setTimePeriod(step, limit) {
@@ -60,6 +79,11 @@
                 if (request.step() && request.limit()) {
                     setTimePeriod(request.step(), request.limit());
                 }
+            },
+            setUpUi: function () {
+                var viewModel = buildViewModel();
+                new TLRGRP.BADGER.DashboardList(viewModel);
+                $('#metric-title').text(viewModel.pageName);
             }
         };
     };

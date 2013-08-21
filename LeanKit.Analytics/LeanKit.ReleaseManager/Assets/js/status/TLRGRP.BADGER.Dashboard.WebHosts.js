@@ -123,8 +123,12 @@
                 }
             }
         };
+        var currentStep = '6e4';
+        var currentLimit = 60;
         var currentView;
+        var currentViewName;
         var currentSubMetric;
+        var currentSubMetricName;
         
         return {
             toString: function () {
@@ -140,6 +144,38 @@
             appendViews: function (allViews) {
                 return $.extend(allViews, views);
             },
+            appendViewModel: function (viewModel) {
+                if (currentViewName) {
+                    viewModel.pageName = currentViewName;
+                }
+
+                for (var view in views) {
+                    if (!views.hasOwnProperty(view)) {
+                        continue;
+                    }
+
+                    viewModel.dashboardViews[viewModel.dashboardViews.length] = {
+                        name: views[view].name || view,
+                        metric: view,
+                        isSelected: view === currentViewName
+                    };
+                    
+                    if (view === currentViewName) {
+                        for (var subMetric in currentView.subMetrics) {
+                            if (!currentView.subMetrics.hasOwnProperty(subMetric)) {
+                                continue;
+                            }
+
+                            viewModel.subMetrics[viewModel.subMetrics.length] = {
+                                name: currentView.subMetrics[subMetric].name || subMetric,
+                                metric: view,
+                                subMetric: subMetric,
+                                isSelected: currentSubMetricName === subMetric
+                            };
+                        }
+                    }
+                }
+            },
             getView: function (view, subMetric) {
                 var selectedView = views[view];
                 
@@ -149,17 +185,27 @@
 
                 return subMetric;
             },
-            setView: function(view, subMetric) {
+            setView: function (view, subMetric) {
+                currentViewName = view;
                 currentView = views[view];
                 currentSubMetric = currentView.subMetrics[subMetric || currentView.defaultSubMetric];
+                currentSubMetricName = subMetric;
             },
-            setTimePeriod: function() {
+            clearView: function () {
+                currentViewName = '';
+                currentView = '';
+                currentSubMetric = '';
             },
-            getGraphs: function (currentTimitSelectDataString) {
+            setTimePeriod: function (step, limit) {
+                currentStep = step;
+                currentLimit = limit;
+            },
+            getGraphs: function () {
                 var maxPerGroup = 5;
                 var metricGroups = [];
                 var currentMetricGroup = -1;
                 var graphs = [];
+                var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
 
                 for (var i = 0; i < 19; i++) {
                     if (!(i % maxPerGroup)) {

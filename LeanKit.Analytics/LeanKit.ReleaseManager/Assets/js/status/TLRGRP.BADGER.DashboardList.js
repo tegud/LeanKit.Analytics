@@ -1,41 +1,34 @@
 ﻿(function () {
     TLRGRP.namespace('TLRGRP.BADGER');
 
-    TLRGRP.BADGER.DashboardList = function (request, currentSubmetric, views) {
-        var currentMetric = request.dashboard();
+    TLRGRP.BADGER.DashboardList = function (viewModel) {
+        var dashboardViewsLength = viewModel.dashboardViews.length;
+        var subMetricsLength = viewModel.subMetrics.length;
+        var x;
         var metricsList = $('#metrics-list');
         var subMetricList = $('#metric-drilldown-list');
 
-        for (var m in views) {
-            if (!views.hasOwnProperty(m)) {
-                continue;
-            }
+        for (x = 0; x < dashboardViewsLength; x++) {
+            var name = viewModel.dashboardViews[x].name;
+            var metric = viewModel.dashboardViews[x].metric;
 
-            var name = views[m].name || m;
-
-            if (currentMetric === m) {
+            if (viewModel.dashboardViews[x].isSelected) {
                 metricsList.append('<li class="selected-metric">' + name + '</li>');
             } else {
-                metricsList.append('<li><a href="/Status?metric=' + m + '">' + name + '</a></li>');
+                metricsList.append('<li><a href="/Status?metric=' + metric + '">' + name + '</a></li>');
             }
         }
+        
+        for (x = 0; x < subMetricsLength; x++) {
+            var name = viewModel.subMetrics[x].name;
+            var metric = viewModel.subMetrics[x].metric;
+            var subMetric = viewModel.subMetrics[x].subMetric;
 
-        if (views[currentMetric] && views[currentMetric].subMetrics) {
-            for (var sm in views[currentMetric].subMetrics) {
-                if (!views[currentMetric].subMetrics.hasOwnProperty(sm)) {
-                    continue;
-                }
-
-                var name = views[currentMetric].subMetrics[sm].name || sm;
-
-                if (currentSubmetric === sm) {
-                    subMetricList.append('<li class="selected-metric">' + name + '</li>');
-                } else {
-                    subMetricList.append('<li><a href="/Status?metric=' + currentMetric + '&subMetric=' + sm + '">' + name + '</a></li>');
-                }
+            if (viewModel.subMetrics[x].isSelected) {
+                subMetricList.append('<li class="selected-metric">' + name + '</li>');
+            } else {
+                subMetricList.append('<li><a href="/Status?metric=' + metric + '&subMetric=' + subMetric + '">' + name + '</a></li>');
             }
         }
-
-        $('#metric-title').text(currentMetric);
     };
 })();
