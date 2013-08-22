@@ -9,11 +9,11 @@
     <li class="stop-start" id="stop-start"></li>
     <li class="time-select">
         <select id="query-time-select">
-            <option data-time-limit="step=6e4&limit=15">Last 15mins</option>
-            <option data-time-limit="step=6e4&limit=30">Last 30mins</option>
-            <option data-time-limit="step=6e4&limit=60">Last Hour</option>
-            <option data-time-limit="step=3e5&limit=48">Last 4 Hours</option>
-            <option data-time-limit="step=36e5&limit=24">Last 24 Hours</option>
+            <option data-time-limit="timePeriod=15mins">Last 15mins</option>
+            <option data-time-limit="timePeriod=30mins">Last 30mins</option>
+            <option data-time-limit="timePeriod=1hour">Last Hour</option>
+            <option data-time-limit="timePeriod=4hours">Last 4 Hours</option>
+            <option data-time-limit="timePeriod=1day">Last 24 Hours</option>
         </select>
     </li>
 </ul>
@@ -52,6 +52,7 @@
     <script src="~/assets/js/status/TLRGRP.BADGER.TimeSelect.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.StopStart.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.MetricRequest.js"></script>
+    <script src="~/assets/js/status/TLRGRP.BADGER.Cube.js"></script>
 	
     <script type="text/javascript">
         (function () {
@@ -60,13 +61,9 @@
                 new TLRGRP.BADGER.Dashboard.WebHosts()
             ], 'Overview');
             var request = new TLRGRP.BADGER.MetricsRequest();
-            var graphs;
+            
             dashboardCollection.setCurrent(request);
             dashboardCollection.setUpUi();
-
-            graphs = dashboardCollection.currentView().getGraphs();
-
-            new TLRGRP.dashboards.Builder($('#graphs'), graphs);
         })();
     </script>
 }

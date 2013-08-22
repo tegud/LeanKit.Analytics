@@ -6,6 +6,7 @@
         var dashboardsLength = dashboards.length;
         var dashboardLookup = {};
         var currentDashboard;
+        var currentTimePeriod;
         
 
         function buildViewModel() {
@@ -31,8 +32,9 @@
             }
         }
         
-        function setTimePeriod(step, limit) {
-            currentDashboard.setTimePeriod(step, limit);
+        function setTimePeriod(timePeriod) {
+            currentTimePeriod = timePeriod;
+            currentDashboard.setTimePeriod(timePeriod);
         }
         
         function getDashboardByView(view) {
@@ -55,44 +57,29 @@
         setView(defaultView);
 
         return {
-            getDashboard: function (name) {
-                return dashboardLookup[name];
-            },
-            allViews: function () {
-                var allViews = {};
-                
-                for (x = 0; x < dashboardsLength; x++) {
-                    dashboards[x].appendViews(allViews);
-                }
-
-                return allViews;
-            },
             getDashboardByView: getDashboardByView,
-            currentView: function () {
-                return currentDashboard;
-            },
             setCurrent: function(request) {
                 if (request.dashboard()) {
                     setView(request.dashboard(), request.subMetric());
                 }
                 
-                if (request.step() && request.limit()) {
-                    setTimePeriod(request.step(), request.limit());
+                if (request.timePeriod()) {
+                    setTimePeriod(request.timePeriod());
                 }
             },
             setUpUi: function () {
                 var viewModel = buildViewModel();
+                var graphs = currentDashboard.getGraphs();
                 
                 new TLRGRP.BADGER.DashboardList(viewModel);
 
-                new TLRGRP.BADGER.TimeSelect($('#query-time-select'), {
-                    currentMetric: currentDashboard,
-                    currentTimeString: ''
-                });
+                new TLRGRP.BADGER.TimeSelect($('#query-time-select'));
                 
                 new TLRGRP.BADGER.StopStart($('#stop-start'));
 
                 $('#metric-title').text(viewModel.pageName);
+                
+                new TLRGRP.dashboards.Builder($('#graphs'), graphs);
             }
         };
     };

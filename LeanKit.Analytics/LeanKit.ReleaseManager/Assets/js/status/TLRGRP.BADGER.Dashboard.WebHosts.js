@@ -123,8 +123,7 @@
                 }
             }
         };
-        var currentStep = '6e4';
-        var currentLimit = 60;
+        var currentTimePeriod = '1hour';
         var currentView;
         var currentViewName;
         var currentSubMetric;
@@ -140,9 +139,6 @@
                 }
 
                 return false;
-            },
-            appendViews: function (allViews) {
-                return $.extend(allViews, views);
             },
             appendViewModel: function (viewModel) {
                 if (currentViewName) {
@@ -186,26 +182,28 @@
                 return subMetric;
             },
             setView: function (view, subMetric) {
+                var selectedView = views[view];
+                var selectedSubmetric = subMetric || selectedView.defaultSubMetric;
+
                 currentViewName = view;
-                currentView = views[view];
-                currentSubMetric = currentView.subMetrics[subMetric || currentView.defaultSubMetric];
-                currentSubMetricName = subMetric;
+                currentView = selectedView;
+                currentSubMetric = currentView.subMetrics[selectedSubmetric];
+                currentSubMetricName = selectedSubmetric;
             },
             clearView: function () {
                 currentViewName = '';
                 currentView = '';
                 currentSubMetric = '';
             },
-            setTimePeriod: function (step, limit) {
-                currentStep = step;
-                currentLimit = limit;
+            setTimePeriod: function (timePeriod) {
+                currentTimePeriod = timePeriod;
             },
             getGraphs: function () {
                 var maxPerGroup = 5;
                 var metricGroups = [];
                 var currentMetricGroup = -1;
                 var graphs = [];
-                var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
+                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
 
                 for (var i = 0; i < 19; i++) {
                     if (!(i % maxPerGroup)) {

@@ -4,9 +4,8 @@
     var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
 
     TLRGRP.BADGER.Dashboard.Overview = function () {
-        var currentStep = '6e4';
-        var currentLimit = 60;
         var isSelected;
+        var currentTimePeriod = '1hour';
 
         return {
             toString: function () {
@@ -31,18 +30,17 @@
             getView: function () {
                 return '';
             },
-            setView: function (view) {
+            setView: function () {
                 isSelected = true;
             },
             clearView: function () {
                 isSelected = false;
             },
-            setTimePeriod: function (step, limit) {
-                currentStep = step;
-                currentLimit = limit;
+            setTimePeriod: function (timePeriod) {
+                currentTimePeriod = timePeriod;
             },
             getGraphs: function () {
-                var currentTimitSelectDataString = 'step=' + currentStep + '&limit=' + currentLimit;
+                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
                 var graphs = [{
                     title: 'Traffic by Type',
                     'class': 'half',

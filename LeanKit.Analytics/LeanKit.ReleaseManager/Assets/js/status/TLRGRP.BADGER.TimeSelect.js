@@ -1,9 +1,21 @@
 ﻿(function () {
     TLRGRP.namespace('TLRGRP.BADGER');
 
-    TLRGRP.BADGER.TimeSelect = function (element, options) {
+    TLRGRP.BADGER.TimeSelect = function (element) {
+        var request = new TLRGRP.BADGER.MetricsRequest();
+        
         function buildUrl(timeLimit) {
-            return '/Status?metric=' + options.currentMetric + '&' + timeLimit;
+            var metric = request.dashboard();
+            var subMetric = request.subMetric();
+            
+            if (metric && subMetric) {
+                return '/Status?metric=' + metric + '&subMetric=' + subMetric + '&' + timeLimit;
+            }
+            else if (metric) {
+                return '/Status?metric=' + metric + '&' + timeLimit;
+            }
+
+            return '/Status?' + timeLimit;
         }
 
         element
@@ -14,7 +26,7 @@
             .children().each(function () {
                 var currentItem = $(this);
 
-                if (currentItem.data('timeLimit') === options.currentTimeString) {
+                if (currentItem.data('timeLimit') === 'timePeriod=' + request.timePeriod()) {
                     currentItem.prop('selected', true);
                     return false;
                 }

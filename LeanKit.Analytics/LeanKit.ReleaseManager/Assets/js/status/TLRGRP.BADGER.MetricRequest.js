@@ -13,11 +13,8 @@
             subMetric: function () {
                 return currentSubmetric;
             },
-            step: function () {
-                return TLRGRP.BADGER.Utilities.getParameterByName('step');
-            },
-            limit: function () {
-                return TLRGRP.BADGER.Utilities.getParameterByName('limit');
+            timePeriod: function () {
+                return TLRGRP.BADGER.Utilities.getParameterByName('timePeriod');
             }
         };
     };
