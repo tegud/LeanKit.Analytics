@@ -39,6 +39,12 @@
         <script type="text/javascript" src="~/Assets/js/lib/jquery-2.0.0.min.js"></script>
         <script type="text/javascript" src="~/Assets/js/ladda.js"></script>
         <script type="text/javascript" src="~/Assets/js/menu.js"></script>
+        
+        <script type="text/javascript">
+            function appendIframe() {
+                $('body').append('<iframe frameborder="0" src="http://lr-brand-releases.laterooms.com" style="width:100%; height: 300px;"></frame>');
+            }
+        </script>
 
         @RenderSection("Javascript", false)
     </body>

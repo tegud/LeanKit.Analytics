@@ -89,6 +89,12 @@
                                 title: 'Hotel Details',
                                 color: colors[4],
                                 expression: 'sum(lr_web_request.eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
+                            },
+                            {
+                                id: 'page-requests-booking-form',
+                                title: 'Booking Form',
+                                color: colors[3],
+                                expression: 'sum(lr_web_request.eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
                             }],
                         chartOptions: {
                             yAxisLabel: 'requests',
@@ -144,6 +150,12 @@
                             title: 'Hotel Details',
                             color: colors[4],
                             expression: 'median(lr_web_request(duration).eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
+                        },
+                        {
+                            id: 'page-requests-booking-form',
+                            title: 'Booking Form',
+                            color: colors[3],
+                            expression: 'median(lr_web_request(duration).eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
                         }],
                         chartOptions: {
                             yAxisLabel: 'request time (ms)',
