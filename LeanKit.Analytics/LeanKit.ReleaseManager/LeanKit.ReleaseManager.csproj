@@ -255,6 +255,7 @@
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.DashboardChartStore.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.Legend.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.renderers.js" />
+    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.ByHost.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.Mobile.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.Cube.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.MetricRequest.js" />
