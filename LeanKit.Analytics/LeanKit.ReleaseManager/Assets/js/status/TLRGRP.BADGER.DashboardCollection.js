@@ -73,7 +73,7 @@
                 
                 new TLRGRP.BADGER.DashboardList(viewModel);
 
-                new TLRGRP.BADGER.TimeSelect($('#query-time-select'));
+                new TLRGRP.BADGER.TimeSelect($('#query-time-select'), viewModel.timePeriod);
                 
                 new TLRGRP.BADGER.StopStart($('#stop-start'));
 

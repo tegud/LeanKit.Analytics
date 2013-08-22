@@ -17,6 +17,7 @@
                 });
             },
             appendViewModel: function (viewModel) {
+                viewModel.timePeriod = currentTimePeriod;
                 viewModel.pageName = 'Overview';
                 viewModel.dashboardViews[viewModel.dashboardViews.length] = {
                     name: 'Overview',
@@ -26,9 +27,6 @@
             },
             supportsView: function (view) {
                 return view === 'Overview';
-            },
-            getView: function () {
-                return '';
             },
             setView: function () {
                 isSelected = true;

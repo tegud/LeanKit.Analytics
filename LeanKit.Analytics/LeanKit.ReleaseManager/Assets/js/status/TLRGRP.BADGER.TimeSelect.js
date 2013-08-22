@@ -1,7 +1,7 @@
 ﻿(function () {
     TLRGRP.namespace('TLRGRP.BADGER');
 
-    TLRGRP.BADGER.TimeSelect = function (element) {
+    TLRGRP.BADGER.TimeSelect = function (element, currentTimePeriod) {
         var request = new TLRGRP.BADGER.MetricsRequest();
         
         function buildUrl(timeLimit) {
@@ -18,18 +18,26 @@
             return '/Status?' + timeLimit;
         }
 
+        function selectTimePeriod() {
+            element
+                .children().each(function() {
+                    var currentItem = $(this);
+
+                    if (currentItem.data('timeLimit') === 'timePeriod=' + currentTimePeriod) {
+                        currentItem.prop('selected', true);
+                        return false;
+                    }
+
+                    return true;
+                });
+        }
+
         element
             .on('change', function () {
                 var timeLimit = $(this).children(':selected:first').data('timeLimit');
                 window.location = buildUrl(timeLimit);
-            })
-            .children().each(function () {
-                var currentItem = $(this);
-
-                if (currentItem.data('timeLimit') === 'timePeriod=' + request.timePeriod()) {
-                    currentItem.prop('selected', true);
-                    return false;
-                }
             });
+
+        selectTimePeriod();
     };
 })();

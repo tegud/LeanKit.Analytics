@@ -172,15 +172,6 @@
                     }
                 }
             },
-            getView: function (view, subMetric) {
-                var selectedView = views[view];
-                
-                if (!subMetric || !selectedView.subMetrics || !selectedView.subMetrics[subMetric]) {
-                    subMetric = selectedView.defaultSubMetric;
-                }
-
-                return subMetric;
-            },
             setView: function (view, subMetric) {
                 var selectedView = views[view];
                 var selectedSubmetric = subMetric || selectedView.defaultSubMetric;

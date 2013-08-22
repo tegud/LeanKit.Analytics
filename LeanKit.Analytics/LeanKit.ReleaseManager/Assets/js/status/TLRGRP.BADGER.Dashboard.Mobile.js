@@ -27,9 +27,6 @@
             supportsView: function (view) {
                 return view === 'Mobile';
             },
-            getView: function () {
-                return '';
-            },
             setView: function () {
                 isSelected = true;
             },

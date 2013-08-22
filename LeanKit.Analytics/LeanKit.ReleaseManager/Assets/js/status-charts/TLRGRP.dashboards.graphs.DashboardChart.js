@@ -8,14 +8,16 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
 		var parseDate = d3.time.format("2012-10-10").parse;
 		var graphTypes = {};
 		var renderers = {};
-		
-		new TLRGRP.dashboards.graphs.Legend(svg, $.extend({
-				data: options.series, 
-				width: dimensions.width
-			}, 
-			options.legend));
-					
-		canvas.appendAxis(options.yAxisLabel);
+
+	    if (options.legend !== false) {
+	        new TLRGRP.dashboards.graphs.Legend(svg, $.extend({
+	                data: options.series,
+	                width: dimensions.width
+	            },
+	            options.legend));
+	    }
+
+	    canvas.appendAxis(options.yAxisLabel);
 		
 		options.series.forEach(function(expression) {
 			var graphType = expression.graphType || 'line';
