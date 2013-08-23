@@ -145,6 +145,8 @@
                     viewModel.pageName = currentViewName;
                 }
 
+                viewModel.timePeriod = currentTimePeriod;
+
                 for (var view in views) {
                     if (!views.hasOwnProperty(view)) {
                         continue;

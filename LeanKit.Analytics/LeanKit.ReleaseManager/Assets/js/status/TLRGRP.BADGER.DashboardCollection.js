@@ -7,7 +7,7 @@
         var dashboardLookup = {};
         var currentDashboard;
         var currentTimePeriod;
-        
+        var request = new TLRGRP.BADGER.MetricsRequest();
 
         function buildViewModel() {
             var viewModel = {
@@ -54,19 +54,20 @@
             dashboardLookup[dashboards[x].toString()] = dashboards[x];
         }
 
-        setView(defaultView);
-
+        
+        if (request.dashboard()) {
+            setView(request.dashboard(), request.subMetric());
+        }
+        else {
+            setView(defaultView);
+        }
+                
+        if (request.timePeriod()) {
+            setTimePeriod(request.timePeriod());
+        }
+        
         return {
             getDashboardByView: getDashboardByView,
-            setCurrent: function(request) {
-                if (request.dashboard()) {
-                    setView(request.dashboard(), request.subMetric());
-                }
-                
-                if (request.timePeriod()) {
-                    setTimePeriod(request.timePeriod());
-                }
-            },
             setUpUi: function () {
                 var viewModel = buildViewModel();
                 var graphs = currentDashboard.getGraphs();

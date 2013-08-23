@@ -17,7 +17,11 @@
                 });
             },
             appendViewModel: function (viewModel) {
-                viewModel.pageName = 'Mobile';
+                $.extend(viewModel, {
+                    pageName: 'Mobile',
+                    timePeriod: currentTimePeriod
+                });
+
                 viewModel.dashboardViews[viewModel.dashboardViews.length] = {
                     name: 'Mobile',
                     metric: 'Mobile',

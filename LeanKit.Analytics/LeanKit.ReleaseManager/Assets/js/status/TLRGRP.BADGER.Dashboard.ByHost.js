@@ -18,6 +18,7 @@
         var metric = selectedView.metric;
         var metricGroup = selectedView.group;
         var eventType = selectedView.eventType;
+        var divideBy = selectedView.divideBy;
 
         if (selectedView.expressionBuilder && $.isFunction(selectedView.expressionBuilder)) {
             return selectedView.expressionBuilder(eventType, metric, machineName, metricGroup, stepAndLimit);
@@ -25,7 +26,7 @@
 
         return ['median(' + eventType + '(' + metric + ')',
             '.eq(source_host,"' + machineName + '")',
-            '.eq(metricGroup,"' + metricGroup + '"))&',
+            '.eq(metricGroup,"' + metricGroup + '"))' + (divideBy || '') + '&',
             stepAndLimit].join('');
     }
 
@@ -46,8 +47,10 @@
                     viewModel.pageName = 'View Metrics for ' + (currentSubMetricName || 'Host');
                 }
 
+                viewModel.timePeriod = currentTimePeriod;
+
                 viewModel.dashboardViews[viewModel.dashboardViews.length] = {
-                    name: 'Host View',
+                    name: 'By Server',
                     metric: 'HostView',
                     isSelected: 'HostView' === currentViewName
                 };
@@ -100,37 +103,106 @@
                 };
 
                 return [{
-                    title: 'Requests Executing',
-                    'class': 'half',
-                    expressions: [{
-                        id: 'requests-executing',
-                        color: colors[0],
-                        expression: buildExpression({
-                            metric: 'ASPNET2__Total_RequestsExecuting',
-                            group: 'ASPNET2',
-                            eventType: 'lr_web_wmi'
-                        }, currentSubMetricName, currentTimitSelectDataString)
-                    }],
-                    chartOptions: $.extend({}, chartOptions, { yAxisLabel: 'requests' })
-                }, {
-                    title: 'CPU',
-                    'class': 'half',
-                    expressions: [{
-                        id: 'cpu',
-                        color: colors[0],
-                        expression: buildExpression({
-                            metric: 'cpu__Total_PercentProcessorTime',
-                            group: 'cpu',
-                            eventType: 'lr_web_wmi'
-                        }, currentSubMetricName, currentTimitSelectDataString)
-                    }],
-                    chartOptions: $.extend({}, chartOptions, {
-                        yAxisLabel: '%',
-                        axisExtents: {
-                            y: [0, 100]
-                        }
-                    })
-                }];
+                        title: 'Requests Executing',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'requests-executing',
+                            color: colors[0],
+                            expression: buildExpression({
+                                metric: 'ASPNET2__Total_RequestsExecuting',
+                                group: 'ASPNET2',
+                                eventType: 'lr_web_wmi'
+                            }, currentSubMetricName, currentTimitSelectDataString)
+                        }],
+                        chartOptions: $.extend({}, chartOptions, { yAxisLabel: 'requests' })
+                    }, {
+                        title: 'CPU',
+                        'class': 'half',
+                        expressions: [{
+                                id: 'cpu',
+                                color: colors[0],
+                                expression: buildExpression({
+                                    metric: 'cpu__Total_PercentProcessorTime',
+                                    group: 'cpu',
+                                    eventType: 'lr_web_wmi'
+                                }, currentSubMetricName, currentTimitSelectDataString)
+                            }
+                        ],
+                        chartOptions: $.extend({}, chartOptions, {
+                            yAxisLabel: '%',
+                            axisExtents: {
+                                y: [0, 100]
+                            }
+                        })
+                    },
+                    {
+                        title: 'Available Memory',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'cpu',
+                            color: colors[0],
+                            expression: buildExpression({
+                                metric: 'memory_AvailableMBytes',
+                                group: 'memory',
+                                eventType: 'lr_web_wmi',
+                                divideBy: '/1024'
+                            }, currentSubMetricName, currentTimitSelectDataString)
+                        }],
+                        chartOptions: $.extend({}, chartOptions, {
+                            yAxisLabel: 'GB'
+                        })
+                    },
+                    {
+                        title: 'Garbage Collection',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'gen0',
+                            color: colors[0],
+                            title: 'Gen0',
+                            expression: buildExpression({
+                                    metric: 'GarbageCollection_3_NumberGen0Collections',
+                                    group: 'GarbageCollection',
+                                    eventType: 'lr_web_wmi'
+                                },
+                                currentSubMetricName,
+                                currentTimitSelectDataString)
+                        }, {
+                            id: 'gen1',
+                            color: colors[1],
+                            title: 'Gen1',
+                            expression: buildExpression({
+                                metric: 'GarbageCollection_3_NumberGen1Collections',
+                                group: 'GarbageCollection',
+                                eventType: 'lr_web_wmi'
+                            },
+                                currentSubMetricName,
+                                currentTimitSelectDataString)
+                        }, {
+                            id: 'gen1',
+                            color: colors[2],
+                            title: 'Gen2',
+                            expression: buildExpression({
+                                metric: 'GarbageCollection_3_NumberGen2Collections',
+                                group: 'GarbageCollection',
+                                eventType: 'lr_web_wmi'
+                            },
+                                currentSubMetricName,
+                                currentTimitSelectDataString)
+                        }],
+                        chartOptions: $.extend({}, chartOptions, {
+                            dimensions: {
+                                margin: {
+                                    left: 50,
+                                    right: 90
+                                }
+                            },
+                            yAxisLabel: '',
+                            legend: {
+                                textAlign: 'end'
+                            }
+                        })
+                    }
+                ];
             }
         };
     };

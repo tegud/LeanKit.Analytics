@@ -61,12 +61,10 @@
             var dashboardCollection = new TLRGRP.BADGER.DashboardCollection([
                 new TLRGRP.BADGER.Dashboard.Overview(),
                 new TLRGRP.BADGER.Dashboard.Mobile(),
-                new TLRGRP.BADGER.Dashboard.ByHost(),
-                new TLRGRP.BADGER.Dashboard.WebHosts()
+                new TLRGRP.BADGER.Dashboard.WebHosts(),
+                new TLRGRP.BADGER.Dashboard.ByHost()
             ], 'Overview');
-            var request = new TLRGRP.BADGER.MetricsRequest();
             
-            dashboardCollection.setCurrent(request);
             dashboardCollection.setUpUi();
         })();
     </script>
