@@ -46,7 +46,8 @@
                         group: 'ASPNET2',
                         eventType: 'lr_web_wmi',
                         chartOptions: {
-                            yAxisLabel: 'requests',
+                            lockToZero: true,
+                            yAxisLabel: 'requests'
                         }
                     },
                     'RequestsPerSec': {
@@ -55,7 +56,8 @@
                         group: 'ASPNET2',
                         eventType: 'lr_web_wmi',
                         chartOptions: {
-                            yAxisLabel: 'requests',
+                            lockToZero: true,
+                            yAxisLabel: 'requests'
                         }
                     },
                     'ExecutionTime': {
@@ -64,6 +66,7 @@
                         group: 'ASPNET2',
                         eventType: 'lr_web_wmi',
                         chartOptions: {
+                            lockToZero: true,
                             dimensions: {
                                 margin: { left: 50 }
                             },
@@ -81,6 +84,7 @@
                         group: 'cpu',
                         eventType: 'lr_web_wmi',
                         chartOptions: {
+                            lockToZero: true,
                             axisExtents: {
                                 y: [0, 100]
                             },
@@ -98,7 +102,8 @@
                         group: 'disk',
                         eventType: 'lr_web_wmi',
                         chartOptions: {
-                            yAxisLabel: 'GB Remaining',
+                            lockToZero: true,
+                            yAxisLabel: 'GB Remaining'
                         },
                         defaults: {
                             step: '3e5',
@@ -112,7 +117,8 @@
                         group: 'disk',
                         eventType: 'lr_web_wmi',
                         chartOptions: {
-                            yAxisLabel: 'GB Remaining',
+                            lockToZero: true,
+                            yAxisLabel: 'GB Remaining'
                         },
                         defaults: {
                             step: '3e5',
@@ -143,9 +149,8 @@
             appendViewModel: function (viewModel) {
                 if (currentViewName) {
                     viewModel.pageName = currentViewName;
+                    viewModel.timePeriod = currentTimePeriod;
                 }
-
-                viewModel.timePeriod = currentTimePeriod;
 
                 for (var view in views) {
                     if (!views.hasOwnProperty(view)) {

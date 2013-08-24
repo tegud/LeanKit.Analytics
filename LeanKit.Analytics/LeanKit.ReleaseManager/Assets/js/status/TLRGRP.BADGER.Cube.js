@@ -14,7 +14,8 @@
         '30mins': { step: STEP.OneMinute, limit: 30 },
         '1hour': { step: STEP.OneMinute, limit: 60 },
         '4hours': { step: STEP.FiveMinutes, limit: 48 },
-        '24hours': { step: STEP.OneHour, limit: 24 }
+        '12hours': { step: STEP.OneHour, limit: 12 },
+        '1day': { step: STEP.OneHour, limit: 24 }
     };
 
     TLRGRP.BADGER.Cube.convertTimePeriod = function (timePeriod) {

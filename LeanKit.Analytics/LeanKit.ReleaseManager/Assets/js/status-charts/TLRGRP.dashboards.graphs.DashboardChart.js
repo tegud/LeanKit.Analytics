@@ -1,56 +1,51 @@
 TLRGRP.namespace('TLRGRP.dashboards.graphs');
 
 (function() {
-	TLRGRP.dashboards.graphs.DashboardChart = function(options) {
-		var dimensions = new TLRGRP.dashboards.graphs.ChartDimensions(options.dimensions);
-		var canvas = new TLRGRP.dashboards.graphs.ChartCanvas(dimensions, options);
-		var svg = canvas.svg;
-		var parseDate = d3.time.format("2012-10-10").parse;
-		var graphTypes = {};
-		var renderers = {};
+    TLRGRP.dashboards.graphs.DashboardChart = function(options) {
+        var dimensions = new TLRGRP.dashboards.graphs.ChartDimensions(options.dimensions);
+        var canvas = new TLRGRP.dashboards.graphs.ChartCanvas(dimensions, options);
+        var svg = canvas.svg;
+        var parseDate = d3.time.format("2012-10-10").parse;
+        var graphTypes = {};
+        var renderers = {};
 
-	    if (options.legend !== false) {
-	        new TLRGRP.dashboards.graphs.Legend(svg, $.extend({
-	                data: options.series,
-	                width: dimensions.width
-	            },
-	            options.legend));
-	    }
+        if (options.legend !== false) {
+            new TLRGRP.dashboards.graphs.Legend(svg, $.extend({
+                    data: options.series,
+                    width: dimensions.width
+                },
+                options.legend));
+        }
 
-	    canvas.appendAxis(options.yAxisLabel);
-		
-		options.series.forEach(function(expression) {
-			var graphType = expression.graphType || 'line';
-			
-			if(!graphTypes[graphType]) {
-				graphTypes[graphType] = [expression];
-			}
-			else {
-				graphTypes[graphType][graphTypes[graphType].length] = expression;
-			}
-		});
-		
-		$.each(graphTypes, function(graphType){
-			renderers[graphType] = new TLRGRP.dashboards.graphs.renderers.get(graphType)(canvas, graphTypes[graphType]);
-		});
-		
-		return {
-			drawChart: function(ds) {
-				canvas.setAxisExtent(getExtents(graphTypes, ds));
+        canvas.appendAxis(options.yAxisLabel);
 
-				$.each(renderers, function(renderer) {
-					renderers[renderer].render(ds);
-				});
-			}
-		};
-	}
+        options.series.forEach(function(expression) {
+            var graphType = expression.graphType || 'line';
+
+            if (!graphTypes[graphType]) {
+                graphTypes[graphType] = [expression];
+            } else {
+                graphTypes[graphType][graphTypes[graphType].length] = expression;
+            }
+        });
+
+        $.each(graphTypes, function(graphType) {
+            renderers[graphType] = new TLRGRP.dashboards.graphs.renderers.get(graphType)(canvas, graphTypes[graphType]);
+        });
+
+        return {
+            drawChart: function(ds) {
+                canvas.setAxisExtent(getExtents(graphTypes, ds, options.lockToZero));
+
+                $.each(renderers, function(renderer) {
+                    renderers[renderer].render(ds);
+                });
+            }
+        };
+    };
 	
 	
-	function getExtents(graphTypes, ds) {
-		function findResults(id) {
-			return ds[id];
-		}
-		
+	function getExtents(graphTypes, ds, lockToZero) {
 		var stacked = [];
 		var minMax = [];
 		
@@ -83,7 +78,11 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
 			}
 		}
 		else {
-			stackedExtents = minMaxExtents;
+		    if (lockToZero) {
+		        minMaxExtents.y[0] = 0;
+		    }
+
+		    stackedExtents = minMaxExtents;
 		}
 		
 		return stackedExtents;

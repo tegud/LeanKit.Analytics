@@ -6,6 +6,9 @@
     TLRGRP.BADGER.Dashboard.Mobile = function () {
         var isSelected;
         var currentTimePeriod = '1hour';
+        var chartOptions = {
+            lockToZero: true
+        };
 
         return {
             toString: function () {
@@ -17,10 +20,12 @@
                 });
             },
             appendViewModel: function (viewModel) {
-                $.extend(viewModel, {
-                    pageName: 'Mobile',
-                    timePeriod: currentTimePeriod
-                });
+                if (isSelected) {
+                    $.extend(viewModel, {
+                        pageName: 'Mobile',
+                        timePeriod: currentTimePeriod
+                    });
+                }
 
                 viewModel.dashboardViews[viewModel.dashboardViews.length] = {
                     name: 'Mobile',
@@ -46,12 +51,12 @@
                     title: 'Mobile Traffic',
                     'class': 'half',
                     expressions: [{
-                            id: 'mobile-on-mobile',
-                            title: 'On Mobile',
-                            color: colors[3],
-                            graphType: 'stacked-area',
-                            expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile, true).eq(pagechannel,"mobile"))&' + currentTimitSelectDataString
-                        },
+                        id: 'mobile-on-mobile',
+                        title: 'On Mobile',
+                        color: colors[3],
+                        graphType: 'stacked-area',
+                        expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile, true).eq(pagechannel,"mobile"))&' + currentTimitSelectDataString
+                    },
                         {
                             id: 'mobile-on-desktop',
                             title: 'On Desktop',
@@ -59,12 +64,12 @@
                             graphType: 'stacked-area',
                             expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile, true).ne(pagechannel,"mobile"))&' + currentTimitSelectDataString
                         }],
-                        chartOptions: {
-                            yAxisLabel: 'requests',
-                            dimensions: {
-                                margin: { left: 50 }
-                            }
+                    chartOptions: $.extend({}, chartOptions, {
+                        yAxisLabel: 'requests',
+                        dimensions: {
+                            margin: { left: 50 }
                         }
+                    })
                 },
                     {
                         title: 'Mobile Site traffic by Page',
@@ -90,12 +95,12 @@
                             graphType: 'stacked-area',
                             expression: 'sum(lr_web_request.eq(isbot,false).eq(pagechannel,"mobile").eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
                         }],
-                        chartOptions: {
+                        chartOptions: $.extend({}, chartOptions, {
                             yAxisLabel: 'requests',
                             dimensions: {
                                 margin: { left: 50 }
                             }
-                        }
+                        })
                     }, {
                         title: 'Response Time by Page',
                         'class': 'half',
@@ -117,12 +122,12 @@
                             color: colors[4],
                             expression: 'median(lr_web_request(duration).eq(pagechannel,"mobile").eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
                         }],
-                        chartOptions: {
+                        chartOptions: $.extend({}, chartOptions, {
                             yAxisLabel: 'request time (ms)',
                             dimensions: {
                                 margin: { left: 50 }
                             }
-                        }
+                        })
                     },
                     {
                         title: 'Mobile traffic on Desktop by Page',
@@ -148,12 +153,12 @@
                             graphType: 'stacked-area',
                             expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile, true).ne(pagechannel,"mobile").eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
                         }],
-                        chartOptions: {
+                        chartOptions: $.extend({}, chartOptions, {
                             yAxisLabel: 'requests',
                             dimensions: {
                                 margin: { left: 50 }
                             }
-                        }
+                        })
                     }];
 
                 return graphs;

@@ -45,9 +45,8 @@
             appendViewModel: function (viewModel) {
                 if (currentViewName) {
                     viewModel.pageName = 'View Metrics for ' + (currentSubMetricName || 'Host');
+                    viewModel.timePeriod = currentTimePeriod;
                 }
-
-                viewModel.timePeriod = currentTimePeriod;
 
                 viewModel.dashboardViews[viewModel.dashboardViews.length] = {
                     name: 'By Server',
@@ -94,6 +93,7 @@
             getGraphs: function () {
                 var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
                 var chartOptions = {
+                    lockToZero: true,
                     legend: false,
                     dimensions: {
                         margin: {

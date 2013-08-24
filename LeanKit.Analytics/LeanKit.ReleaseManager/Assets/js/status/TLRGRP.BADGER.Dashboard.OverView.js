@@ -6,6 +6,9 @@
     TLRGRP.BADGER.Dashboard.Overview = function () {
         var isSelected;
         var currentTimePeriod = '1hour';
+        var chartOptions = {
+            lockToZero: true
+        };
 
         return {
             toString: function () {
@@ -17,8 +20,11 @@
                 });
             },
             appendViewModel: function (viewModel) {
-                viewModel.timePeriod = currentTimePeriod;
-                viewModel.pageName = 'Overview';
+                if (isSelected) {
+                    viewModel.timePeriod = currentTimePeriod;
+                    viewModel.pageName = 'Overview';
+                }
+                
                 viewModel.dashboardViews[viewModel.dashboardViews.length] = {
                     name: 'Overview',
                     metric: 'Overview',
@@ -60,12 +66,12 @@
                             color: colors[4],
                             expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile,true))&' + currentTimitSelectDataString
                         }],
-                    chartOptions: {
+                    chartOptions: $.extend({}, chartOptions, {
                         yAxisLabel: 'requests',
                         dimensions: {
                             margin: { left: 50 }
                         }
-                    }
+                    })
                 },
                     {
                         title: 'Traffic by Page',
@@ -94,12 +100,12 @@
                                 color: colors[3],
                                 expression: 'sum(lr_web_request.eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
                             }],
-                        chartOptions: {
+                        chartOptions: $.extend({}, chartOptions, {
                             yAxisLabel: 'requests',
                             dimensions: {
                                 margin: { left: 50 }
                             }
-                        }
+                        })
                     },
                     {
                         title: 'Traffic by Channel',
@@ -122,12 +128,12 @@
                                 color: colors[4],
                                 expression: 'sum(lr_web_request.eq(pagechannel,"affiliate"))&' + currentTimitSelectDataString
                             }],
-                        chartOptions: {
+                        chartOptions: $.extend({}, chartOptions, {
                             yAxisLabel: 'requests',
                             dimensions: {
                                 margin: { left: 50 }
                             }
-                        }
+                        })
                     }, {
                         title: 'Response Time by Page',
                         'class': 'half',
@@ -155,12 +161,12 @@
                             color: colors[3],
                             expression: 'median(lr_web_request(duration).eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
                         }],
-                        chartOptions: {
+                        chartOptions: $.extend({}, chartOptions, {
                             yAxisLabel: 'request time (ms)',
                             dimensions: {
                                 margin: { left: 50 }
                             }
-                        }
+                        })
                     }];
 
                 return graphs;
