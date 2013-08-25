@@ -29,120 +29,31 @@
             stepAndLimit].join('');
     }
 
-    TLRGRP.BADGER.WMI = (function () {
-        var allMetrics = {};
-
-
-        return {
-            metricInfo: function (metricName) {
-                return {
-                    name: 'Requests Executing',
-                    metric: 'ASPNET2__Total_RequestsExecuting',
-                    group: 'ASPNET2',
-                    eventType: 'lr_web_wmi',
-                    chartOptions: {
-                        lockToZero: true,
-                        yAxisLabel: 'requests'
-                    }
-                };
-            }
-        };
-    })();
-
     TLRGRP.BADGER.Dashboard.WebHosts = function () {
+        function buildSubmetrics(counters) {
+            var countersLength = counters.length;
+            var x;
+            var subMetrics = {};
+
+            for (x = 0; x < countersLength; x++) {
+                subMetrics[counters[x]] = TLRGRP.BADGER.WMI.metricInfo(counters[x]);
+            }
+
+            return subMetrics;
+        }
+
         var views = {
             'Requests': {
                 defaultSubMetric: 'RequestsExecuting',
-                subMetrics: {
-                    'RequestsExecuting': TLRGRP.BADGER.WMI.metricInfo('RequestsExecuting'),
-                    'RequestsPerSec': {
-                        name: 'Requests /s',
-                        metric: 'ASPNET2__Total_RequestsPerSec',
-                        group: 'ASPNET2',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            lockToZero: true,
-                            yAxisLabel: 'requests /s'
-                        }
-                    },
-                    'ExecutionTime': {
-                        name: 'Execution Time',
-                        metric: 'ASPNET2__Total_RequestExecutionTime',
-                        group: 'ASPNET2',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            lockToZero: true,
-                            dimensions: {
-                                margin: { left: 50 }
-                            },
-                            yAxisLabel: 'time (s)',
-                        }
-                    }
-                }
+                subMetrics: buildSubmetrics(['RequestsExecuting', 'RequestsPerSec', 'ExecutionTime'])
             },
             'Performance': {
                 defaultSubMetric: 'CPU',
-                subMetrics: {
-                    'CPU': {
-                        name: 'CPU',
-                        metric: 'cpu__Total_PercentProcessorTime',
-                        group: 'cpu',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            axisExtents: {
-                                y: [0, 100]
-                            },
-                            yAxisLabel: '%',
-                        }
-                    },
-                    'Memory': {
-                        name: 'Memory',
-                        metric: 'memory_AvailableMBytes',
-                        group: 'memory',
-                        eventType: 'lr_web_wmi',
-                        divideBy: '/1024',
-                        chartOptions: {
-                            yAxisLabel: 'GB Available',
-                            lockToZero: true
-                        },
-                        defaults: {
-                            timePeriod: '4hours'
-                        }
-                    }
-                }
+                subMetrics: buildSubmetrics(['CPU', 'Memory'])
             },
             'Disk': {
                 defaultSubMetric: 'DiskSpaceD',
-                subMetrics: {
-                    'DiskSpaceC': {
-                        name: 'Disk (C:)',
-                        metric: 'disk_0_FreeSpace',
-                        group: 'disk',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            lockToZero: true,
-                            yAxisLabel: 'GB Remaining'
-                        },
-                        divideBy: '/1073741824',
-                        defaults: {
-                            timePeriod: '4hours'
-                        }
-                    },
-                    'DiskSpaceD': {
-                        name: 'Disk (D:)',
-                        metric: 'disk_1_FreeSpace',
-                        group: 'disk',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            lockToZero: true,
-                            yAxisLabel: 'GB Remaining'
-                        },
-                        divideBy: '/1073741824',
-                        defaults: {
-                            timePeriod: '4hours'
-                        }
-                    }
-                }
+                subMetrics: buildSubmetrics(['DiskSpaceC', 'DiskSpaceD'])
             }
         };
         var currentTimePeriod = '1hour';
