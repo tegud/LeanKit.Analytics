@@ -3,17 +3,6 @@
 
     var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
 
-    function getMachineName(machineNumber) {
-        var machineNumberLength = (machineNumber + '').length;
-        var id = machineNumber;
-
-        for (var x = machineNumberLength; x < 3; x++) {
-            id = '0' + id;
-        }
-
-        return 'TELWEB' + id + 'P';
-    }
-
     function buildExpression(selectedView, machineName, stepAndLimit, divideBy) {
         var metric = selectedView.metric;
         var metricGroup = selectedView.group;
@@ -149,7 +138,7 @@
 
                     for (var m = 0; m < metricGroups[n].length; m++) {
                         var machineId = metricGroups[n][m];
-                        var machineName = getMachineName(machineId);
+                        var machineName = TLRGRP.BADGER.Machines.getFullNameForWebServer(machineId);
 
                         if (!m) {
                             title += machineId + '-';

@@ -2,17 +2,6 @@
     TLRGRP.namespace('TLRGRP.BADGER.Dashboard');
 
     var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
-    
-    function getMachineName(machineNumber) {
-        var machineNumberLength = (machineNumber + '').length;
-        var id = machineNumber;
-
-        for (var x = machineNumberLength; x < 3; x++) {
-            id = '0' + id;
-        }
-
-        return 'TELWEB' + id + 'P';
-    }
 
     function buildExpression(selectedView, machineName, stepAndLimit) {
         var metric = selectedView.metric;
@@ -58,7 +47,7 @@
                     
                 if ('HostView' === currentViewName) {
                     for (var x = 1; x < 20; x++) {
-                        var machine = getMachineName(x);
+                        var machine = TLRGRP.BADGER.Machines.getFullNameForWebServer(x);
 
                         viewModel.subMetrics[viewModel.subMetrics.length] = {
                             name: x,
@@ -69,7 +58,7 @@
                     }
                     
                     for (x = 107; x < 110; x++) {
-                        var machine = getMachineName(x);
+                        var machine = TLRGRP.BADGER.Machines.getFullNameForWebServer(x);
 
                         viewModel.subMetrics[viewModel.subMetrics.length] = {
                             name: x,
