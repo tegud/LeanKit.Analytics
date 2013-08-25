@@ -46,25 +46,17 @@
                 };
                     
                 if ('HostView' === currentViewName) {
-                    for (var x = 1; x < 20; x++) {
-                        var machine = TLRGRP.BADGER.Machines.getFullNameForWebServer(x);
-
-                        viewModel.subMetrics[viewModel.subMetrics.length] = {
-                            name: x,
-                            metric: 'HostView',
-                            subMetric: machine,
-                            isSelected: currentSubMetricName === machine
-                        };
-                    }
+                    var allServers = TLRGRP.BADGER.Machines.getAllServers();
+                    var allServerLength = allServers.length;
+                    var x;
+                    var serverNameRegex = /TELWEB0{0,3}([0-9]){1,3}P/;
                     
-                    for (x = 107; x < 110; x++) {
-                        var machine = TLRGRP.BADGER.Machines.getFullNameForWebServer(x);
-
+                    for (x = 0; x < allServerLength; x++) {
                         viewModel.subMetrics[viewModel.subMetrics.length] = {
-                            name: x,
+                            name: allServers[x].replace(serverNameRegex, '$1'),
                             metric: 'HostView',
-                            subMetric: machine,
-                            isSelected: currentSubMetricName === machine
+                            subMetric: allServers[x],
+                            isSelected: currentSubMetricName === allServers[x]
                         };
                     }
                 }
