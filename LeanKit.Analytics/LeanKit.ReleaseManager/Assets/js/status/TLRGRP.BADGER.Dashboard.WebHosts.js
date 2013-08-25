@@ -1,4 +1,4 @@
-﻿(function() {
+﻿(function () {
     TLRGRP.namespace('TLRGRP.BADGER.Dashboard');
 
     var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
@@ -14,7 +14,7 @@
         return 'TELWEB' + id + 'P';
     }
 
-    function buildExpression(selectedView, machineName, stepAndLimit) {
+    function buildExpression(selectedView, machineName, stepAndLimit, divideBy) {
         var metric = selectedView.metric;
         var metricGroup = selectedView.group;
         var eventType = selectedView.eventType;
@@ -25,31 +25,36 @@
 
         return ['median(' + eventType + '(' + metric + ')',
             '.eq(source_host,"' + machineName + '")',
-            '.eq(metricGroup,"' + metricGroup + '"))&',
+            '.eq(metricGroup,"' + metricGroup + '"))' + (divideBy || '') + '&',
             stepAndLimit].join('');
     }
-    
-    TLRGRP.BADGER.Dashboard.WebHosts = function () {
-        var diskExpression = function (eventType, metric, machineName, metricGroup, stepAndLimit) {
-            return ['min(' + eventType + '(' + metric + ')',
-                '.eq(source_host,"' + machineName + '")',
-                '.eq(metricGroup,"' + metricGroup + '")) / 1073741824',
-                stepAndLimit].join('');
+
+    TLRGRP.BADGER.WMI = (function () {
+        var allMetrics = {};
+
+
+        return {
+            metricInfo: function (metricName) {
+                return {
+                    name: 'Requests Executing',
+                    metric: 'ASPNET2__Total_RequestsExecuting',
+                    group: 'ASPNET2',
+                    eventType: 'lr_web_wmi',
+                    chartOptions: {
+                        lockToZero: true,
+                        yAxisLabel: 'requests'
+                    }
+                };
+            }
         };
+    })();
+
+    TLRGRP.BADGER.Dashboard.WebHosts = function () {
         var views = {
             'Requests': {
                 defaultSubMetric: 'RequestsExecuting',
                 subMetrics: {
-                    'RequestsExecuting': {
-                        name: 'Requests Executing',
-                        metric: 'ASPNET2__Total_RequestsExecuting',
-                        group: 'ASPNET2',
-                        eventType: 'lr_web_wmi',
-                        chartOptions: {
-                            lockToZero: true,
-                            yAxisLabel: 'requests'
-                        }
-                    },
+                    'RequestsExecuting': TLRGRP.BADGER.WMI.metricInfo('RequestsExecuting'),
                     'RequestsPerSec': {
                         name: 'Requests /s',
                         metric: 'ASPNET2__Total_RequestsPerSec',
@@ -57,7 +62,7 @@
                         eventType: 'lr_web_wmi',
                         chartOptions: {
                             lockToZero: true,
-                            yAxisLabel: 'requests'
+                            yAxisLabel: 'requests /s'
                         }
                     },
                     'ExecutionTime': {
@@ -84,11 +89,24 @@
                         group: 'cpu',
                         eventType: 'lr_web_wmi',
                         chartOptions: {
-                            lockToZero: true,
                             axisExtents: {
                                 y: [0, 100]
                             },
                             yAxisLabel: '%',
+                        }
+                    },
+                    'Memory': {
+                        name: 'Memory',
+                        metric: 'memory_AvailableMBytes',
+                        group: 'memory',
+                        eventType: 'lr_web_wmi',
+                        divideBy: '/1024',
+                        chartOptions: {
+                            yAxisLabel: 'GB Available',
+                            lockToZero: true
+                        },
+                        defaults: {
+                            timePeriod: '4hours'
                         }
                     }
                 }
@@ -105,11 +123,10 @@
                             lockToZero: true,
                             yAxisLabel: 'GB Remaining'
                         },
+                        divideBy: '/1073741824',
                         defaults: {
-                            step: '3e5',
-                            limit: 48
-                        },
-                        expressionBuilder: diskExpression
+                            timePeriod: '4hours'
+                        }
                     },
                     'DiskSpaceD': {
                         name: 'Disk (D:)',
@@ -120,11 +137,10 @@
                             lockToZero: true,
                             yAxisLabel: 'GB Remaining'
                         },
+                        divideBy: '/1073741824',
                         defaults: {
-                            step: '3e5',
-                            limit: 48
-                        },
-                        expressionBuilder: diskExpression
+                            timePeriod: '4hours'
+                        }
                     }
                 }
             }
@@ -134,7 +150,7 @@
         var currentViewName;
         var currentSubMetric;
         var currentSubMetricName;
-        
+
         return {
             toString: function () {
                 return 'Webhosts';
@@ -162,7 +178,7 @@
                         metric: view,
                         isSelected: view === currentViewName
                     };
-                    
+
                     if (view === currentViewName) {
                         for (var subMetric in currentView.subMetrics) {
                             if (!currentView.subMetrics.hasOwnProperty(subMetric)) {
@@ -187,6 +203,10 @@
                 currentView = selectedView;
                 currentSubMetric = currentView.subMetrics[selectedSubmetric];
                 currentSubMetricName = selectedSubmetric;
+
+                if (currentSubMetric.defaults && currentSubMetric.defaults.timePeriod) {
+                    currentTimePeriod = currentSubMetric.defaults.timePeriod;
+                }
             },
             clearView: function () {
                 currentViewName = '';
@@ -214,6 +234,7 @@
                 for (var n = 0; n < metricGroups.length; n++) {
                     var expressions = [];
                     var title = currentSubMetric.name + ' by hosts ';
+                    var divideBy = currentSubMetric.divideBy;
 
                     for (var m = 0; m < metricGroups[n].length; m++) {
                         var machineId = metricGroups[n][m];
@@ -229,7 +250,7 @@
                             id: machineName,
                             title: machineName,
                             color: colors[m % colors.length],
-                            expression: buildExpression(currentSubMetric, machineName, currentTimitSelectDataString)
+                            expression: buildExpression(currentSubMetric, machineName, currentTimitSelectDataString, divideBy)
                         };
                     }
 
