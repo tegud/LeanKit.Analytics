@@ -34,6 +34,8 @@
         var currentTimePeriod = '1hour';
         var currentViewName;
         var currentSubMetricName;
+        var currentView;
+        var currentSubMetric;
         
         return {
             toString: function () {
@@ -102,107 +104,69 @@
                     }
                 };
 
-                return [{
-                        title: 'Requests Executing',
+                var defaultGraphBuilderOptions = {
+                    graphOptions: {}
+                };
+
+                function buildGraph(metrics, options) {
+                    var metricsLength;
+                    var x;
+                    var expressions = [];
+                    var name = 'Untitled';
+
+                    options = $.extend({}, defaultGraphBuilderOptions, options);
+
+                    if (typeof metrics === 'string') {
+                        if (options.name) {
+                            name = options.name;
+                        }
+                        
+                        metrics = [metrics];
+                    }
+
+                    metricsLength = metrics.length;
+
+                    for (x = 0; x < metricsLength; x++) {
+                        var wmiMetric = TLRGRP.BADGER.WMI.metricInfo(metrics[x]);
+
+                        if (name === 'Untitled') {
+                            name = wmiMetric.name;
+                        }
+
+                        expressions[expressions.length] = {
+                            id: metrics[x],
+                            title: wmiMetric.name,
+                            color: colors[x % colors.length],
+                            expression: buildExpression(wmiMetric, currentSubMetricName, currentTimitSelectDataString)
+                        };
+                    }
+
+                    return {
+                        title: options.name || name,
                         'class': 'half',
-                        expressions: [{
-                            id: 'requests-executing',
-                            color: colors[0],
-                            expression: buildExpression({
-                                metric: 'ASPNET2__Total_RequestsExecuting',
-                                group: 'ASPNET2',
-                                eventType: 'lr_web_wmi'
-                            }, currentSubMetricName, currentTimitSelectDataString)
-                        }],
-                        chartOptions: $.extend({}, chartOptions, { yAxisLabel: 'requests' })
-                    }, {
-                        title: 'CPU',
-                        'class': 'half',
-                        expressions: [{
-                                id: 'cpu',
-                                color: colors[0],
-                                expression: buildExpression({
-                                    metric: 'cpu__Total_PercentProcessorTime',
-                                    group: 'cpu',
-                                    eventType: 'lr_web_wmi'
-                                }, currentSubMetricName, currentTimitSelectDataString)
-                            }
-                        ],
-                        chartOptions: $.extend({}, chartOptions, {
-                            yAxisLabel: '%',
-                            axisExtents: {
-                                y: [0, 100]
-                            }
-                        })
-                    },
-                    {
-                        title: 'Available Memory',
-                        'class': 'half',
-                        expressions: [{
-                            id: 'cpu',
-                            color: colors[0],
-                            expression: buildExpression({
-                                metric: 'memory_AvailableMBytes',
-                                group: 'memory',
-                                eventType: 'lr_web_wmi',
-                                divideBy: '/1024'
-                            }, currentSubMetricName, currentTimitSelectDataString)
-                        }],
-                        chartOptions: $.extend({}, chartOptions, {
-                            yAxisLabel: 'GB'
-                        })
-                    },
-                    {
-                        title: 'Garbage Collection',
-                        'class': 'half',
-                        expressions: [{
-                            id: 'gen0',
-                            color: colors[0],
-                            title: 'Gen0',
-                            expression: buildExpression({
-                                    metric: 'GarbageCollection_3_NumberGen0Collections',
-                                    group: 'GarbageCollection',
-                                    eventType: 'lr_web_wmi'
-                                },
-                                currentSubMetricName,
-                                currentTimitSelectDataString)
-                        }, {
-                            id: 'gen1',
-                            color: colors[1],
-                            title: 'Gen1',
-                            expression: buildExpression({
-                                metric: 'GarbageCollection_3_NumberGen1Collections',
-                                group: 'GarbageCollection',
-                                eventType: 'lr_web_wmi'
-                            },
-                                currentSubMetricName,
-                                currentTimitSelectDataString)
-                        }, {
-                            id: 'gen1',
-                            color: colors[2],
-                            title: 'Gen2',
-                            expression: buildExpression({
-                                metric: 'GarbageCollection_3_NumberGen2Collections',
-                                group: 'GarbageCollection',
-                                eventType: 'lr_web_wmi'
-                            },
-                                currentSubMetricName,
-                                currentTimitSelectDataString)
-                        }],
-                        chartOptions: $.extend({}, chartOptions, {
+                        expressions: expressions,
+                        chartOptions: $.extend({}, chartOptions, options.graphOptions)
+                    };
+                }
+
+                return [
+                    buildGraph('RequestsExecuting'),
+                    buildGraph('CPU'),
+                    buildGraph('Memory'),
+                    buildGraph(['Gen0GarbageCollection', 'Gen1GarbageCollection', 'Gen2GarbageCollection'], {
+                        name: 'Garbage Collection',
+                        graphOptions: {
                             dimensions: {
                                 margin: {
                                     left: 50,
                                     right: 90
                                 }
                             },
-                            yAxisLabel: '',
                             legend: {
                                 textAlign: 'end'
                             }
-                        })
-                    }
-                ];
+                        }
+                    })];
             }
         };
     };

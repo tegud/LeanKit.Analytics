@@ -90,6 +90,24 @@
                 defaults: {
                     timePeriod: '4hours'
                 }
+            },
+            'Gen0GarbageCollection': {
+                name: 'Gen 0',
+                metric: 'GarbageCollection_3_NumberGen0Collections',
+                group: 'GarbageCollection',
+                eventType: wmiEventType
+            },
+            'Gen1GarbageCollection': {
+                name: 'Gen 1',
+                metric: 'GarbageCollection_3_NumberGen1Collections',
+                group: 'GarbageCollection',
+                eventType: wmiEventType
+            },
+            'Gen2GarbageCollection': {
+                name: 'Gen 2',
+                metric: 'GarbageCollection_3_NumberGen2Collections',
+                group: 'GarbageCollection',
+                eventType: wmiEventType
             }
         };
 
