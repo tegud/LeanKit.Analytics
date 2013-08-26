@@ -3,29 +3,14 @@
 
     var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
 
-    function buildExpression(selectedView, machineName, stepAndLimit) {
-        var metric = selectedView.metric;
-        var metricGroup = selectedView.group;
-        var eventType = selectedView.eventType;
-        var divideBy = selectedView.divideBy;
-
-        if (selectedView.expressionBuilder && $.isFunction(selectedView.expressionBuilder)) {
-            return selectedView.expressionBuilder(eventType, metric, machineName, metricGroup, stepAndLimit);
-        }
-
-        return ['median(' + eventType + '(' + metric + ')',
-            '.eq(source_host,"' + machineName + '")',
-            '.eq(metricGroup,"' + metricGroup + '"))' + (divideBy || '') + '&',
-            stepAndLimit].join('');
-    }
-
     TLRGRP.BADGER.Dashboard.ByHost = function () {
         var currentTimePeriod = '1hour';
         var currentViewName;
         var currentSubMetricName;
         var currentView;
         var currentSubMetric;
-        
+        var isSelected;
+
         return {
             toString: function () {
                 return 'Host View';
@@ -42,14 +27,14 @@
                 viewModel.dashboardViews[viewModel.dashboardViews.length] = {
                     name: 'By Server',
                     metric: 'HostView',
-                    isSelected: 'HostView' === currentViewName
+                    isSelected: isSelected
                 };
                     
-                if ('HostView' === currentViewName) {
+                if (isSelected) {
                     var allServers = TLRGRP.BADGER.Machines.getAllServers();
                     var allServerLength = allServers.length;
                     var x;
-                    var serverNameRegex = /TELWEB0{0,3}([0-9]){1,3}P/;
+                    var serverNameRegex = /TELWEB[0]{0,3}([0-9]{1,3})P/;
                     
                     for (x = 0; x < allServerLength; x++) {
                         viewModel.subMetrics[viewModel.subMetrics.length] = {
@@ -64,8 +49,10 @@
             setView: function (view, subMetric) {
                 currentViewName = view;
                 currentSubMetricName = subMetric || 'TELWEB001P';
+                isSelected = true;
             },
             clearView: function () {
+                isSelected = false;
                 currentViewName = '';
                 currentView = '';
                 currentSubMetric = '';
@@ -94,6 +81,7 @@
                     var x;
                     var expressions = [];
                     var name = 'Untitled';
+                    var allMetricChartOptions = [true, {}, chartOptions];
 
                     options = $.extend({}, defaultGraphBuilderOptions, options);
 
@@ -114,19 +102,23 @@
                             name = wmiMetric.name;
                         }
 
+                        allMetricChartOptions[allMetricChartOptions.length] = wmiMetric.chartOptions;
+
                         expressions[expressions.length] = {
                             id: metrics[x],
                             title: wmiMetric.name,
                             color: colors[x % colors.length],
-                            expression: buildExpression(wmiMetric, currentSubMetricName, currentTimitSelectDataString)
+                            expression: TLRGRP.BADGER.Cube.WMI.buildExpression(wmiMetric, currentSubMetricName, currentTimitSelectDataString)
                         };
                     }
+
+                    allMetricChartOptions[allMetricChartOptions.length] = options.graphOptions;
 
                     return {
                         title: options.name || name,
                         'class': 'half',
                         expressions: expressions,
-                        chartOptions: $.extend({}, chartOptions, options.graphOptions)
+                        chartOptions: $.extend.apply(this, allMetricChartOptions)
                     };
                 }
 

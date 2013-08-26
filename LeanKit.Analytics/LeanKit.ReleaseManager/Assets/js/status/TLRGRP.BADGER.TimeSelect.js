@@ -35,7 +35,13 @@
         element
             .on('change', function () {
                 var timeLimit = $(this).children(':selected:first').data('timeLimit');
-                window.location = buildUrl(timeLimit);
+                
+                if (timeLimit) {
+                    window.location = buildUrl(timeLimit);
+                    return;
+                }
+
+
             });
 
         selectTimePeriod();

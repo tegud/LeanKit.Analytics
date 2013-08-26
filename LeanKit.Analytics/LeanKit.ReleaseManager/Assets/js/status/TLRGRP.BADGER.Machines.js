@@ -28,9 +28,6 @@
         }
 
         return {
-            getFullNameForWebServer: function (machineNumber) {
-                return buildServerName(machineNumber);
-            },
             getAllServers: function() {
                 var allServers = [];
 

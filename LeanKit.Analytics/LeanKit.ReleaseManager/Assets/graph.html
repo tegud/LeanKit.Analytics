@@ -17,9 +17,14 @@
     <script src="js/status-charts/TLRGRP.dashboards.graphs.DashboardChart.js"></script>
     <script src="js/status-charts/TLRGRP.dashboards.graphs.DashboardChartStore.js"></script>
     <script src="js/page-capture.js"></script>
+    <script src="js/lib/fabric.all.min.js"></script>
     <script>
         (function () {
             $('#capture-graph').on('click', function () {
+                //var svg = fabric.loadSVGFromString($('body > svg').html());
+                //console.log(svg);
+
+
                 html2canvas(document.body, {
                     onrendered: function (canvas) {
                         Canvas2Image.saveAsPNG(canvas);

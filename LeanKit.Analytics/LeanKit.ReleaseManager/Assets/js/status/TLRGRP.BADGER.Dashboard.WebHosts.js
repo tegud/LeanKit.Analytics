@@ -3,21 +3,6 @@
 
     var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
 
-    function buildExpression(selectedView, machineName, stepAndLimit, divideBy) {
-        var metric = selectedView.metric;
-        var metricGroup = selectedView.group;
-        var eventType = selectedView.eventType;
-
-        if (selectedView.expressionBuilder && $.isFunction(selectedView.expressionBuilder)) {
-            return selectedView.expressionBuilder(eventType, metric, machineName, metricGroup, stepAndLimit);
-        }
-
-        return ['median(' + eventType + '(' + metric + ')',
-            '.eq(source_host,"' + machineName + '")',
-            '.eq(metricGroup,"' + metricGroup + '"))' + (divideBy || '') + '&',
-            stepAndLimit].join('');
-    }
-
     TLRGRP.BADGER.Dashboard.WebHosts = function () {
         function buildSubmetrics(counters) {
             var countersLength = counters.length;
@@ -122,23 +107,25 @@
                 var currentMetricGroup = -1;
                 var graphs = [];
                 var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
+                var webBoxes = TLRGRP.BADGER.Machines.getServerRange('web');
+                var webBoxesLength = webBoxes.length;
 
-                for (var i = 0; i < 19; i++) {
+                for (var i = 0; i < webBoxesLength; i++) {
                     if (!(i % maxPerGroup)) {
                         metricGroups[++currentMetricGroup] = [];
                     }
 
-                    metricGroups[currentMetricGroup][metricGroups[currentMetricGroup].length] = i + 1;
+                    metricGroups[currentMetricGroup][metricGroups[currentMetricGroup].length] = webBoxes[i];
                 }
 
                 for (var n = 0; n < metricGroups.length; n++) {
                     var expressions = [];
                     var title = currentSubMetric.name + ' by hosts ';
-                    var divideBy = currentSubMetric.divideBy;
 
                     for (var m = 0; m < metricGroups[n].length; m++) {
-                        var machineId = metricGroups[n][m];
-                        var machineName = TLRGRP.BADGER.Machines.getFullNameForWebServer(machineId);
+                        var machineName = metricGroups[n][m];
+                        var serverNameRegex = /TELWEB[0]{0,3}([0-9]{1,3})P/;
+                        var machineId = machineName.replace(serverNameRegex, '$1');
 
                         if (!m) {
                             title += machineId + '-';
@@ -150,7 +137,7 @@
                             id: machineName,
                             title: machineName,
                             color: colors[m % colors.length],
-                            expression: buildExpression(currentSubMetric, machineName, currentTimitSelectDataString, divideBy)
+                            expression: TLRGRP.BADGER.Cube.WMI.buildExpression(currentSubMetric, machineName, currentTimitSelectDataString)
                         };
                     }
 

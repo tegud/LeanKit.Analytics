@@ -23,4 +23,20 @@
 
         return 'step=' + timePeriodMapping.step + '&limit=' + timePeriodMapping.limit;
     };
+
+    TLRGRP.BADGER.Cube.WMI = (function () {
+        return {
+            buildExpression: function (selectedView, machineName, stepAndLimit) {
+                var metric = selectedView.metric;
+                var metricGroup = selectedView.group;
+                var eventType = selectedView.eventType;
+                var divideBy = selectedView.divideBy;
+
+                return ['median(' + eventType + '(' + metric + ')',
+                    '.eq(source_host,"' + machineName + '")',
+                    '.eq(metricGroup,"' + metricGroup + '"))' + (divideBy || '') + '&',
+                    stepAndLimit].join('');
+            }
+        };
+    })();
 })();
