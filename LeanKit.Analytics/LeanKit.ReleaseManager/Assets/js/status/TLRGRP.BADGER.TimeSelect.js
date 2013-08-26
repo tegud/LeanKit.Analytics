@@ -18,7 +18,7 @@
             return '/Status?' + timeLimit;
         }
 
-        function selectTimePeriod() {
+        function selectTimePeriod(element) {
             element
                 .children().each(function() {
                     var currentItem = $(this);
@@ -31,6 +31,41 @@
                     return true;
                 });
         }
+        
+        function setCustomPeriod() {
+            var dialogElement = $('<div class="time-period-dialog">'
+                    + '<label>Date: <input type="date" class="time-period-date" /></label>'
+                    + '<label>Time: <input type="time" class="time-period-time" /></label>'
+                    + '<label>Period: <select class="time-period-picker">' + element.html() + '</select>'
+                    + '</label>' 
+                + '</div>')
+                .appendTo($('body'))
+                .dialog({
+                    title: 'Select Time Period',
+                    resizable: false,
+                    draggable: false,
+                    modal: true,
+                    close: closeDialog,
+                    width: 400,
+                    height: 240,
+                    buttons: {
+                        'Set': function () {
+                            var start = $('.time-period-date', dialogElement).val() + 'T' + $('.time-period-time', dialogElement).val() + ':00Z';
+
+                            window.location = buildUrl(timePeriodPickerElement.children(':selected:first').data('timeLimit') + '&start=' + start);
+                        },
+                        'Cancel': closeDialog
+                    }
+                });
+            var timePeriodPickerElement = $('.time-period-picker', dialogElement);
+
+            timePeriodPickerElement.children('option:last').remove();
+            selectTimePeriod(timePeriodPickerElement);
+
+            function closeDialog() {
+                dialogElement.dialog('close').remove();
+            }
+        }
 
         element
             .on('change', function () {
@@ -41,9 +76,10 @@
                     return;
                 }
 
-
+                setCustomPeriod();
+                selectTimePeriod(element);
             });
 
-        selectTimePeriod();
+        selectTimePeriod(element);
     };
 })();

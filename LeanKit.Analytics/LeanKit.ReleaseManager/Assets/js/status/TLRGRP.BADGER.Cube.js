@@ -10,6 +10,7 @@
     };
 
     var timePeriodMappings = {
+        '5mins': { step: STEP.TenSeconds, limit: 30 },
         '15mins': { step: STEP.OneMinute, limit: 15 },
         '30mins': { step: STEP.OneMinute, limit: 30 },
         '1hour': { step: STEP.OneMinute, limit: 60 },

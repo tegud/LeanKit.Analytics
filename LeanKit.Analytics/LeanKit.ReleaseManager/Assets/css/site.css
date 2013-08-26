@@ -384,6 +384,12 @@ td.ticket-cycle-time { width: 90px;}
 
 .time-select {float: right;padding: 3px 0 0 0; }
 
+.time-period-dialog { font-size: 0.8em }
+
+.time-period-dialog label { display: block; }
+
+.time-period-dialog input[type='date'],
+.time-period-dialog input[type='time'] { margin: 4px 4px 4px 12px } 
 
 .box line,
 .box rect,
