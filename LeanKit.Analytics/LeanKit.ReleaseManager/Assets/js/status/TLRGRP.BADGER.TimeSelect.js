@@ -18,13 +18,24 @@
             return '/Status?' + timeLimit;
         }
 
-        function selectTimePeriod(element) {
+        function selectTimePeriod(element, timePeriodOverride) {
             element
                 .children().each(function() {
                     var currentItem = $(this);
 
-                    if (currentItem.data('timeLimit') === 'timePeriod=' + currentTimePeriod) {
+                    if (currentItem.data('timeLimit') === 'timePeriod=' + (timePeriodOverride || currentTimePeriod)) {
                         currentItem.prop('selected', true);
+                        return false;
+                    }
+                    
+                    if (!currentItem.data('timeLimit') && currentTimePeriod.start) {
+                        currentItem
+                            .prop('selected', true)
+                            .text('User Defined');
+
+                        if (element.children('.custom-item').size() === 1) {
+                            element.append('<option class="custom-item">Adjust...</option>');
+                        }
                         return false;
                     }
 
@@ -33,10 +44,31 @@
         }
         
         function setCustomPeriod() {
+            var timePeriodSelect = element
+                .clone()
+                .children('.custom-item')
+                .remove()
+                .end()
+                .children()
+                .each(function () {
+                    var item = $(this);
+
+                    item.text(item.data('customText'));
+                })
+                .end();
+            var startDate = '';
+            var startTime = '';
+
+            if (currentTimePeriod.start) {
+                var startMoment = moment(currentTimePeriod.start);
+                startDate = startMoment.utc().format('YYYY-MM-DD');
+                startTime = startMoment.utc().format('HH:mm');
+            }
+
             var dialogElement = $('<div class="time-period-dialog">'
-                    + '<label>Date: <input type="date" class="time-period-date" /></label>'
-                    + '<label>Time: <input type="time" class="time-period-time" /></label>'
-                    + '<label>Period: <select class="time-period-picker">' + element.html() + '</select>'
+                    + '<label>Date: <input type="date" class="time-period-date" value="' + startDate + '" /></label>'
+                    + '<label>Time: <input type="time" class="time-period-time" value="' + startTime + '"/></label>'
+                    + '<label>Period: <select class="time-period-picker">' + timePeriodSelect.html() + '</select>'
                     + '</label>' 
                 + '</div>')
                 .appendTo($('body'))
@@ -59,8 +91,7 @@
                 });
             var timePeriodPickerElement = $('.time-period-picker', dialogElement);
 
-            timePeriodPickerElement.children('option:last').remove();
-            selectTimePeriod(timePeriodPickerElement);
+            selectTimePeriod(timePeriodPickerElement, currentTimePeriod.timePeriod);
 
             function closeDialog() {
                 dialogElement.dialog('close').remove();

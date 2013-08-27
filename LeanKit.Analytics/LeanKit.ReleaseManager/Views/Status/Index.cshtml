@@ -9,13 +9,13 @@
     <li class="stop-start" id="stop-start"></li>
     <li class="time-select">
         <select id="query-time-select">
-            <option data-time-limit="timePeriod=15mins">Last 15mins</option>
-            <option data-time-limit="timePeriod=30mins">Last 30mins</option>
-            <option data-time-limit="timePeriod=1hour">Last Hour</option>
-            <option data-time-limit="timePeriod=4hours">Last 4 Hours</option>
-            <option data-time-limit="timePeriod=12hours">Last 12 Hours</option>
-            <!--<option data-time-limit="timePeriod=1day">Last 24 Hours</option>-->
-            <option>Custom...</option>
+            <option data-time-limit="timePeriod=15mins" data-custom-text="15 Mins">Last 15mins</option>
+            <option data-time-limit="timePeriod=30mins" data-custom-text="30 Mins">Last 30mins</option>
+            <option data-time-limit="timePeriod=1hour" data-custom-text="1 Hour">Last Hour</option>
+            <option data-time-limit="timePeriod=4hours" data-custom-text="4 Hours">Last 4 Hours</option>
+            <option data-time-limit="timePeriod=12hours" data-custom-text="12 Hours">Last 12 Hours</option>
+            <!--<option data-time-limit="timePeriod=1day" data-custom-text="24 Hours">Last 24 Hours</option>-->
+            <option class="custom-item">Custom...</option>
         </select>
     </li>
 </ul>
@@ -46,6 +46,7 @@
     <script src="~/assets/js/page-capture.js"></script>
     <script src="~/assets/js/lib/jquery-2.0.0.min.js"></script>
     <script src="~/assets/js/lib/jquery-ui.js"></script>
+    <script src="~/assets/js/lib/moment.min.js"></script>
     <script src="~/assets/js/lib/TLRGRP.core.js"></script>
     <script src="~/assets/js/lib/TLRGRP.BADGER.utilities.js"></script>
     <script src="~/assets/js/status-charts/TLRGRP.dashboards.Builder.js"></script>

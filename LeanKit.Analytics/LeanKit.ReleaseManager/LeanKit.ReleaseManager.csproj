@@ -257,6 +257,7 @@
     <Content Include="Assets\js\charts\TLRGRP.dashboards.graphs.renderers.js" />
     <Content Include="Assets\js\d3.box.js" />
     <Content Include="Assets\js\ladda.js" />
+    <Content Include="Assets\js\lib\moment.min.js" />
     <Content Include="Assets\js\lib\fabric.all.min.js" />
     <Content Include="Assets\js\lib\jquery-ui.js" />
     <Content Include="Assets\js\lib\TLRGRP.BADGER.utilities.js" />

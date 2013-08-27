@@ -90,26 +90,49 @@
                 defaults: {
                     timePeriod: '4hours'
                 }
-            },
-            'Gen0GarbageCollection': {
-                name: 'Gen 0',
-                metric: 'GarbageCollection_3_NumberGen0Collections',
-                group: 'GarbageCollection',
-                eventType: wmiEventType
-            },
-            'Gen1GarbageCollection': {
-                name: 'Gen 1',
-                metric: 'GarbageCollection_3_NumberGen1Collections',
-                group: 'GarbageCollection',
-                eventType: wmiEventType
-            },
-            'Gen2GarbageCollection': {
-                name: 'Gen 2',
-                metric: 'GarbageCollection_3_NumberGen2Collections',
-                group: 'GarbageCollection',
-                eventType: wmiEventType
             }
         };
+        
+        function appendGarbageCollectionCounters() {
+            var templates = {
+                'Gen0GarbageCollection': {
+                    name: 'Gen 0',
+                    metric: 'GarbageCollection_{ID}_NumberGen0Collections'
+                },
+                'Gen1GarbageCollection': {
+                    name: 'Gen 1',
+                    metric: 'GarbageCollection_{ID}_NumberGen1Collections'
+                },
+                'Gen2GarbageCollection': {
+                    name: 'Gen 2',
+                    metric: 'GarbageCollection_{ID}_NumberGe2Collections'
+                },
+                'PercentTimeinGC': {
+                    name: 'GC {ID}',
+                    metric: 'GarbageCollection_{ID}_PercentTimeinGC',
+                }
+            };
+
+            for (var x = 1; x < 4; x++) {
+                for (var template in templates) {
+                    if (!templates.hasOwnProperty(template)) {
+                        continue;
+                    }
+
+                    var metricTemplate = templates[template];
+                    var metricName = template + x;
+
+                    allMetrics[metricName] = {
+                        name: metricTemplate.name.replace('{ID}', x),
+                        metric: metricTemplate.metric.replace('{ID}', x),
+                        group: 'GarbageCollection',
+                        eventType: wmiEventType
+                    };
+                }
+            }
+        }
+
+        appendGarbageCollectionCounters();
 
         return {
             metricInfo: function (metricName) {

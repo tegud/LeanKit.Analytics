@@ -10,19 +10,36 @@
     };
 
     var timePeriodMappings = {
-        '5mins': { step: STEP.TenSeconds, limit: 30 },
-        '15mins': { step: STEP.OneMinute, limit: 15 },
-        '30mins': { step: STEP.OneMinute, limit: 30 },
-        '1hour': { step: STEP.OneMinute, limit: 60 },
-        '4hours': { step: STEP.FiveMinutes, limit: 48 },
-        '12hours': { step: STEP.OneHour, limit: 12 },
-        '1day': { step: STEP.OneHour, limit: 24 }
+        '5mins': { step: STEP.TenSeconds, limit: 30, minutes: 5 },
+        '15mins': { step: STEP.OneMinute, limit: 15, minutes: 15 },
+        '30mins': { step: STEP.OneMinute, limit: 30, minutes: 30 },
+        '1hour': { step: STEP.OneMinute, limit: 60, minutes: 60 },
+        '4hours': { step: STEP.FiveMinutes, limit: 48, minutes: 240 },
+        '12hours': { step: STEP.OneHour, limit: 12, minutes: 720 },
+        '1day': { step: STEP.OneHour, limit: 24, minutes: 1440 }
     };
 
     TLRGRP.BADGER.Cube.convertTimePeriod = function (timePeriod) {
-        var timePeriodMapping = timePeriodMappings[timePeriod];
+        if (typeof(timePeriod) === 'string') {
+            timePeriod = {
+                timePeriod: timePeriod
+            };
+        }
 
-        return 'step=' + timePeriodMapping.step + '&limit=' + timePeriodMapping.limit;
+        var timePeriodMapping = timePeriodMappings[timePeriod.timePeriod];
+        var timeString = 'step=' + timePeriodMapping.step;
+
+        if (timePeriod.start) {
+            var startMoment = moment(timePeriod.start);
+            var endMoment = startMoment.add('minutes', timePeriodMapping.minutes);
+
+            timeString += '&start=' + timePeriod.start + '&stop=' + endMoment.utc().format('YYYY-MM-DD') + 'T' + endMoment.utc().format('HH:mm:ss');
+        }
+        else {
+            timeString += '&limit=' + timePeriodMapping.limit;
+        }
+
+        return timeString;
     };
 
     TLRGRP.BADGER.Cube.WMI = (function () {

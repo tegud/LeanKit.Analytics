@@ -14,7 +14,14 @@
                 return currentSubmetric;
             },
             timePeriod: function () {
-                return TLRGRP.BADGER.Utilities.getParameterByName('timePeriod');
+                if (!TLRGRP.BADGER.Utilities.getParameterByName('start') && !TLRGRP.BADGER.Utilities.getParameterByName('timePeriod')) {
+                    return false;
+                }
+
+                return {
+                    start: TLRGRP.BADGER.Utilities.getParameterByName('start'),
+                    timePeriod: TLRGRP.BADGER.Utilities.getParameterByName('timePeriod')
+                };
             }
         };
     };

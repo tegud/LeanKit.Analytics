@@ -44,7 +44,8 @@
                     return decodeURIComponent(results[1].replace(/\+/g, " "));
                 }
             }
-	
+
+            var refreshRate = getParameterByName('refreshRate') || 0;
             var defaultChartOptions = {
                 dimensions: {
                     margin: { top: 10, right: 100, bottom: 20, left: 30 }
@@ -67,7 +68,7 @@
                 dataStore = new TLRGRP.dashboards.graphs.DashboardChartStore({
                     expressions: expressions,
                     server: 'http://10.44.26.14',
-                    refreshRate: 2500,
+                    refreshRate: refreshRate,
                     chart: chart
                 });
 

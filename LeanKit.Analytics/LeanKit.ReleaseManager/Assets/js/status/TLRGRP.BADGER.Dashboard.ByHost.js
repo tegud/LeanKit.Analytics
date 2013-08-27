@@ -126,8 +126,50 @@
                     buildGraph('RequestsExecuting'),
                     buildGraph('CPU'),
                     buildGraph('Memory'),
-                    buildGraph(['Gen0GarbageCollection', 'Gen1GarbageCollection', 'Gen2GarbageCollection'], {
-                        name: 'Garbage Collection',
+                    buildGraph(['Gen0GarbageCollection1', 'Gen1GarbageCollection1', 'Gen2GarbageCollection1'], {
+                        name: 'Garbage Collection 1',
+                        graphOptions: {
+                            dimensions: {
+                                margin: {
+                                    left: 50,
+                                    right: 90
+                                }
+                            },
+                            legend: {
+                                textAlign: 'end'
+                            }
+                        }
+                    }),
+                    buildGraph(['Gen0GarbageCollection2', 'Gen1GarbageCollection2', 'Gen2GarbageCollection2'], {
+                        name: 'Garbage Collection 2',
+                        graphOptions: {
+                            dimensions: {
+                                margin: {
+                                    left: 50,
+                                    right: 90
+                                }
+                            },
+                            legend: {
+                                textAlign: 'end'
+                            }
+                        }
+                    }),
+                    buildGraph(['Gen0GarbageCollection3', 'Gen1GarbageCollection3', 'Gen2GarbageCollection3'], {
+                        name: 'Garbage Collection 3',
+                        graphOptions: {
+                            dimensions: {
+                                margin: {
+                                    left: 50,
+                                    right: 90
+                                }
+                            },
+                            legend: {
+                                textAlign: 'end'
+                            }
+                        }
+                    }),
+                    buildGraph(['PercentTimeinGC1', 'PercentTimeinGC2', 'PercentTimeinGC3'], {
+                        name: 'Time in GC',
                         graphOptions: {
                             dimensions: {
                                 margin: {
