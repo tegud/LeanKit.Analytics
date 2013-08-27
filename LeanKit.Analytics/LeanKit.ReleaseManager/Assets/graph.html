@@ -45,7 +45,6 @@
                 }
             }
 
-            var refreshRate = getParameterByName('refreshRate') || 0;
             var defaultChartOptions = {
                 dimensions: {
                     margin: { top: 10, right: 100, bottom: 20, left: 30 }
@@ -64,7 +63,9 @@
 				
                     return $.extend(true, defaultChartOptions, JSON.parse(urlOptions), { series: expressions });
                 },
-                chart = new TLRGRP.dashboards.graphs.DashboardChart(getChartOptions()),
+                chartOptions = getChartOptions(),
+                chart = new TLRGRP.dashboards.graphs.DashboardChart(chartOptions),
+                refreshRate = typeof chartOptions.refreshRate !== 'undefined' ? chartOptions.refreshRate : 2500,
                 dataStore = new TLRGRP.dashboards.graphs.DashboardChartStore({
                     expressions: expressions,
                     server: 'http://10.44.26.14',

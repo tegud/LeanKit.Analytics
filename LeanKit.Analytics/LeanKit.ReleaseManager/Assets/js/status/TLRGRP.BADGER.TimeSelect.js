@@ -23,7 +23,7 @@
                 .children().each(function() {
                     var currentItem = $(this);
 
-                    if (currentItem.data('timeLimit') === 'timePeriod=' + (timePeriodOverride || currentTimePeriod)) {
+                    if (currentItem.data('timeLimit') === 'timePeriod=' + (timePeriodOverride || currentTimePeriod.timePeriod)) {
                         currentItem.prop('selected', true);
                         return false;
                     }
@@ -82,7 +82,7 @@
                     height: 240,
                     buttons: {
                         'Set': function () {
-                            var start = $('.time-period-date', dialogElement).val() + 'T' + $('.time-period-time', dialogElement).val() + ':00Z';
+                            var start = $('.time-period-date', dialogElement).val() + 'T' + $('.time-period-time', dialogElement).val() + ':00';
 
                             window.location = buildUrl(timePeriodPickerElement.children(':selected:first').data('timeLimit') + '&start=' + start);
                         },

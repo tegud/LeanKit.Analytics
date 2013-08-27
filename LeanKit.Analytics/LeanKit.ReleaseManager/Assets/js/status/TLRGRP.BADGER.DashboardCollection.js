@@ -71,6 +71,8 @@
             setUpUi: function () {
                 var viewModel = buildViewModel();
                 var graphs = currentDashboard.getGraphs();
+                var x = 0;
+                var graphsLength = graphs.length;
                 
                 new TLRGRP.BADGER.DashboardList(viewModel);
 
@@ -79,7 +81,13 @@
                 new TLRGRP.BADGER.StopStart($('#stop-start'));
 
                 $('#metric-title').text(viewModel.pageName);
-                
+
+                if (request.timePeriod().start) {
+                    for (; x < graphsLength; x++) {
+                        graphs[x].chartOptions.refreshRate = 0;
+                    }
+                }
+
                 new TLRGRP.dashboards.Builder($('#graphs'), graphs);
             }
         };
