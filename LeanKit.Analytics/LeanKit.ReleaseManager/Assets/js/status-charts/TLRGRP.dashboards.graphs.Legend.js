@@ -46,11 +46,17 @@ TLRGRP.namespace('TLRGRP.dashboards.graphs');
 			.attr("height", 18)
 			.style("fill", function(d) { return d.color; });
 
-		legend.append("text")
-			.attr("x", width + legendBasePosition.textXPositionOffset)
+	    legend.append("text")
+            .attr("x", width + legendBasePosition.textXPositionOffset)
 			.attr("y", 9)
 			.attr("dy", ".35em")
+	        .attr('class', options.linkFormat ? 'legend-link' : '')
 			.style("text-anchor", legendBasePosition.textAlign)
-			.text(function(d) { return d.title; });
+			.text(function (d) { return d.title; })
+	        .on('click', function () {
+	            if (options.linkFormat) {
+	                window.open(options.linkFormat.replace('{title}', $(this).text()));
+	            }
+	        });
 	}
 })();

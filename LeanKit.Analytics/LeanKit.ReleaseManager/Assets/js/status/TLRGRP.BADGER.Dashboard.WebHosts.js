@@ -145,7 +145,11 @@
                         title: title,
                         'class': 'half',
                         expressions: expressions,
-                        chartOptions: currentSubMetric.chartOptions || {}
+                        chartOptions: $.extend(true, {
+                            legend: {
+                                linkFormat: '/status?metric=HostView&subMetric={title}'
+                            }
+                        }, currentSubMetric.chartOptions)
                     };
                 }
 
