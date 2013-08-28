@@ -4,6 +4,12 @@
     TLRGRP.BADGER.TimeSelect = function (element, currentTimePeriod) {
         var request = new TLRGRP.BADGER.MetricsRequest();
         
+        if (typeof currentTimePeriod === 'string') {
+            currentTimePeriod = {
+                timePeriod: currentTimePeriod
+            };
+        }
+        
         function buildUrl(timeLimit) {
             var metric = request.dashboard();
             var subMetric = request.subMetric();
@@ -19,11 +25,17 @@
         }
 
         function selectTimePeriod(element, timePeriodOverride) {
+            var currentTimePeriodString = currentTimePeriod.start ? '' : currentTimePeriod.timePeriod;
+
+            if (timePeriodOverride) {
+                currentTimePeriodString = timePeriodOverride;
+            }
+
             element
                 .children().each(function() {
                     var currentItem = $(this);
 
-                    if (currentItem.data('timeLimit') === 'timePeriod=' + (timePeriodOverride || currentTimePeriod.timePeriod)) {
+                    if (currentItem.data('timeLimit') === 'timePeriod=' + currentTimePeriodString) {
                         currentItem.prop('selected', true);
                         return false;
                     }
@@ -61,8 +73,8 @@
 
             if (currentTimePeriod.start) {
                 var startMoment = moment(currentTimePeriod.start);
-                startDate = startMoment.utc().format('YYYY-MM-DD');
-                startTime = startMoment.utc().format('HH:mm');
+                startDate = startMoment.format('YYYY-MM-DD');
+                startTime = startMoment.format('HH:mm');
             }
 
             var dialogElement = $('<div class="time-period-dialog">'
@@ -82,9 +94,9 @@
                     height: 240,
                     buttons: {
                         'Set': function () {
-                            var start = $('.time-period-date', dialogElement).val() + 'T' + $('.time-period-time', dialogElement).val() + ':00';
+                            var startMoment = moment($('.time-period-date', dialogElement).val() + 'T' + $('.time-period-time', dialogElement).val() + ':00');
 
-                            window.location = buildUrl(timePeriodPickerElement.children(':selected:first').data('timeLimit') + '&start=' + start);
+                            window.location = buildUrl(timePeriodPickerElement.children(':selected:first').data('timeLimit') + '&start=' + startMoment.format());
                         },
                         'Cancel': closeDialog
                     }

@@ -31,9 +31,14 @@
 
         if (timePeriod.start) {
             var startMoment = moment(timePeriod.start);
-            var endMoment = startMoment.add('minutes', timePeriodMapping.minutes);
+            var endMoment = startMoment.clone().add('minutes', timePeriodMapping.minutes);
 
-            timeString += '&start=' + timePeriod.start + '&stop=' + endMoment.utc().format('YYYY-MM-DD') + 'T' + endMoment.utc().format('HH:mm:ss');
+            var start = startMoment.utc().format('YYYY-MM-DDTHH:mm:ss') + 'Z';
+            var stop = endMoment.utc().format('YYYY-MM-DDTHH:mm:ss') + 'Z';
+
+            console.log('Start: ' + start + ', stop: ' + stop);
+
+            timeString += '&start=' + start + '&stop=' + stop;
         }
         else {
             timeString += '&limit=' + timePeriodMapping.limit;
