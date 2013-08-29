@@ -260,6 +260,7 @@
     <Content Include="Assets\js\lib\moment.min.js" />
     <Content Include="Assets\js\lib\fabric.all.min.js" />
     <Content Include="Assets\js\lib\jquery-ui.js" />
+    <Content Include="Assets\js\lib\nanomachine.js" />
     <Content Include="Assets\js\lib\TLRGRP.BADGER.utilities.js" />
     <Content Include="Assets\js\lib\d3.min.js" />
     <Content Include="Assets\js\lib\jquery-2.0.0.min.js" />

@@ -2,6 +2,22 @@
     TLRGRP.namespace('TLRGRP.BADGER');
 
     TLRGRP.BADGER.StopStart = function (element) {
+        var fsm = nano.Machine({
+            states: {
+                refreshing: {
+                    _onEnter: function () {
+                        
+                    }
+                },
+                stopped: {
+                    _onEnter: function () {
+                        
+                    }
+                }
+            },
+            initialState: 'refreshing'
+        });
+        
         function toggleRefresh(stop) {
             for (var x = 0; x < window.frames.length; x++) {
                 window.frames[x].postMessage(stop ? 'stop' : 'start', '*');
