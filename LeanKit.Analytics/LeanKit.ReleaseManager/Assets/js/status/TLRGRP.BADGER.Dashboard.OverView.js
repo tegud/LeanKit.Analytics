@@ -15,11 +15,155 @@
         };
         var currentSubMetric;
         var subMetrics = {
+            'Summary': {
+                defaultTimePeriod: '1hour',
+                getGraphs: function (currentTimitSelectDataString) {
+                    return [{
+                        title: 'Traffic by Type',
+                        'class': 'half',
+                        expressions: [{
+                                id: 'iis-all',
+                                title: 'All',
+                                color: colors[0],
+                                expression: 'sum(lr_web_request)&' + currentTimitSelectDataString
+                            },
+                            {
+                                id: 'iis-bot',
+                                title: 'Bot',
+                                color: colors[1],
+                                expression: 'sum(lr_web_request.eq(isbot,true))&' + currentTimitSelectDataString
+                            },
+                            {
+                                id: 'iis-mobile',
+                                title: 'Mobile',
+                                color: colors[4],
+                                expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile,true))&' + currentTimitSelectDataString
+                            }],
+                        chartOptions: $.extend({}, chartOptions, {
+                            yAxisLabel: 'requests',
+                            dimensions: {
+                                margin: { left: 50 }
+                            }
+                        })
+                    }, {
+                        title: 'Errors',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'all-errors',
+                            title: 'All Errors',
+                            color: colors[1],
+                            expression: 'sum(no_type)&' + currentTimitSelectDataString
+                        }],
+                        chartOptions: $.extend({}, chartOptions, {
+                            legend: false
+                        })
+                    }, {
+                        title: 'Response Time by Page',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'page-requests-home-page',
+                            title: 'Home Page',
+                            color: homePageColor,
+                            expression: 'median(lr_web_request(duration).eq(pagetype,"home-page"))&' + currentTimitSelectDataString
+                        },
+                            {
+                                id: 'page-requests-search',
+                                title: 'Search',
+                                color: searchColor,
+                                expression: 'median(lr_web_request(duration).eq(pagetype,"search"))&' + currentTimitSelectDataString
+                            },
+                            {
+                                id: 'page-requests-hotel-details',
+                                title: 'Hotel Details',
+                                color: hotelColor,
+                                expression: 'median(lr_web_request(duration).eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
+                            },
+                            {
+                                id: 'page-requests-booking-form',
+                                title: 'Booking Form',
+                                color: bookingPageColor,
+                                expression: 'median(lr_web_request(duration).eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
+                            }],
+                        chartOptions: $.extend({}, chartOptions, {
+                            yAxisLabel: 'request time (ms)',
+                            dimensions: {
+                                margin: { left: 50 }
+                            }
+                        })
+                    }, {
+                        title: 'Status Codes',
+                        'class': 'half',
+                        expressions: [{
+                            id: 'status-ok',
+                            title: '200 (Ok)',
+                            color: colors[3],
+                            expression: 'sum(lr_web_request.eq(status,200))&' + currentTimitSelectDataString
+                        }, {
+                            id: 'status-missing',
+                            title: '404 (Not Found)',
+                            color: colors[2],
+                            expression: 'sum(lr_web_request.eq(status,404))&' + currentTimitSelectDataString
+                        }, {
+                            id: 'status-error',
+                            title: '500 (Error)',
+                            color: colors[1],
+                            expression: 'sum(lr_web_request.eq(status,500))&' + currentTimitSelectDataString
+                        }, {
+                            id: 'status-error',
+                            title: '301/302 (Redirect)',
+                            color: colors[0],
+                            expression: 'sum(lr_web_request.in(status,[301,302]))&' + currentTimitSelectDataString
+                        }],
+                        chartOptions: $.extend({}, chartOptions, {
+                            yAxisLabel: 'requests',
+                            dimensions: {
+                                margin: {
+                                    left: 50,
+                                    right: 100
+                                }
+                            }
+                        })
+                    }];
+                }
+            },
             'Traffic': {
                 defaultTimePeriod: '1hour',
                 getGraphs: function(currentTimitSelectDataString) {
                     
-                    return [{
+                    return [
+                        {
+                            title: 'Traffic by Page',
+                            expressions: [{
+                                id: 'page-requests-home-page',
+                                title: 'Home Page',
+                                color: homePageColor,
+                                expression: 'sum(lr_web_request.eq(pagetype,"home-page"))&' + currentTimitSelectDataString
+                            },
+                                {
+                                    id: 'page-requests-search',
+                                    title: 'Search',
+                                    color: searchColor,
+                                    expression: 'sum(lr_web_request.eq(pagetype,"search"))&' + currentTimitSelectDataString
+                                },
+                                {
+                                    id: 'page-requests-hotel-details',
+                                    title: 'Hotel Details',
+                                    color: hotelColor,
+                                    expression: 'sum(lr_web_request.eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
+                                },
+                                {
+                                    id: 'page-requests-booking-form',
+                                    title: 'Booking Form',
+                                    color: bookingPageColor,
+                                    expression: 'sum(lr_web_request.eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
+                                }],
+                            chartOptions: $.extend({}, chartOptions, {
+                                yAxisLabel: 'requests',
+                                dimensions: {
+                                    margin: { left: 50 }
+                                }
+                            })
+                        }, {
                             title: 'Traffic by Type',
                             'class': 'half',
                             expressions: [{
@@ -39,40 +183,6 @@
                                     title: 'Mobile',
                                     color: colors[4],
                                     expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile,true))&' + currentTimitSelectDataString
-                                }],
-                            chartOptions: $.extend({}, chartOptions, {
-                                yAxisLabel: 'requests',
-                                dimensions: {
-                                    margin: { left: 50 }
-                                }
-                            })
-                        },
-                        {
-                            title: 'Traffic by Page',
-                            'class': 'half',
-                            expressions: [{
-                                    id: 'page-requests-home-page',
-                                    title: 'Home Page',
-                                    color: homePageColor,
-                                    expression: 'sum(lr_web_request.eq(pagetype,"home-page"))&' + currentTimitSelectDataString
-                                },
-                                {
-                                    id: 'page-requests-search',
-                                    title: 'Search',
-                                    color: searchColor,
-                                    expression: 'sum(lr_web_request.eq(pagetype,"search"))&' + currentTimitSelectDataString
-                                },
-                                {
-                                    id: 'page-requests-hotel-details',
-                                    title: 'Hotel Details',
-                                    color: hotelColor,
-                                    expression: 'sum(lr_web_request.eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
-                                },
-                                {
-                                    id: 'page-requests-booking-form',
-                                    title: 'Booking Form',
-                                    color: bookingPageColor,
-                                    expression: 'sum(lr_web_request.eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
                                 }],
                             chartOptions: $.extend({}, chartOptions, {
                                 yAxisLabel: 'requests',
@@ -107,51 +217,6 @@
                                 dimensions: {
                                     margin: { left: 50 }
                                 }
-                            })
-                        }, {
-                            title: 'Response Time by Page',
-                            'class': 'half',
-                            expressions: [{
-                                    id: 'page-requests-home-page',
-                                    title: 'Home Page',
-                                    color: homePageColor,
-                                    expression: 'median(lr_web_request(duration).eq(pagetype,"home-page"))&' + currentTimitSelectDataString
-                                },
-                                {
-                                    id: 'page-requests-search',
-                                    title: 'Search',
-                                    color: searchColor,
-                                    expression: 'median(lr_web_request(duration).eq(pagetype,"search"))&' + currentTimitSelectDataString
-                                },
-                                {
-                                    id: 'page-requests-hotel-details',
-                                    title: 'Hotel Details',
-                                    color: hotelColor,
-                                    expression: 'median(lr_web_request(duration).eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
-                                },
-                                {
-                                    id: 'page-requests-booking-form',
-                                    title: 'Booking Form',
-                                    color: bookingPageColor,
-                                    expression: 'median(lr_web_request(duration).eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
-                                }],
-                            chartOptions: $.extend({}, chartOptions, {
-                                yAxisLabel: 'request time (ms)',
-                                dimensions: {
-                                    margin: { left: 50 }
-                                }
-                            })
-                        }, {
-                            title: 'Errors',
-                            'class': 'half',
-                            expressions: [{
-                                id: 'all-errors',
-                                title: 'All Errors',
-                                color: colors[1],
-                                expression: 'sum(no_type)&' + currentTimitSelectDataString
-                            }],
-                            chartOptions: $.extend({}, chartOptions, {
-                                legend: false
                             })
                         }];
                 }
@@ -222,7 +287,7 @@
             },
             setView: function (view, subMetric) {
                 isSelected = true;
-                currentSubMetric = subMetric || 'Traffic';
+                currentSubMetric = subMetric || 'Summary';
                 currentTimePeriod = subMetrics[currentSubMetric].defaultTimePeriod;
             },
             clearView: function () {
