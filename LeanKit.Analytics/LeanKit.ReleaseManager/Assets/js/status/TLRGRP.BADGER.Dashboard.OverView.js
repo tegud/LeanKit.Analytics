@@ -282,7 +282,12 @@
                             title: 'All Errors',
                             color: colors[1],
                             expression: 'sum(no_type)&' + currentTimitSelectDataString
-                        },{
+                        }],
+                        chartOptions: $.extend({}, chartOptions, { })
+                    },{
+                        title: 'User Journey (pre-booking form) Errors',
+                        'class': 'half',
+                        expressions: [{
                             id: 'search-errors',
                             title: 'Search',
                             color: searchColor,
@@ -292,14 +297,20 @@
                             title: 'Hotel Details',
                             color: hotelColor,
                             expression: 'sum(no_type.re(Url,"hotel-reservations"))&' + currentTimitSelectDataString
-                        }, {
-                            id: 'booking-form-errors',
-                            title: 'Booking Form',
-                            color: colors[0],
-                            expression: 'sum(no_type.re(Url,"Booking/Online"))&' + currentTimitSelectDataString
                         }],
-                        chartOptions: $.extend({}, chartOptions, { })
-                    }];
+                        chartOptions: {}
+                    },
+                        {
+                            title: 'Booking Errors',
+                            'class': 'half',
+                            expressions: [{
+                                id: 'booking-errors',
+                                title: 'Booking',
+                                color: colors[0],
+                                expression: 'sum(no_type.re(Url,"(Booking/Online|HotelReservationsSubmit/Submit|Booking/Submit)"))&' + currentTimitSelectDataString
+                            }],
+                            chartOptions: {}
+                        }];
                 }
             }
         };
