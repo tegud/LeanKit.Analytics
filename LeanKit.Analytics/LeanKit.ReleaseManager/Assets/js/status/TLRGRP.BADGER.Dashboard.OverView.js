@@ -14,6 +14,57 @@
             lockToZero: true
         };
         var currentSubMetric;
+
+        var defaultGraphBuilderOptions = {
+            graphOptions: {}
+        };
+
+        function buildGraph(metrics, options) {
+            var metricsLength;
+            var x;
+            var expressions = [];
+            var name = 'Untitled';
+            var allMetricChartOptions = [true, {}, chartOptions];
+
+            options = $.extend({}, defaultGraphBuilderOptions, options);
+
+            if (typeof metrics === 'string') {
+                if (options.name) {
+                    name = options.name;
+                }
+
+                metrics = [metrics];
+            }
+
+            metricsLength = metrics.length;
+
+            for (x = 0; x < metricsLength; x++) {
+                var wmiMetric = TLRGRP.BADGER.WMI.metricInfo(metrics[x]);
+
+                if (name === 'Untitled') {
+                    name = wmiMetric.name;
+                }
+
+                allMetricChartOptions[allMetricChartOptions.length] = wmiMetric.chartOptions;
+
+                expressions[expressions.length] = {
+                    id: metrics[x],
+                    title: wmiMetric.name,
+                    color: colors[x % colors.length],
+                    expression: TLRGRP.BADGER.Cube.WMI.buildExpression(wmiMetric, currentSubMetricName, currentTimitSelectDataString)
+                };
+            }
+
+            allMetricChartOptions[allMetricChartOptions.length] = options.graphOptions;
+
+            return {
+                title: options.name || name,
+                'class': 'half',
+                expressions: expressions,
+                chartOptions: $.extend.apply(this, allMetricChartOptions)
+            };
+        }
+
         var subMetrics = {
             'Summary': {
                 defaultTimePeriod: '1hour',
@@ -109,8 +160,8 @@
                             color: colors[1],
                             expression: 'sum(lr_web_request.eq(status,500))&' + currentTimitSelectDataString
                         }, {
-                            id: 'status-error',
-                            title: '301/302 (Redirect)',
+                            id: 'status-redirect',
+                            title: '30x (Redirect)',
                             color: colors[0],
                             expression: 'sum(lr_web_request.in(status,[301,302]))&' + currentTimitSelectDataString
                         }],
@@ -241,6 +292,11 @@
                             title: 'Hotel Details',
                             color: hotelColor,
                             expression: 'sum(no_type.re(Url,"hotel-reservations"))&' + currentTimitSelectDataString
+                        }, {
+                            id: 'booking-form-errors',
+                            title: 'Booking Form',
+                            color: colors[0],
+                            expression: 'sum(no_type.re(Url,"Booking/Online"))&' + currentTimitSelectDataString
                         }],
                         chartOptions: $.extend({}, chartOptions, { })
                     }];

@@ -62,4 +62,15 @@
             }
         };
     })();
+
+    TLRGRP.BADGER.Cube.IIS = (function () {
+        return {
+            buildExpression: function (selectedView, machineName, stepAndLimit) {
+                var expression = selectedView.expression;
+                var divideBy = selectedView.divideBy;
+
+                return expression + (divideBy || '') + '&' + stepAndLimit;
+            }
+        };
+    })();
 })();
