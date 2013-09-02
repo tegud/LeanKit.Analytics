@@ -47,6 +47,72 @@
         return timeString;
     };
 
+
+    TLRGRP.BADGER.Cube.ExpressionBuilder = function (metric) {
+        var criteriaFunction = function (operator) {
+            return function (key, value) {
+                expressionCriteria[expressionCriteria.length] = {
+                    operator: operator,
+                    key: key,
+                    value: value
+                };
+
+                return filterReturnObject;
+            };
+        };
+        var reducerSetter = function (reducer) {
+            return function (value) {
+                expressionReducer = reducer;
+                expressionValue = value;
+
+                return filterReturnObject;
+            };
+        };
+        var filterReturnObject = {
+            equalTo: criteriaFunction('eq'),
+            notEqualTo: criteriaFunction('ne'),
+            matchesRegEx: criteriaFunction('re'),
+            in: criteriaFunction('in'),
+            sum: reducerSetter('sum'),
+            median: reducerSetter('median'),
+            setTimePeriod: function (timePeriod) {
+                expressionTimeSelection = timePeriod;
+
+                return filterReturnObject;
+            },
+            build: function () {
+                var expression = expressionReducer + '(' + metric;
+
+                if (expressionValue) {
+                    expression += '(' + expressionValue + ')';
+                }
+
+                if (expressionCriteria.length) {
+                    expression += '.' + _.map(expressionCriteria, function (criteria) {
+                        var value = criteria.value;
+
+                        if (typeof value === 'string') {
+                            value = '"' + value + '"';
+                        }
+                        if (typeof value === 'object' && value.join) {
+                            value = '[' + value.join(',') + ']';
+                        }
+
+                        return criteria.operator + '(' + criteria.key + ',' + value + ')';
+                    }).join('.');
+                }
+
+                return expression + ')&' + expressionTimeSelection;
+            }
+        };
+        var expressionCriteria = [];
+        var expressionValue;
+        var expressionReducer;
+        var expressionTimeSelection;
+
+        return filterReturnObject;
+    }
+
     TLRGRP.BADGER.Cube.WMI = (function () {
         return {
             buildExpression: function (selectedView, machineName, stepAndLimit) {

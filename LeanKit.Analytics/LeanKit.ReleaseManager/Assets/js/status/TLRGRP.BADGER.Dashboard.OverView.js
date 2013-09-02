@@ -15,60 +15,18 @@
         };
         var currentSubMetric;
 
-        var defaultGraphBuilderOptions = {
-            graphOptions: {}
-        };
-
-        function buildGraph(metrics, options) {
-            var metricsLength;
-            var x;
-            var expressions = [];
-            var name = 'Untitled';
-            var allMetricChartOptions = [true, {}, chartOptions];
-
-            options = $.extend({}, defaultGraphBuilderOptions, options);
-
-            if (typeof metrics === 'string') {
-                if (options.name) {
-                    name = options.name;
-                }
-
-                metrics = [metrics];
-            }
-
-            metricsLength = metrics.length;
-
-            for (x = 0; x < metricsLength; x++) {
-                var wmiMetric = TLRGRP.BADGER.WMI.metricInfo(metrics[x]);
-
-                if (name === 'Untitled') {
-                    name = wmiMetric.name;
-                }
-
-                allMetricChartOptions[allMetricChartOptions.length] = wmiMetric.chartOptions;
-
-                expressions[expressions.length] = {
-                    id: metrics[x],
-                    title: wmiMetric.name,
-                    color: colors[x % colors.length],
-                    expression: TLRGRP.BADGER.Cube.WMI.buildExpression(wmiMetric, currentSubMetricName, currentTimitSelectDataString)
-                };
-            }
-
-            allMetricChartOptions[allMetricChartOptions.length] = options.graphOptions;
-
-            return {
-                title: options.name || name,
-                'class': 'half',
-                expressions: expressions,
-                chartOptions: $.extend.apply(this, allMetricChartOptions)
-            };
+        function iisExpressionBuilder(timePeriod) {
+            return (function () {
+                return new TLRGRP.BADGER.Cube.ExpressionBuilder('lr_web_request').setTimePeriod(timePeriod);
+            });
         }
-
+        
         var subMetrics = {
             'Summary': {
                 defaultTimePeriod: '1hour',
                 getGraphs: function (currentTimitSelectDataString) {
+                    var iis = iisExpressionBuilder(currentTimitSelectDataString);
+
                     return [{
                         title: 'Traffic by Type',
                         'class': 'half',
@@ -76,19 +34,19 @@
                                 id: 'iis-all',
                                 title: 'All',
                                 color: colors[0],
-                                expression: 'sum(lr_web_request)&' + currentTimitSelectDataString
+                                expression: iis().sum().build()
                             },
                             {
                                 id: 'iis-bot',
                                 title: 'Bot',
                                 color: colors[1],
-                                expression: 'sum(lr_web_request.eq(isbot,true))&' + currentTimitSelectDataString
+                                expression: iis().sum().equalTo('isbot', true).build()
                             },
                             {
                                 id: 'iis-mobile',
                                 title: 'Mobile',
                                 color: colors[4],
-                                expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile,true))&' + currentTimitSelectDataString
+                                expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true).build()
                             }],
                         chartOptions: $.extend({}, chartOptions, {
                             yAxisLabel: 'requests',
@@ -115,25 +73,25 @@
                             id: 'page-requests-home-page',
                             title: 'Home Page',
                             color: homePageColor,
-                            expression: 'median(lr_web_request(duration).eq(pagetype,"home-page"))&' + currentTimitSelectDataString
+                            expression: iis().median('duration').equalTo('pagetype', 'home-page').build()
                         },
                             {
                                 id: 'page-requests-search',
                                 title: 'Search',
                                 color: searchColor,
-                                expression: 'median(lr_web_request(duration).eq(pagetype,"search"))&' + currentTimitSelectDataString
+                                expression: iis().median('duration').equalTo('pagetype', 'search').build()
                             },
                             {
                                 id: 'page-requests-hotel-details',
                                 title: 'Hotel Details',
                                 color: hotelColor,
-                                expression: 'median(lr_web_request(duration).eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
+                                expression: iis().median('duration').equalTo('pagetype', 'hotel-details').build()
                             },
                             {
                                 id: 'page-requests-booking-form',
                                 title: 'Booking Form',
                                 color: bookingPageColor,
-                                expression: 'median(lr_web_request(duration).eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
+                                expression: iis().median('duration').equalTo('pagetype', 'booking-form').build()
                             }],
                         chartOptions: $.extend({}, chartOptions, {
                             yAxisLabel: 'request time (ms)',
@@ -142,28 +100,23 @@
                             }
                         })
                     }, {
-                        title: 'Status Codes',
+                        title: 'Status Codes (non 200)',
                         'class': 'half',
-                        expressions: [{
-                            id: 'status-ok',
-                            title: '200 (Ok)',
-                            color: colors[3],
-                            expression: 'sum(lr_web_request.eq(status,200))&' + currentTimitSelectDataString
-                        }, {
+                        expressions: [ {
                             id: 'status-missing',
                             title: '404 (Not Found)',
                             color: colors[2],
-                            expression: 'sum(lr_web_request.eq(status,404))&' + currentTimitSelectDataString
+                            expression: iis().sum().equalTo('status', 404).build()
                         }, {
                             id: 'status-error',
                             title: '500 (Error)',
                             color: colors[1],
-                            expression: 'sum(lr_web_request.eq(status,500))&' + currentTimitSelectDataString
+                            expression: iis().sum().equalTo('status', 500).build()
                         }, {
                             id: 'status-redirect',
                             title: '30x (Redirect)',
                             color: colors[0],
-                            expression: 'sum(lr_web_request.in(status,[301,302]))&' + currentTimitSelectDataString
+                            expression: iis().sum().in('status', [301, 302]).build()
                         }],
                         chartOptions: $.extend({}, chartOptions, {
                             yAxisLabel: 'requests',
@@ -179,7 +132,8 @@
             },
             'Traffic': {
                 defaultTimePeriod: '1hour',
-                getGraphs: function(currentTimitSelectDataString) {
+                getGraphs: function (currentTimitSelectDataString) {
+                    var iis = iisExpressionBuilder(currentTimitSelectDataString);
                     
                     return [
                         {
@@ -188,25 +142,25 @@
                                 id: 'page-requests-home-page',
                                 title: 'Home Page',
                                 color: homePageColor,
-                                expression: 'sum(lr_web_request.eq(pagetype,"home-page"))&' + currentTimitSelectDataString
+                                expression: iis().sum().equalTo('pagetype', 'home-page').build()
                             },
                                 {
                                     id: 'page-requests-search',
                                     title: 'Search',
                                     color: searchColor,
-                                    expression: 'sum(lr_web_request.eq(pagetype,"search"))&' + currentTimitSelectDataString
+                                    expression: iis().sum().equalTo('pagetype', 'search').build()
                                 },
                                 {
                                     id: 'page-requests-hotel-details',
                                     title: 'Hotel Details',
                                     color: hotelColor,
-                                    expression: 'sum(lr_web_request.eq(pagetype,"hotel-details"))&' + currentTimitSelectDataString
+                                    expression: iis().sum().equalTo('pagetype', 'hotel-details').build()
                                 },
                                 {
                                     id: 'page-requests-booking-form',
                                     title: 'Booking Form',
                                     color: bookingPageColor,
-                                    expression: 'sum(lr_web_request.eq(pagetype,"booking-form"))&' + currentTimitSelectDataString
+                                    expression: iis().sum().equalTo('pagetype', 'booking-form').build()
                                 }],
                             chartOptions: $.extend({}, chartOptions, {
                                 yAxisLabel: 'requests',
@@ -221,19 +175,19 @@
                                     id: 'iis-all',
                                     title: 'All',
                                     color: colors[0],
-                                    expression: 'sum(lr_web_request)&' + currentTimitSelectDataString
+                                    expression: iis().sum().build()
                                 },
                                 {
                                     id: 'iis-bot',
                                     title: 'Bot',
                                     color: colors[1],
-                                    expression: 'sum(lr_web_request.eq(isbot,true))&' + currentTimitSelectDataString
+                                    expression: iis().sum().equalTo('isbot', true).build()
                                 },
                                 {
                                     id: 'iis-mobile',
                                     title: 'Mobile',
                                     color: colors[4],
-                                    expression: 'sum(lr_web_request.eq(isbot,false).eq(ismobile,true))&' + currentTimitSelectDataString
+                                    expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true).build()
                                 }],
                             chartOptions: $.extend({}, chartOptions, {
                                 yAxisLabel: 'requests',
@@ -275,6 +229,7 @@
             'Errors': {
                 defaultTimePeriod: '1hour',
                 getGraphs: function (currentTimitSelectDataString) {
+                    var iis = iisExpressionBuilder(currentTimitSelectDataString);
                     return [{
                         title: 'Errors',
                         expressions: [{
