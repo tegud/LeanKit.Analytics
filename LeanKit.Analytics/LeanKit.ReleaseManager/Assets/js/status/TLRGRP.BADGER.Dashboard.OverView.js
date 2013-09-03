@@ -228,7 +228,7 @@
                 }
             },
             'IPGResponseTime': {
-                title: 'IPG Errors',
+                title: 'Average Time for Tokenisation',
                 expressions: [{
                     color: colors[0],
                     expression: iis().sum().matchesRegEx('url', '/beacon/pageresponse')
