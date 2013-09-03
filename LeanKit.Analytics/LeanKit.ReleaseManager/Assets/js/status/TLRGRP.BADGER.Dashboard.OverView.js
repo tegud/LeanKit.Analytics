@@ -362,8 +362,8 @@
             setView: function (view, subMetric) {
                 isSelected = true;
                 currentSubMetric = subMetric || 'Summary';
-                if (subMetrics[subMetric].defaultTimePeriod) {
-                    currentTimePeriod = subMetrics[subMetric].defaultTimePeriod;
+                if (subMetrics[currentSubMetric].defaultTimePeriod) {
+                    currentTimePeriod = subMetrics[currentSubMetric].defaultTimePeriod;
                 }
             },
             clearView: function () {
