@@ -15,257 +15,309 @@
         };
         var currentSubMetric;
 
-        function iisExpressionBuilder(timePeriod) {
+        function iisExpressionBuilder() {
             return (function () {
-                return new TLRGRP.BADGER.Cube.ExpressionBuilder('lr_web_request').setTimePeriod(timePeriod);
+                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
+                return new TLRGRP.BADGER.Cube.ExpressionBuilder('lr_web_request').setTimePeriod(currentTimitSelectDataString);
             });
         }
-        
+
+        function errorExpressionBuilder() {
+            return (function () {
+                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
+                return new TLRGRP.BADGER.Cube.ExpressionBuilder('no_type').setTimePeriod(currentTimitSelectDataString);
+            });
+        }
+
+        var iis = iisExpressionBuilder();
+        var errors = errorExpressionBuilder();
+        var graphs = {
+            'TrafficByType': {
+                title: 'Traffic by Type',
+                expressions: [{
+                        title: 'All',
+                        color: colors[0],
+                        expression: iis().sum()
+                    },
+                    {
+                        title: 'Bot',
+                        color: colors[1],
+                        expression: iis().sum().equalTo('isbot', true)
+                    },
+                    {
+                        title: 'Mobile',
+                        color: colors[4],
+                        expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true)
+                    }],
+                chartOptions: {
+                    yAxisLabel: 'requests',
+                    dimensions: {
+                        margin: { left: 50 }
+                    }
+                }
+            },
+            'AllErrors': {
+                title: 'Errors',
+                expressions: [{
+                    title: 'All Errors',
+                    color: colors[1],
+                    expression: errors().sum()
+                }],
+                chartOptions: {
+                    legend: false
+                }
+            },
+            'ResponseTimeByPage': {
+                title: 'Response Time by Page',
+                expressions: [{
+                        title: 'Home Page',
+                        color: homePageColor,
+                        expression: iis().median('duration').equalTo('pagetype', 'home-page')
+                    },
+                    {
+                        title: 'Search',
+                        color: searchColor,
+                        expression: iis().median('duration').equalTo('pagetype', 'search')
+                    },
+                    {
+                        title: 'Hotel Details',
+                        color: hotelColor,
+                        expression: iis().median('duration').equalTo('pagetype', 'hotel-details')
+                    },
+                    {
+                        title: 'Booking Form',
+                        color: bookingPageColor,
+                        expression: iis().median('duration').equalTo('pagetype', 'booking-form')
+                    }],
+                chartOptions: {
+                    yAxisLabel: 'request time (ms)',
+                    dimensions: {
+                        margin: { left: 50 }
+                    }
+                }
+            },
+            'StatusCodes': {
+                title: 'Status Codes (non 200)',
+                expressions: [{
+                        title: '404 (Not Found)',
+                        color: colors[2],
+                        expression: iis().sum().equalTo('status', 404)
+                    }, {
+                        title: '500 (Error)',
+                        color: colors[1],
+                        expression: iis().sum().equalTo('status', 500)
+                    }, {
+                        title: '30x (Redirect)',
+                        color: colors[0],
+                        expression: iis().sum().in('status', [301, 302])
+                    }],
+                chartOptions: {
+                    yAxisLabel: 'requests',
+                    dimensions: {
+                        margin: {
+                            left: 50,
+                            right: 100
+                        }
+                    }
+                }
+            },
+            'TrafficByChannel': {
+                title: 'Traffic by Channel',
+                expressions: [{
+                        title: 'Direct',
+                        color: homePageColor,
+                        expression: iis().sum().equalTo('pagechannel', 'web')
+                    },
+                    {
+                        title: 'Mobile',
+                        color: searchColor,
+                        expression: iis().sum().equalTo('pagechannel', 'mobile')
+                    },
+                    {
+                        title: 'Affiliate',
+                        color: hotelColor,
+                        expression: iis().sum().equalTo('pagechannel', 'affiliate')
+                    }],
+                chartOptions: {
+                    yAxisLabel: 'requests',
+                    dimensions: {
+                        margin: { left: 50 }
+                    }
+                }
+            },
+            'TrafficByPage': {
+                title: 'Traffic by Page',
+                expressions: [{
+                        title: 'Home Page',
+                        color: homePageColor,
+                        expression: iis().sum().equalTo('pagetype', 'home-page')
+                    },
+                    {
+                        title: 'Search',
+                        color: searchColor,
+                        expression: iis().sum().equalTo('pagetype', 'search')
+                    },
+                    {
+                        title: 'Hotel Details',
+                        color: hotelColor,
+                        expression: iis().sum().equalTo('pagetype', 'hotel-details')
+                    },
+                    {
+                        title: 'Booking Form',
+                        color: bookingPageColor,
+                        expression: iis().sum().equalTo('pagetype', 'booking-form')
+                    }],
+                chartOptions: {
+                    yAxisLabel: 'requests',
+                    dimensions: {
+                        margin: { left: 50 }
+                    }
+                }
+            },
+            'UserJourneyErrors': {
+                title: 'User Journey (pre-booking form) Errors',
+                expressions: [{
+                        title: 'Search',
+                        color: searchColor,
+                        expression: errors().sum().matchesRegEx('Url', 'Search|(H|h)otels')
+                    }, {
+                        title: 'Hotel Details',
+                        color: hotelColor,
+                        expression: errors().sum().matchesRegEx('Url', 'hotel-reservations')
+                    }]
+            },
+            'BookingErrors': {
+                title: 'Booking Errors',
+                expressions: [{
+                    title: 'Booking',
+                    color: colors[0],
+                    expression: errors().sum().matchesRegEx('Url', '(BookingError/LogError\.mvc|Booking/Online|HotelReservationsSubmit/Submit|Booking/Submit)')
+                }],
+                chartOptions: {
+                    legend: false,
+                    dimensions: {
+                        margin: { right: 20 }
+                    }
+                }
+            },
+            'IPGErrors': {
+                title: 'IPG Errors',
+                expressions: [{
+                        title: 'Request Timeout',
+                        color: colors[0],
+                        expression: errors().sum()
+                            .matchesRegEx('Url', '(BookingError/LogError\.mvc)')
+                            .matchesRegEx('Exception.Message', 'request_timeout')
+                }, {
+                    title: 'Session Timeout',
+                    color: colors[2],
+                    expression: errors().sum()
+                        .matchesRegEx('Url', '(BookingError/LogError\.mvc)')
+                        .matchesRegEx('Exception.Message', 'session_timeout')
+                }, {
+                    title: 'Invalid Session',
+                    color: colors[4],
+                    expression: errors().sum()
+                        .matchesRegEx('Url', '(BookingError/LogError\.mvc)')
+                        .matchesRegEx('Exception.Message', 'invalid_session')
+                }],
+                chartOptions: {
+                    dimensions: {
+                        margin: { right: 110 }
+                    }
+                }
+            },
+            'IPGResponseTime': {
+                title: 'IPG Errors',
+                expressions: [{
+                    color: colors[0],
+                    expression: iis().sum().matchesRegEx('url', '/beacon/pageresponse')
+                }],
+                chartOptions: {
+                    legend: false,
+                    yAxisLabel: 'duration (ms)'
+                }
+            }
+        };
+
+        function getGraphFor(graph) {
+            var graphClass;
+            var instanceChartOptions = graph.chartOptions;
+
+            if (typeof graph === 'object') {
+                if (graph.slots === 2) {
+                    graphClass = 'half';
+                }
+                graph = graph.id;
+            }
+
+            var selectedGraph = graphs[graph];
+            var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
+
+            return $.extend(true, {}, selectedGraph, {
+                'class': graphClass,
+                expressions: _.map(selectedGraph.expressions, function (expression) {
+                    expression.expression = expression.expression.setTimePeriod(currentTimitSelectDataString).build();
+
+                    if (!expression.id) {
+                        var autoTitle = (selectedGraph.title ? selectedGraph.title + '-' : '') + expression.title;
+                        expression.id = autoTitle.toLowerCase().replace(/\s/g, '-').replace(/[()]/g, '');
+                    }
+
+                    return expression;
+                }),
+                chartOptions: $.extend({}, chartOptions, selectedGraph.chartOptions, instanceChartOptions)
+            });
+        }
+
+        function getGraphsFor() {
+            return _.map(arguments, function (graphItem) {
+                return getGraphFor(graphItem);
+            });
+        }
+
         var subMetrics = {
             'Summary': {
-                defaultTimePeriod: '1hour',
-                getGraphs: function (currentTimitSelectDataString) {
-                    var iis = iisExpressionBuilder(currentTimitSelectDataString);
-
-                    return [{
-                        title: 'Traffic by Type',
-                        'class': 'half',
-                        expressions: [{
-                                id: 'iis-all',
-                                title: 'All',
-                                color: colors[0],
-                                expression: iis().sum().build()
-                            },
-                            {
-                                id: 'iis-bot',
-                                title: 'Bot',
-                                color: colors[1],
-                                expression: iis().sum().equalTo('isbot', true).build()
-                            },
-                            {
-                                id: 'iis-mobile',
-                                title: 'Mobile',
-                                color: colors[4],
-                                expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true).build()
-                            }],
-                        chartOptions: $.extend({}, chartOptions, {
-                            yAxisLabel: 'requests',
-                            dimensions: {
-                                margin: { left: 50 }
-                            }
-                        })
-                    }, {
-                        title: 'Errors',
-                        'class': 'half',
-                        expressions: [{
-                            id: 'all-errors',
-                            title: 'All Errors',
-                            color: colors[1],
-                            expression: 'sum(no_type)&' + currentTimitSelectDataString
-                        }],
-                        chartOptions: $.extend({}, chartOptions, {
-                            legend: false
-                        })
-                    }, {
-                        title: 'Response Time by Page',
-                        'class': 'half',
-                        expressions: [{
-                            id: 'page-requests-home-page',
-                            title: 'Home Page',
-                            color: homePageColor,
-                            expression: iis().median('duration').equalTo('pagetype', 'home-page').build()
-                        },
-                            {
-                                id: 'page-requests-search',
-                                title: 'Search',
-                                color: searchColor,
-                                expression: iis().median('duration').equalTo('pagetype', 'search').build()
-                            },
-                            {
-                                id: 'page-requests-hotel-details',
-                                title: 'Hotel Details',
-                                color: hotelColor,
-                                expression: iis().median('duration').equalTo('pagetype', 'hotel-details').build()
-                            },
-                            {
-                                id: 'page-requests-booking-form',
-                                title: 'Booking Form',
-                                color: bookingPageColor,
-                                expression: iis().median('duration').equalTo('pagetype', 'booking-form').build()
-                            }],
-                        chartOptions: $.extend({}, chartOptions, {
-                            yAxisLabel: 'request time (ms)',
-                            dimensions: {
-                                margin: { left: 50 }
-                            }
-                        })
-                    }, {
-                        title: 'Status Codes (non 200)',
-                        'class': 'half',
-                        expressions: [ {
-                            id: 'status-missing',
-                            title: '404 (Not Found)',
-                            color: colors[2],
-                            expression: iis().sum().equalTo('status', 404).build()
-                        }, {
-                            id: 'status-error',
-                            title: '500 (Error)',
-                            color: colors[1],
-                            expression: iis().sum().equalTo('status', 500).build()
-                        }, {
-                            id: 'status-redirect',
-                            title: '30x (Redirect)',
-                            color: colors[0],
-                            expression: iis().sum().in('status', [301, 302]).build()
-                        }],
-                        chartOptions: $.extend({}, chartOptions, {
-                            yAxisLabel: 'requests',
-                            dimensions: {
-                                margin: {
-                                    left: 50,
-                                    right: 100
+                getGraphs: function() {
+                    return getGraphsFor({ id: 'TrafficByType', slots: 2 },
+                        {
+                            id: 'AllErrors',
+                            slots: 2,
+                            chartOptions: {
+                                dimensions: {
+                                    margin: { right: 20 }
                                 }
                             }
-                        })
-                    }];
+                        },
+                        { id: 'ResponseTimeByPage', slots: 2 },
+                        { id: 'StatusCodes', slots: 2 });
                 }
             },
             'Traffic': {
-                defaultTimePeriod: '1hour',
-                getGraphs: function (currentTimitSelectDataString) {
-                    var iis = iisExpressionBuilder(currentTimitSelectDataString);
-                    
-                    return [
-                        {
-                            title: 'Traffic by Page',
-                            expressions: [{
-                                id: 'page-requests-home-page',
-                                title: 'Home Page',
-                                color: homePageColor,
-                                expression: iis().sum().equalTo('pagetype', 'home-page').build()
-                            },
-                                {
-                                    id: 'page-requests-search',
-                                    title: 'Search',
-                                    color: searchColor,
-                                    expression: iis().sum().equalTo('pagetype', 'search').build()
-                                },
-                                {
-                                    id: 'page-requests-hotel-details',
-                                    title: 'Hotel Details',
-                                    color: hotelColor,
-                                    expression: iis().sum().equalTo('pagetype', 'hotel-details').build()
-                                },
-                                {
-                                    id: 'page-requests-booking-form',
-                                    title: 'Booking Form',
-                                    color: bookingPageColor,
-                                    expression: iis().sum().equalTo('pagetype', 'booking-form').build()
-                                }],
-                            chartOptions: $.extend({}, chartOptions, {
-                                yAxisLabel: 'requests',
-                                dimensions: {
-                                    margin: { left: 50 }
-                                }
-                            })
-                        }, {
-                            title: 'Traffic by Type',
-                            'class': 'half',
-                            expressions: [{
-                                    id: 'iis-all',
-                                    title: 'All',
-                                    color: colors[0],
-                                    expression: iis().sum().build()
-                                },
-                                {
-                                    id: 'iis-bot',
-                                    title: 'Bot',
-                                    color: colors[1],
-                                    expression: iis().sum().equalTo('isbot', true).build()
-                                },
-                                {
-                                    id: 'iis-mobile',
-                                    title: 'Mobile',
-                                    color: colors[4],
-                                    expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true).build()
-                                }],
-                            chartOptions: $.extend({}, chartOptions, {
-                                yAxisLabel: 'requests',
-                                dimensions: {
-                                    margin: { left: 50 }
-                                }
-                            })
-                        },
-                        {
-                            title: 'Traffic by Channel',
-                            'class': 'half',
-                            expressions: [{
-                                    id: 'page-requests-web',
-                                    title: 'Direct',
-                                    color: homePageColor,
-                                    expression: 'sum(lr_web_request.eq(pagechannel,"web"))&' + currentTimitSelectDataString
-                                },
-                                {
-                                    id: 'page-requests-mobile',
-                                    title: 'Mobile',
-                                    color: searchColor,
-                                    expression: 'sum(lr_web_request.eq(pagechannel,"mobile"))&' + currentTimitSelectDataString
-                                },
-                                {
-                                    id: 'page-requests-affiliate',
-                                    title: 'Affiliate',
-                                    color: hotelColor,
-                                    expression: 'sum(lr_web_request.eq(pagechannel,"affiliate"))&' + currentTimitSelectDataString
-                                }],
-                            chartOptions: $.extend({}, chartOptions, {
-                                yAxisLabel: 'requests',
-                                dimensions: {
-                                    margin: { left: 50 }
-                                }
-                            })
-                        }];
+                getGraphs: function() {
+                    return getGraphsFor('TrafficByPage',
+                        { id: 'TrafficByType', slots: 2 },
+                        { id: 'TrafficByChannel', slots: 2 });
                 }
             },
             'Errors': {
-                defaultTimePeriod: '1hour',
-                getGraphs: function (currentTimitSelectDataString) {
-                    var iis = iisExpressionBuilder(currentTimitSelectDataString);
-                    return [{
-                        title: 'Errors',
-                        expressions: [{
-                            id: 'all-errors',
-                            title: 'All Errors',
-                            color: colors[1],
-                            expression: 'sum(no_type)&' + currentTimitSelectDataString
-                        }],
-                        chartOptions: $.extend({}, chartOptions, { })
-                    },{
-                        title: 'User Journey (pre-booking form) Errors',
-                        'class': 'half',
-                        expressions: [{
-                            id: 'search-errors',
-                            title: 'Search',
-                            color: searchColor,
-                            expression: 'sum(no_type.re(Url,"Search|(H|h)otels"))&' + currentTimitSelectDataString
-                        }, {
-                            id: 'hotel-details-errors',
-                            title: 'Hotel Details',
-                            color: hotelColor,
-                            expression: 'sum(no_type.re(Url,"hotel-reservations"))&' + currentTimitSelectDataString
-                        }],
-                        chartOptions: {}
-                    },
-                        {
-                            title: 'Booking Errors',
-                            'class': 'half',
-                            expressions: [{
-                                id: 'booking-errors',
-                                title: 'Booking',
-                                color: colors[0],
-                                expression: 'sum(no_type.re(Url,"(Booking/Online|HotelReservationsSubmit/Submit|Booking/Submit)"))&' + currentTimitSelectDataString
-                            }],
-                            chartOptions: {}
-                        }];
+                getGraphs: function() {
+                    return getGraphsFor({
+                            id: 'AllErrors',
+                            chartOptions: {
+                                dimensions: {
+                                    margin: { right: 20 }
+                                }
+                            }
+                        },
+                        { id: 'UserJourneyErrors', slots: 2 },
+                        { id: 'BookingErrors', slots: 2 });
+                }
+            },
+            'IPG': {
+                defaultTimePeriod: '4hours',
+                getGraphs: function() {
+                    return getGraphsFor('IPGErrors', 'IPGResponseTime');
                 }
             }
         };
@@ -285,7 +337,7 @@
                     metric: 'Overview',
                     isSelected: isSelected
                 };
-                
+
                 if (isSelected) {
                     viewModel.timePeriod = currentTimePeriod;
                     viewModel.pageName = 'Overview';
@@ -294,7 +346,7 @@
                         if (!subMetrics.hasOwnProperty(subMetric)) {
                             continue;
                         }
-                        
+
                         viewModel.subMetrics[viewModel.subMetrics.length] = {
                             name: subMetric,
                             metric: 'Overview',
@@ -310,7 +362,9 @@
             setView: function (view, subMetric) {
                 isSelected = true;
                 currentSubMetric = subMetric || 'Summary';
-                currentTimePeriod = subMetrics[currentSubMetric].defaultTimePeriod;
+                if (subMetrics[subMetric].defaultTimePeriod) {
+                    currentTimePeriod = subMetrics[subMetric].defaultTimePeriod;
+                }
             },
             clearView: function () {
                 isSelected = false;
