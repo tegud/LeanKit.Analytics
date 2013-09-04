@@ -2,10 +2,18 @@
     TLRGRP.namespace('TLRGRP.BADGER.Dashboard');
 
     var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
-    var homePageColor = colors[0];
     var searchColor = colors[2];
-    var bookingPageColor = colors[3];
     var hotelColor = colors[4];
+
+    var presetColors = {
+        homepage: colors[0],
+        search: colors[2],
+        bookingpage: colors[3],
+        hoteldetails: colors[4],
+        mobile: colors[2],
+        direct: colors[0],
+        affiliate: colors[4]
+    };
 
     TLRGRP.BADGER.Dashboard.Overview = function () {
         var isSelected;
@@ -31,31 +39,118 @@
 
         var iis = iisExpressionBuilder();
         var errors = errorExpressionBuilder();
+
+        function getColor(expressionKey, i) {
+            if (expressionKey.color) {
+                return expressionKey.color;
+            }
+
+            var lowerCaseId = expressionKey.id.toLowerCase();
+
+            for (var preset in presetColors) {
+                if (lowerCaseId.indexOf(preset) > -1) {
+                    return presetColors[preset];
+                }
+            }
+
+            return colors[i];
+        }
+
+        function buildGraph(options) {
+            var chartOptions = {};
+
+            return {
+                title: options.title,
+                expressions: _.map(options.expressions, function (expressionKey, i) {
+                    if (typeof expressionKey !== 'object') {
+                        expressionKey = {
+                            id: expressionKey
+                        };
+                    }
+                    var expression = TLRGRP.BADGER[options.source].metricInfo(expressionKey.id);
+
+                    $.extend(chartOptions, expression.chartOptions);
+
+                    return {
+                        title: expression.title,
+                        expression: expression.expression,
+                        color: getColor(expressionKey, i)
+                    };
+                }),
+                chartOptions: $.extend(chartOptions, options.chartOptions)
+            };
+        }
+
         var graphs = {
-            'TrafficByType': {
+            'TrafficByType': buildGraph({
+                source: 'IIS',
                 title: 'Traffic by Type',
-                expressions: [{
-                        title: 'All',
-                        color: colors[0],
-                        expression: iis().sum()
-                    },
-                    {
-                        title: 'Bot',
-                        color: colors[1],
-                        expression: iis().sum().equalTo('isbot', true)
-                    },
-                    {
-                        title: 'Mobile',
-                        color: colors[4],
-                        expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true)
-                    }],
+                expressions: ['AllTraffic', 'BotTraffic', 'MobileTraffic'],
                 chartOptions: {
-                    yAxisLabel: 'requests',
                     dimensions: {
                         margin: { left: 50 }
                     }
                 }
-            },
+            }),
+            'ResponseTimeByPage': buildGraph({
+                source: 'IIS',
+                title: 'Response Time by Page',
+                expressions: ['HomePageServerResponseTime', 'SearchServerResponseTime', 'HotelDetailsServerResponseTime', 'BookingFormServerResponseTime'],
+                chartOptions: {
+                    dimensions: {
+                        margin: { left: 50 }
+                    }
+                }
+            }),
+            'StatusCodes': buildGraph({
+                source: 'IIS',
+                title: 'Status Codes (non 200)',
+                expressions: [{ id: 'NotFoundResponse', color: colors[2] },
+                { id: 'ErrorResponse', color: colors[1] },
+                { id: 'RedirectResponse', color: colors[0] }],
+                chartOptions: {
+                    dimensions: {
+                        margin: {
+                            left: 50,
+                            right: 100
+                        }
+                    }
+                }
+            }),
+            'TrafficByChannel': buildGraph({
+                source: 'IIS',
+                title: 'Traffic by Channel',
+                expressions: ['ChannelDirectRequests', 'ChannelMobileRequests', 'ChannelAffiliateRequests'],
+                chartOptions: {
+                    dimensions: {
+                        margin: {
+                            left: 50,
+                            right: 100
+                        }
+                    }
+                }
+            }),
+            'TrafficByPage': buildGraph({
+                source: 'IIS',
+                title: 'Traffic by Page',
+                expressions: ['HomePageRequests', 'SearchRequests', 'HotelDetailsRequests', 'BookingFormRequests'],
+                chartOptions: {
+                    dimensions: {
+                        margin: {
+                            left: 50
+                        }
+                    }
+                }
+            }),
+            'IPGResponseTime': buildGraph({
+                source: 'IIS',
+                title: 'Average Time for Tokenisation',
+                expressions: ['IPGResponseTime'],
+                chartOptions: {
+                    legend: false,
+                    yAxisLabel: 'duration (ms)'
+                }
+            }),
             'AllErrors': {
                 title: 'Errors',
                 expressions: [{
@@ -67,124 +162,17 @@
                     legend: false
                 }
             },
-            'ResponseTimeByPage': {
-                title: 'Response Time by Page',
-                expressions: [{
-                        title: 'Home Page',
-                        color: homePageColor,
-                        expression: iis().median('duration').equalTo('pagetype', 'home-page')
-                    },
-                    {
-                        title: 'Search',
-                        color: searchColor,
-                        expression: iis().median('duration').equalTo('pagetype', 'search')
-                    },
-                    {
-                        title: 'Hotel Details',
-                        color: hotelColor,
-                        expression: iis().median('duration').equalTo('pagetype', 'hotel-details')
-                    },
-                    {
-                        title: 'Booking Form',
-                        color: bookingPageColor,
-                        expression: iis().median('duration').equalTo('pagetype', 'booking-form')
-                    }],
-                chartOptions: {
-                    yAxisLabel: 'request time (ms)',
-                    dimensions: {
-                        margin: { left: 50 }
-                    }
-                }
-            },
-            'StatusCodes': {
-                title: 'Status Codes (non 200)',
-                expressions: [{
-                        title: '404 (Not Found)',
-                        color: colors[2],
-                        expression: iis().sum().equalTo('status', 404)
-                    }, {
-                        title: '500 (Error)',
-                        color: colors[1],
-                        expression: iis().sum().equalTo('status', 500)
-                    }, {
-                        title: '30x (Redirect)',
-                        color: colors[0],
-                        expression: iis().sum().in('status', [301, 302])
-                    }],
-                chartOptions: {
-                    yAxisLabel: 'requests',
-                    dimensions: {
-                        margin: {
-                            left: 50,
-                            right: 100
-                        }
-                    }
-                }
-            },
-            'TrafficByChannel': {
-                title: 'Traffic by Channel',
-                expressions: [{
-                        title: 'Direct',
-                        color: homePageColor,
-                        expression: iis().sum().equalTo('pagechannel', 'web')
-                    },
-                    {
-                        title: 'Mobile',
-                        color: searchColor,
-                        expression: iis().sum().equalTo('pagechannel', 'mobile')
-                    },
-                    {
-                        title: 'Affiliate',
-                        color: hotelColor,
-                        expression: iis().sum().equalTo('pagechannel', 'affiliate')
-                    }],
-                chartOptions: {
-                    yAxisLabel: 'requests',
-                    dimensions: {
-                        margin: { left: 50 }
-                    }
-                }
-            },
-            'TrafficByPage': {
-                title: 'Traffic by Page',
-                expressions: [{
-                        title: 'Home Page',
-                        color: homePageColor,
-                        expression: iis().sum().equalTo('pagetype', 'home-page')
-                    },
-                    {
-                        title: 'Search',
-                        color: searchColor,
-                        expression: iis().sum().equalTo('pagetype', 'search')
-                    },
-                    {
-                        title: 'Hotel Details',
-                        color: hotelColor,
-                        expression: iis().sum().equalTo('pagetype', 'hotel-details')
-                    },
-                    {
-                        title: 'Booking Form',
-                        color: bookingPageColor,
-                        expression: iis().sum().equalTo('pagetype', 'booking-form')
-                    }],
-                chartOptions: {
-                    yAxisLabel: 'requests',
-                    dimensions: {
-                        margin: { left: 50 }
-                    }
-                }
-            },
             'UserJourneyErrors': {
                 title: 'User Journey (pre-booking form) Errors',
                 expressions: [{
-                        title: 'Search',
-                        color: searchColor,
-                        expression: errors().sum().matchesRegEx('Url', 'Search|(H|h)otels')
-                    }, {
-                        title: 'Hotel Details',
-                        color: hotelColor,
-                        expression: errors().sum().matchesRegEx('Url', 'hotel-reservations')
-                    }]
+                    title: 'Search',
+                    color: searchColor,
+                    expression: errors().sum().matchesRegEx('Url', 'Search|(H|h)otels')
+                }, {
+                    title: 'Hotel Details',
+                    color: hotelColor,
+                    expression: errors().sum().matchesRegEx('Url', 'hotel-reservations')
+                }]
             },
             'BookingErrors': {
                 title: 'Booking Errors',
@@ -203,11 +191,11 @@
             'IPGErrors': {
                 title: 'IPG Errors',
                 expressions: [{
-                        title: 'Request Timeout',
-                        color: colors[0],
-                        expression: errors().sum()
-                            .matchesRegEx('Url', '(BookingError/LogError\.mvc)')
-                            .matchesRegEx('Exception.Message', 'request_timeout')
+                    title: 'Request Timeout',
+                    color: colors[0],
+                    expression: errors().sum()
+                        .matchesRegEx('Url', '(BookingError/LogError\.mvc)')
+                        .matchesRegEx('Exception.Message', 'request_timeout')
                 }, {
                     title: 'Session Timeout',
                     color: colors[2],
@@ -225,17 +213,6 @@
                     dimensions: {
                         margin: { right: 110 }
                     }
-                }
-            },
-            'IPGResponseTime': {
-                title: 'Average Time for Tokenisation',
-                expressions: [{
-                    color: colors[0],
-                    expression: iis().sum().matchesRegEx('url', '/beacon/pageresponse')
-                }],
-                chartOptions: {
-                    legend: false,
-                    yAxisLabel: 'duration (ms)'
                 }
             }
         };
@@ -278,7 +255,7 @@
 
         var subMetrics = {
             'Summary': {
-                getGraphs: function() {
+                getGraphs: function () {
                     return getGraphsFor({ id: 'TrafficByType', slots: 2 },
                         {
                             id: 'AllErrors',
@@ -294,29 +271,29 @@
                 }
             },
             'Traffic': {
-                getGraphs: function() {
+                getGraphs: function () {
                     return getGraphsFor('TrafficByPage',
                         { id: 'TrafficByType', slots: 2 },
                         { id: 'TrafficByChannel', slots: 2 });
                 }
             },
             'Errors': {
-                getGraphs: function() {
+                getGraphs: function () {
                     return getGraphsFor({
-                            id: 'AllErrors',
-                            chartOptions: {
-                                dimensions: {
-                                    margin: { right: 20 }
-                                }
+                        id: 'AllErrors',
+                        chartOptions: {
+                            dimensions: {
+                                margin: { right: 20 }
                             }
-                        },
+                        }
+                    },
                         { id: 'UserJourneyErrors', slots: 2 },
                         { id: 'BookingErrors', slots: 2 });
                 }
             },
             'IPG': {
                 defaultTimePeriod: '4hours',
-                getGraphs: function() {
+                getGraphs: function () {
                     return getGraphsFor('IPGErrors', 'IPGResponseTime');
                 }
             }

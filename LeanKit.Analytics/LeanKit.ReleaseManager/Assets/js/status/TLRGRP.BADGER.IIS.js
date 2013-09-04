@@ -2,123 +2,137 @@
     TLRGRP.namespace('TLRGRP.BADGER.WMI');
 
     TLRGRP.BADGER.IIS = (function () {
-        function iisExpressionBuilder() {
+        var iis = (function () {
             return (function () {
-                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
-                return new TLRGRP.BADGER.Cube.ExpressionBuilder('lr_web_request').setTimePeriod(currentTimitSelectDataString);
+                return new TLRGRP.BADGER.Cube.ExpressionBuilder('lr_web_request');
             });
-        }
+        })();
 
-        var iis = iisExpressionBuilder();
+        var pageTypes = [{
+            title: 'Home Page',
+            pagetype: 'home-page'
+        }, {
+            title: 'Search',
+            pagetype: 'search'
+        }, {
+            title: 'Hotel Details',
+            pagetype: 'hotel-details'
+        }, {
+            title: 'Booking Form',
+            pagetype: 'booking-form'
+        }];
+
+        var statuses = [{
+            id: 'NotFound',
+            status: 404,
+            title: '404 (Not Found)'
+        }, {
+            id: 'Error',
+            status: 500,
+            title: '500 (Error)'
+        }, {
+            id: 'Redirect',
+            status: [301, 302],
+            title: '30x (Redirect)'
+        }];
+
+        var channels = [{
+            title: 'Direct',
+            pagechannel: 'web'
+        }, {
+            title: 'Mobile',
+            pagechannel: 'mobile'
+        }, {
+            title: 'Affiliate',
+            pagechannel: 'affiliate'
+        }];
 
         var allMetrics = {
-            'TrafficByType': {
-                title: 'Traffic by Type',
-                expressions: [{
-                        title: 'All',
-                        expression: iis().sum()
-                    },
-                    {
-                        title: 'Bot',
-                        expression: iis().sum().equalTo('isbot', true)
-                    },
-                    {
-                        title: 'Mobile',
-                        expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true)
-                    }],
+            'AllTraffic': {
+                title: 'All',
+                expression: iis().sum(),
                 chartOptions: {
                     yAxisLabel: 'requests'
                 }
             },
-            'ResponseTimeByPage': {
-                title: 'Response Time by Page',
-                expressions: [{
-                        title: 'Home Page',
-                        expression: iis().median('duration').equalTo('pagetype', 'home-page')
-                    },
-                    {
-                        title: 'Search',
-                        expression: iis().median('duration').equalTo('pagetype', 'search')
-                    },
-                    {
-                        title: 'Hotel Details',
-                        expression: iis().median('duration').equalTo('pagetype', 'hotel-details')
-                    },
-                    {
-                        title: 'Booking Form',
-                        expression: iis().median('duration').equalTo('pagetype', 'booking-form')
-                    }],
-                chartOptions: {
-                    yAxisLabel: 'request time (ms)'
-                }
-            },
-            'StatusCodes': {
-                title: 'Status Codes (non 200)',
-                expressions: [{
-                        title: '404 (Not Found)',
-                        expression: iis().sum().equalTo('status', 404)
-                    }, {
-                        title: '500 (Error)',
-                        expression: iis().sum().equalTo('status', 500)
-                    }, {
-                        title: '30x (Redirect)',
-                        expression: iis().sum().in('status', [301, 302])
-                    }],
+            'BotTraffic': {
+                title: 'Bot',
+                expression: iis().sum().equalTo('isbot', true),
                 chartOptions: {
                     yAxisLabel: 'requests'
                 }
             },
-            'TrafficByChannel': {
-                title: 'Traffic by Channel',
-                expressions: [{
-                        title: 'Direct',
-                        expression: iis().sum().equalTo('pagechannel', 'web')
-                    },
-                    {
-                        title: 'Mobile',
-                        expression: iis().sum().equalTo('pagechannel', 'mobile')
-                    },
-                    {
-                        title: 'Affiliate',
-                        expression: iis().sum().equalTo('pagechannel', 'affiliate')
-                    }],
-                chartOptions: {
-                    yAxisLabel: 'requests'
-                }
-            },
-            'TrafficByPage': {
-                title: 'Traffic by Page',
-                expressions: [{
-                        title: 'Home Page',
-                        expression: iis().sum().equalTo('pagetype', 'home-page')
-                    },
-                    {
-                        title: 'Search',
-                        expression: iis().sum().equalTo('pagetype', 'search')
-                    },
-                    {
-                        title: 'Hotel Details',
-                        expression: iis().sum().equalTo('pagetype', 'hotel-details')
-                    },
-                    {
-                        title: 'Booking Form',
-                        expression: iis().sum().equalTo('pagetype', 'booking-form')
-                    }],
+            'MobileTraffic': {
+                title: 'Mobile',
+                expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true),
                 chartOptions: {
                     yAxisLabel: 'requests'
                 }
             },
             'IPGResponseTime': {
                 title: 'Average Time for Tokenisation',
-                expressions: [{
-                    expression: iis().sum().matchesRegEx('url', '/beacon/pageresponse')
-                }],
+                expression: iis().median('token_duration').matchesRegEx('url', '/beacon/tokeniserresponse'),
                 chartOptions: {
                     yAxisLabel: 'duration (ms)'
                 }
             }
         };
-        
+
+        function addRequestsMetrics() {
+            function stripSpaces(input) {
+                return input.replace(/\s/g, '');
+            }
+
+            function metricExpander(metricCollection, options) {
+                var metrics = {};
+                var property = options.property;
+
+                _(metricCollection).each(function (metric) {
+                    var metricId = options.titleFormatString.replace('{MetricId}', (metric.id || stripSpaces(metric.title)));
+                    var reducer = typeof metric[property] === "object" && metric[property].join ? 'in' : 'equalTo';
+
+                    metrics[metricId] = {
+                        title: metric.title,
+                        expression: iis()[options.aggregate](options.aggregateField)[reducer](property, metric[property]),
+                        chartOptions: {
+                            yAxisLabel: options.yAxisLabel
+                        }
+                    };
+                });
+
+                return metrics;
+            }
+
+            $.extend(true, allMetrics,
+                metricExpander(statuses, {
+                    property: 'status',
+                    aggregate: 'sum',
+                    titleFormatString: '{MetricId}Response',
+                    yAxisLabel: 'requests'
+                }),
+                metricExpander(pageTypes, {
+                    property: 'pagetype',
+                    aggregate: 'sum',
+                    titleFormatString: '{MetricId}Requests',
+                    yAxisLabel: 'requests'
+                }),
+                metricExpander(channels, {
+                    property: 'pagechannel',
+                    aggregate: 'sum',
+                    titleFormatString: 'Channel{MetricId}Requests',
+                    yAxisLabel: 'requests'
+                }),
+                metricExpander(pageTypes, {
+                    property: 'pagetype',
+                    aggregate: 'median',
+                    aggregateField: 'duration',
+                    titleFormatString: '{MetricId}ServerResponseTime',
+                    yAxisLabel: 'request time (ms)'
+                }));
+        };
+
+        addRequestsMetrics();
+
         return {
             metricInfo: function (metricName) {
                 return allMetrics[metricName];
