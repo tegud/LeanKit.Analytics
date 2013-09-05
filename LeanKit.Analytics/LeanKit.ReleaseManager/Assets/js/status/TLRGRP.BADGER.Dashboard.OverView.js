@@ -1,20 +1,6 @@
 ﻿(function () {
     TLRGRP.namespace('TLRGRP.BADGER.Dashboard');
 
-    var colors = ['steelblue', 'red', 'orange', 'green', 'purple'];
-    var searchColor = colors[2];
-    var hotelColor = colors[4];
-
-    var presetColors = {
-        homepage: colors[0],
-        search: colors[2],
-        bookingpage: colors[3],
-        hoteldetails: colors[4],
-        mobile: colors[2],
-        direct: colors[0],
-        affiliate: colors[4]
-    };
-
     TLRGRP.BADGER.Dashboard.Overview = function () {
         var isSelected;
         var currentTimePeriod = '1hour';
@@ -22,39 +8,7 @@
             lockToZero: true
         };
         var currentSubMetric;
-
-        function iisExpressionBuilder() {
-            return (function () {
-                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
-                return new TLRGRP.BADGER.Cube.ExpressionBuilder('lr_web_request').setTimePeriod(currentTimitSelectDataString);
-            });
-        }
-
-        function errorExpressionBuilder() {
-            return (function () {
-                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
-                return new TLRGRP.BADGER.Cube.ExpressionBuilder('no_type').setTimePeriod(currentTimitSelectDataString);
-            });
-        }
-
-        var iis = iisExpressionBuilder();
-        var errors = errorExpressionBuilder();
-
-        function getColor(expressionKey, i) {
-            if (expressionKey.color) {
-                return expressionKey.color;
-            }
-
-            var lowerCaseId = expressionKey.id.toLowerCase();
-
-            for (var preset in presetColors) {
-                if (lowerCaseId.indexOf(preset) > -1) {
-                    return presetColors[preset];
-                }
-            }
-
-            return colors[i];
-        }
+        var colors = new TLRGRP.BADGER.ColorPalette();
 
         function buildGraph(options) {
             var chartOptions = {};
@@ -74,11 +28,47 @@
                     return {
                         title: expression.title,
                         expression: expression.expression,
-                        color: getColor(expressionKey, i)
+                        color: colors.getColorByKey(expressionKey, i)
                     };
                 }),
                 chartOptions: $.extend(chartOptions, options.chartOptions)
             };
+        }
+
+        function getGraphsFor() {
+            function getGraphFor(graph) {
+                var graphClass;
+                var instanceChartOptions = graph.chartOptions;
+
+                if (typeof graph === 'object') {
+                    if (graph.slots === 2) {
+                        graphClass = 'half';
+                    }
+                    graph = graph.id;
+                }
+
+                var selectedGraph = graphs[graph];
+                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
+
+                return $.extend(true, {}, selectedGraph, {
+                    'class': graphClass,
+                    expressions: _.map(selectedGraph.expressions, function (expression) {
+                        expression.expression = expression.expression.setTimePeriod(currentTimitSelectDataString).build();
+
+                        if (!expression.id) {
+                            var autoTitle = (selectedGraph.title ? selectedGraph.title + '-' : '') + expression.title;
+                            expression.id = autoTitle.toLowerCase().replace(/\s/g, '-').replace(/[()]/g, '');
+                        }
+
+                        return expression;
+                    }),
+                    chartOptions: $.extend({}, chartOptions, selectedGraph.chartOptions, instanceChartOptions)
+                });
+            }
+
+            return _.map(arguments, function (graphItem) {
+                return getGraphFor(graphItem);
+            });
         }
 
         var graphs = {
@@ -105,9 +95,9 @@
             'StatusCodes': buildGraph({
                 source: 'IIS',
                 title: 'Status Codes (non 200)',
-                expressions: [{ id: 'NotFoundResponse', color: colors[2] },
-                { id: 'ErrorResponse', color: colors[1] },
-                { id: 'RedirectResponse', color: colors[0] }],
+                expressions: [{ id: 'NotFoundResponse', color: colors.getColorByIndex(2) },
+                'ErrorResponse',
+                { id: 'RedirectResponse', color: colors.getColorByIndex(0) }],
                 chartOptions: {
                     dimensions: {
                         margin: {
@@ -151,107 +141,46 @@
                     yAxisLabel: 'duration (ms)'
                 }
             }),
-            'AllErrors': {
+            'AllErrors': buildGraph({
+                source: 'Errors',
                 title: 'Errors',
-                expressions: [{
-                    title: 'All Errors',
-                    color: colors[1],
-                    expression: errors().sum()
-                }],
+                expressions: ['AllErrors'],
                 chartOptions: {
-                    legend: false
+                    legend: false,
+                    yAxisLabel: ''
                 }
-            },
-            'UserJourneyErrors': {
+            }),
+            'UserJourneyErrors': buildGraph({
+                source: 'Errors',
                 title: 'User Journey (pre-booking form) Errors',
-                expressions: [{
-                    title: 'Search',
-                    color: searchColor,
-                    expression: errors().sum().matchesRegEx('Url', 'Search|(H|h)otels')
-                }, {
-                    title: 'Hotel Details',
-                    color: hotelColor,
-                    expression: errors().sum().matchesRegEx('Url', 'hotel-reservations')
-                }]
-            },
-            'BookingErrors': {
+                expressions: ['SearchErrors', 'HotelDetailsErrors']
+            }),
+            'BookingErrors': buildGraph({
+                source: 'Errors',
                 title: 'Booking Errors',
-                expressions: [{
-                    title: 'Booking',
-                    color: colors[0],
-                    expression: errors().sum().matchesRegEx('Url', '(BookingError/LogError\.mvc|Booking/Online|HotelReservationsSubmit/Submit|Booking/Submit)')
-                }],
+                expressions: [{ id: 'BookingErrors', color: colors.getColorByIndex(0) }],
                 chartOptions: {
                     legend: false,
                     dimensions: {
                         margin: { right: 20 }
                     }
                 }
-            },
-            'IPGErrors': {
-                title: 'IPG Errors',
-                expressions: [{
-                    title: 'Request Timeout',
-                    color: colors[0],
-                    expression: errors().sum()
-                        .matchesRegEx('Url', '(BookingError/LogError\.mvc)')
-                        .matchesRegEx('Exception.Message', 'request_timeout')
-                }, {
-                    title: 'Session Timeout',
-                    color: colors[2],
-                    expression: errors().sum()
-                        .matchesRegEx('Url', '(BookingError/LogError\.mvc)')
-                        .matchesRegEx('Exception.Message', 'session_timeout')
-                }, {
-                    title: 'Invalid Session',
-                    color: colors[4],
-                    expression: errors().sum()
-                        .matchesRegEx('Url', '(BookingError/LogError\.mvc)')
-                        .matchesRegEx('Exception.Message', 'invalid_session')
-                }],
+            }),
+            'IPGErrors': buildGraph({
+                source: 'Errors',
+                title: 'IPG Booking',
+                expressions: [
+                    { id: 'IPGRequestTimeoutErrors', color: colors.getColorByIndex(0) },
+                    { id: 'IPGSessionTimeoutErrors', color: colors.getColorByIndex(2) },
+                    { id: 'IPGInvalidSessionErrors', color: colors.getColorByIndex(4) }
+                ],
                 chartOptions: {
                     dimensions: {
                         margin: { right: 110 }
                     }
                 }
-            }
+            })
         };
-
-        function getGraphFor(graph) {
-            var graphClass;
-            var instanceChartOptions = graph.chartOptions;
-
-            if (typeof graph === 'object') {
-                if (graph.slots === 2) {
-                    graphClass = 'half';
-                }
-                graph = graph.id;
-            }
-
-            var selectedGraph = graphs[graph];
-            var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
-
-            return $.extend(true, {}, selectedGraph, {
-                'class': graphClass,
-                expressions: _.map(selectedGraph.expressions, function (expression) {
-                    expression.expression = expression.expression.setTimePeriod(currentTimitSelectDataString).build();
-
-                    if (!expression.id) {
-                        var autoTitle = (selectedGraph.title ? selectedGraph.title + '-' : '') + expression.title;
-                        expression.id = autoTitle.toLowerCase().replace(/\s/g, '-').replace(/[()]/g, '');
-                    }
-
-                    return expression;
-                }),
-                chartOptions: $.extend({}, chartOptions, selectedGraph.chartOptions, instanceChartOptions)
-            });
-        }
-
-        function getGraphsFor() {
-            return _.map(arguments, function (graphItem) {
-                return getGraphFor(graphItem);
-            });
-        }
 
         var subMetrics = {
             'Summary': {
@@ -352,9 +281,8 @@
             },
             getGraphs: function () {
                 var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
-                var graphs = subMetrics[currentSubMetric].getGraphs(currentTimitSelectDataString);
 
-                return graphs;
+                return subMetrics[currentSubMetric].getGraphs(currentTimitSelectDataString);
             }
         };
     };

@@ -47,7 +47,6 @@
         return timeString;
     };
 
-
     TLRGRP.BADGER.Cube.ExpressionBuilder = function (metric) {
         var criteriaFunction = function (operator) {
             return function (key, value) {
