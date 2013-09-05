@@ -66,6 +66,7 @@
     <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.ByHost.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.Overview.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.Mobile.js"></script>
+    <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.ByPage.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.TimeSelect.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.StopStart.js"></script>
     <script src="~/assets/js/status/TLRGRP.BADGER.MetricRequest.js"></script>
@@ -77,7 +78,8 @@
                 new TLRGRP.BADGER.Dashboard.Overview(),
                 new TLRGRP.BADGER.Dashboard.Mobile(),
                 new TLRGRP.BADGER.Dashboard.WebHosts(),
-                new TLRGRP.BADGER.Dashboard.ByHost()
+                new TLRGRP.BADGER.Dashboard.ByHost(),
+                new TLRGRP.BADGER.Dashboard.ByPage()
             ], 'Overview');
             
             dashboardCollection.setUpUi();
