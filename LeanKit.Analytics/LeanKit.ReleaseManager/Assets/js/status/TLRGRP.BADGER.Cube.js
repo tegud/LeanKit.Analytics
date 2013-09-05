@@ -36,8 +36,6 @@
             var start = startMoment.utc().format('YYYY-MM-DDTHH:mm:ss') + 'Z';
             var stop = endMoment.utc().format('YYYY-MM-DDTHH:mm:ss') + 'Z';
 
-            console.log('Start: ' + start + ', stop: ' + stop);
-
             timeString += '&start=' + start + '&stop=' + stop;
         }
         else {
@@ -71,7 +69,7 @@
             equalTo: criteriaFunction('eq'),
             notEqualTo: criteriaFunction('ne'),
             matchesRegEx: criteriaFunction('re'),
-            in: criteriaFunction('in'),
+            'in': criteriaFunction('in'),
             sum: reducerSetter('sum'),
             median: reducerSetter('median'),
             setTimePeriod: function (timePeriod) {

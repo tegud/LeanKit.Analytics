@@ -275,6 +275,8 @@
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.DashboardChartStore.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.Legend.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.renderers.js" />
+    <Content Include="Assets\js\status\TLRGRP.BADGER.ColorPalette.js" />
+    <Content Include="Assets\js\status\TLRGRP.BADGER.Errors.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.IIS.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.Machines.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.WMI.js" />
