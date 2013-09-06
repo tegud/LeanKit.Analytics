@@ -8,11 +8,13 @@
             lockToZero: true
         };
         var currentSubMetric;
-        
+
         function getGraphsFor() {
             function getGraphFor(graph) {
                 var graphClass;
                 var instanceChartOptions = graph.chartOptions;
+                var expressionFilter = graph.expressions;
+                var additionalExpressionFilters = graph.additionalExpressionFilters;
 
                 if (typeof graph === 'object') {
                     if (graph.slots === 2) {
@@ -23,14 +25,33 @@
 
                 var selectedGraph = TLRGRP.BADGER.Dashboard.Graphs.get(graph);
                 var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
+                var selectedExpressions = selectedGraph.expressions;
+
+                if (expressionFilter && expressionFilter) {
+                    selectedExpressions = _(selectedExpressions).filter(function (graphExpression) {
+                        if (_(expressionFilter).contains(graphExpression.id)) {
+                            return graphExpression;
+                        }
+                    });
+                }
+
+                delete selectedGraph.expressions;
 
                 return $.extend(true, {}, selectedGraph, {
                     'class': graphClass,
-                    expressions: _.map(selectedGraph.expressions, function (expression) {
-                        expression.expression = expression.expression
-                            .equalTo('pagetype', subMetrics[currentSubMetric].pageType)
-                            .setTimePeriod(currentTimitSelectDataString)
-                            .build();
+                    expressions: _.map(selectedExpressions, function (expression) {
+                        var currentExpression = expression.expression;
+                        currentExpression = currentExpression.setTimePeriod(currentTimitSelectDataString);
+
+                        if (additionalExpressionFilters) {
+                            _(additionalExpressionFilters).each(function (expressionFilter) {
+                                currentExpression = currentExpression[expressionFilter.filter](expressionFilter.key, expressionFilter.value);
+                            });
+                        }
+
+                        // equalTo('pagetype', subMetrics[currentSubMetric].pageType)
+
+                        expression.expression = currentExpression.build();
 
                         if (!expression.id) {
                             var autoTitle = (selectedGraph.title ? selectedGraph.title + '-' : '') + expression.title;
@@ -48,29 +69,118 @@
             });
         }
 
+        var pages = {
+            'HomePage': {
+                name: 'Home Page',
+                pageType: 'home-page'
+            },
+            'Search': {
+                pageType: 'search',
+                regex: 'Search|(H|h)otels'
+            },
+            'HotelDetails': {
+                name: 'Hotel Details',
+                pageType: 'hotel-details',
+                regex: 'hotel-reservations'
+            },
+            'BookingForm': {
+                name: 'Booking Form',
+                pageType: 'booking-form',
+                regex: '(BookingError/LogError\.mvc|Booking/Online|HotelReservationsSubmit/Submit|Booking/Submit)'
+            }
+        };
+
+        function getBaseGraphs() {
+            var trafficTypeGraph = {
+                id: 'TrafficByType',
+                additionalExpressionFilters: [{
+                    filter: 'equalTo',
+                    key: 'pagetype',
+                    value: pages[currentSubMetric].pageType
+                }]
+            };
+
+            return trafficTypeGraph;
+        }
+
         var subMetrics = {
             'HomePage': {
                 name: 'Home Page',
                 pageType: 'home-page',
                 getGraphs: function () {
-                    return getGraphsFor('TrafficByType');
+                    return getGraphsFor(getBaseGraphs(),
+                        { id: 'ResponseTimeByPage', expressions: ['HomePageServerResponseTime'] });
                 }
             },
             'Search': {
+                pageType: 'search',
                 getGraphs: function () {
-                    return [];
+                    return getGraphsFor(getBaseGraphs(),
+                        {
+                            id: 'ResponseTimeByPage',
+                            expressions: ['SearchServerResponseTime'],
+                            slots: 2
+                        },
+                        {
+                            id: 'AllErrors',
+                            additionalExpressionFilters: [{
+                                filter: 'matchesRegEx',
+                                key: 'Url',
+                                value: pages[currentSubMetric].regex
+                            }],
+                            slots: 2,
+                            chartOptions: {
+                                dimensions: { margin: { right: 20 } }
+                            }
+                        });
                 }
             },
             'HotelDetails': {
                 name: 'Hotel Details',
+                pageType: 'hotel-details',
                 getGraphs: function () {
-                    return [];
+                    return getGraphsFor(getBaseGraphs(),
+                        {
+                            id: 'ResponseTimeByPage',
+                            expressions: ['HotelDetailsServerResponseTime'],
+                            slots: 2
+                        },
+                        {
+                            id: 'AllErrors',
+                            additionalExpressionFilters: [{
+                                filter: 'matchesRegEx',
+                                key: 'Url',
+                                value: pages[currentSubMetric].regex
+                            }],
+                            slots: 2,
+                            chartOptions: {
+                                dimensions: { margin: { right: 20 } }
+                            }
+                        });
                 }
             },
             'BookingForm': {
                 name: 'Booking Form',
+                pageType: 'booking-form',
                 getGraphs: function () {
-                    return [];
+                    return getGraphsFor(getBaseGraphs(),
+                        {
+                            id: 'ResponseTimeByPage',
+                            expressions: ['BookingFormServerResponseTime'],
+                            slots: 2
+                        },
+                        {
+                            id: 'AllErrors',
+                            additionalExpressionFilters: [{
+                                filter: 'matchesRegEx',
+                                key: 'Url',
+                                value: pages[currentSubMetric].regex
+                            }],
+                            slots: 2,
+                            chartOptions: {
+                                dimensions: { margin: { right: 20 } }
+                            }
+                        });
                 }
             }
         };
