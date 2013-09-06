@@ -8,11 +8,12 @@
             lockToZero: true
         };
         var currentSubMetric;
-        
+
         function getGraphsFor() {
             function getGraphFor(graph) {
                 var graphClass;
                 var instanceChartOptions = graph.chartOptions;
+                var expressionFilter = graph.expressions;
 
                 if (typeof graph === 'object') {
                     if (graph.slots === 2) {
@@ -23,11 +24,24 @@
 
                 var selectedGraph = TLRGRP.BADGER.Dashboard.Graphs.get(graph);
                 var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
+                var selectedExpressions = selectedGraph.expressions;
+
+                if (expressionFilter && expressionFilter) {
+                    selectedExpressions = _(selectedExpressions).filter(function (graphExpression) {
+                        if (_(expressionFilter).contains(graphExpression.id)) {
+                            return graphExpression;
+                        }
+                    });
+                }
+
+                delete selectedGraph.expressions;
 
                 return $.extend(true, {}, selectedGraph, {
                     'class': graphClass,
-                    expressions: _.map(selectedGraph.expressions, function (expression) {
-                        expression.expression = expression.expression.setTimePeriod(currentTimitSelectDataString).build();
+                    expressions: _.map(selectedExpressions, function (expression) {
+                        expression.expression = expression.expression
+                            .setTimePeriod(currentTimitSelectDataString)
+                            .build();
 
                         if (!expression.id) {
                             var autoTitle = (selectedGraph.title ? selectedGraph.title + '-' : '') + expression.title;

@@ -18,6 +18,7 @@
                 $.extend(baseChartOptions, expression.chartOptions);
 
                 return {
+                    id: expressionKey.id,
                     title: expression.title,
                     expression: expression.expression,
                     color: colors.getColorByKey(expressionKey, i)
