@@ -8,19 +8,7 @@
             });
         })();
 
-        var pageTypes = [{
-            title: 'Home Page',
-            pagetype: 'home-page'
-        }, {
-            title: 'Search',
-            pagetype: 'search'
-        }, {
-            title: 'Hotel Details',
-            pagetype: 'hotel-details'
-        }, {
-            title: 'Booking Form',
-            pagetype: 'booking-form'
-        }];
+        var pageTypes = TLRGRP.BADGER.Pages.allForArea('UserJourney');
 
         var statuses = [{
             id: 'NotFound',

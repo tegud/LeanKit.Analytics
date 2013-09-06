@@ -1,4 +1,5 @@
-﻿@{
+﻿@using System.Web.Optimization
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Layouts/_Layout.cshtml";
 }
@@ -43,34 +44,7 @@
 
 @section Javascript
 {
-    <script src="~/assets/js/page-capture.js"></script>
-    <script src="~/assets/js/lib/jquery-2.0.0.min.js"></script>
-    <script src="~/assets/js/lib/jquery-ui.js"></script>
-    <script src="~/assets/js/lib/lodash.js"></script>
-    <script src="~/assets/js/lib/moment.min.js"></script>
-    <script src="~/assets/js/lib/TLRGRP.core.js"></script>
-    <script src="~/assets/js/lib/nanomachine.js"></script>
-    <script src="~/assets/js/lib/TLRGRP.BADGER.utilities.js"></script>
-    <script src="~/assets/js/status-charts/TLRGRP.dashboards.Builder.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.ColorPalette.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Cube.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.Graphs.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.IIS.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.WMI.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Errors.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.Graphs.IIS.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.Graphs.Errors.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.DashboardCollection.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.DashboardList.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.WebHosts.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.ByHost.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.Overview.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.Mobile.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Dashboard.ByPage.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.TimeSelect.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.StopStart.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.MetricRequest.js"></script>
-    <script src="~/assets/js/status/TLRGRP.BADGER.Machines.js"></script>
+    @Scripts.Render("~/assets/js/bundles/dashboards")
 	
     <script type="text/javascript">
         (function () {

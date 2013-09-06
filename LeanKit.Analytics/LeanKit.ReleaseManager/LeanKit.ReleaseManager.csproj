@@ -41,6 +41,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="Glimpse.AspNet">
       <HintPath>..\packages\Glimpse.AspNet.1.3.0\lib\net45\Glimpse.AspNet.dll</HintPath>
     </Reference>
@@ -69,6 +72,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -125,8 +131,12 @@
     <Reference Include="WebActivator">
       <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
     </Reference>
+    <Reference Include="WebGrease">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\MunqMvc3Startup.cs" />
     <Compile Include="Controllers\CycleTimeController.cs" />
     <Compile Include="Controllers\EditRelease.cs" />
@@ -275,25 +285,28 @@
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.DashboardChartStore.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.Legend.js" />
     <Content Include="Assets\js\status-charts\TLRGRP.dashboards.graphs.renderers.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.ByPage.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.Graphs.Errors.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.Graphs.IIS.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.Graphs.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.ColorPalette.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Errors.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.IIS.js" />
+    <Content Include="Assets\js\status\TLRGRP.BADGER.Pages.js" />
+    <Content Include="Assets\js\status\Dashboards\TLRGRP.BADGER.Dashboard.ByPage.js" />
+    <Content Include="Assets\js\status\Graphs\TLRGRP.BADGER.Dashboard.Graphs.Errors.js" />
+    <Content Include="Assets\js\status\Graphs\TLRGRP.BADGER.Dashboard.Graphs.IIS.js" />
+    <Content Include="Assets\js\status\Graphs\TLRGRP.BADGER.Dashboard.Graphs.js" />
+    <Content Include="Assets\js\status\LateRooms\TLRGRP.BADGER.LateRooms.Pages.js" />
+    <Content Include="Assets\js\status\LateRooms\TLRGRP.BADGER.LateRooms.Machines.js" />
+    <Content Include="Assets\js\status\UI\TLRGRP.BADGER.ColorPalette.js" />
+    <Content Include="Assets\js\status\Metrics\TLRGRP.BADGER.Errors.js" />
+    <Content Include="Assets\js\status\Metrics\TLRGRP.BADGER.IIS.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.Machines.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.WMI.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.ByHost.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.Mobile.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Cube.js" />
+    <Content Include="Assets\js\status\Metrics\TLRGRP.BADGER.WMI.js" />
+    <Content Include="Assets\js\status\Dashboards\TLRGRP.BADGER.Dashboard.ByHost.js" />
+    <Content Include="Assets\js\status\Dashboards\TLRGRP.BADGER.Dashboard.Mobile.js" />
+    <Content Include="Assets\js\status\Sources\TLRGRP.BADGER.Cube.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.MetricRequest.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.DashboardList.js" />
+    <Content Include="Assets\js\status\UI\TLRGRP.BADGER.DashboardList.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.DashboardCollection.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.StopStart.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.TimeSelect.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.OverView.js" />
-    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.WebHosts.js" />
+    <Content Include="Assets\js\status\UI\TLRGRP.BADGER.TimeSelect.js" />
+    <Content Include="Assets\js\status\Dashboards\TLRGRP.BADGER.Dashboard.OverView.js" />
+    <Content Include="Assets\js\status\Dashboards\TLRGRP.BADGER.Dashboard.WebHosts.js" />
     <Content Include="Global.asax" />
     <Content Include="Views\Estimates\Index.cshtml" />
     <Content Include="Views\Status\graph.html" />

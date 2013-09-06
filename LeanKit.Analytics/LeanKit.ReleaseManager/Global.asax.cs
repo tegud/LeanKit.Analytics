@@ -5,8 +5,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.Optimization;
 using System.Web.Routing;
 using LeanKit.Data.SQL;
+using LeanKit.ReleaseManager.App_Start;
 
 namespace LeanKit.ReleaseManager
 {
@@ -25,7 +27,11 @@ namespace LeanKit.ReleaseManager
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 
             ViewEngines.Engines.Clear();
-            ViewEngines.Engines.Add(new RazorViewEngine()); 
+            ViewEngines.Engines.Add(new RazorViewEngine());
+
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            BundleTable.EnableOptimizations = false;
 
             ConnectionString = new DbConnectionString(ConfigurationManager.ConnectionStrings["LeanKitSyncDb"].ConnectionString);
         }
