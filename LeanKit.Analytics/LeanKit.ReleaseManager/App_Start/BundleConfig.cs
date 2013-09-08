@@ -41,7 +41,8 @@ namespace LeanKit.ReleaseManager.App_Start
                                      "~/assets/js/status/Metrics/TLRGRP.BADGER.WMI.js",
                                      "~/assets/js/status/Metrics/TLRGRP.BADGER.Errors.js");
 
-            dashboardsBundle.Include("~/assets/js/status/Graphs/TLRGRP.BADGER.Dashboard.Graphs.js",
+            dashboardsBundle.Include("~/assets/js/status/TLRGRP.BADGER.Dashboard.GraphFactory.js",
+                                     "~/assets/js/status/Graphs/TLRGRP.BADGER.Dashboard.Graphs.js",
                                      "~/assets/js/status/Graphs/TLRGRP.BADGER.Dashboard.Graphs.IIS.js",
                                      "~/assets/js/status/Graphs/TLRGRP.BADGER.Dashboard.Graphs.Errors.js");
 

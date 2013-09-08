@@ -1,129 +1,28 @@
 ﻿(function () {
     TLRGRP.namespace('TLRGRP.BADGER.Dashboard');
 
-    TLRGRP.BADGER.Dashboard.Overview = function () {
+    TLRGRP.BADGER.Dashboard.GraphSet = function (configuration) {
         var isSelected;
         var currentTimePeriod = '1hour';
-        var chartOptions = {
-            lockToZero: true
-        };
         var currentSubMetric;
-
-        function getGraphsFor() {
-            function getGraphFor(graph) {
-                var graphClass;
-                var instanceChartOptions = graph.chartOptions;
-                var expressionFilter = graph.expressions;
-
-                if (typeof graph === 'object') {
-                    if (graph.slots === 2) {
-                        graphClass = 'half';
-                    }
-                    graph = graph.id;
-                }
-
-                var selectedGraph = TLRGRP.BADGER.Dashboard.Graphs.get(graph);
-                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
-                var selectedExpressions = selectedGraph.expressions;
-
-                if (expressionFilter && expressionFilter) {
-                    selectedExpressions = _(selectedExpressions).filter(function (graphExpression) {
-                        if (_(expressionFilter).contains(graphExpression.id)) {
-                            return graphExpression;
-                        }
-                    });
-                }
-
-                delete selectedGraph.expressions;
-
-                return $.extend(true, {}, selectedGraph, {
-                    'class': graphClass,
-                    expressions: _.map(selectedExpressions, function (expression) {
-                        expression.expression = expression.expression
-                            .setTimePeriod(currentTimitSelectDataString)
-                            .build();
-
-                        if (!expression.id) {
-                            var autoTitle = (selectedGraph.title ? selectedGraph.title + '-' : '') + expression.title;
-                            expression.id = autoTitle.toLowerCase().replace(/\s/g, '-').replace(/[()]/g, '');
-                        }
-
-                        return expression;
-                    }),
-                    chartOptions: $.extend({}, chartOptions, selectedGraph.chartOptions, instanceChartOptions)
-                });
-            }
-
-            return _.map(arguments, function (graphItem) {
-                return getGraphFor(graphItem);
-            });
-        }
-
-        var subMetrics = {
-            'Summary': {
-                getGraphs: function () {
-                    return getGraphsFor({ id: 'TrafficByType', slots: 2 },
-                        {
-                            id: 'AllErrors',
-                            slots: 2,
-                            chartOptions: {
-                                dimensions: {
-                                    margin: { right: 20 }
-                                }
-                            }
-                        },
-                        { id: 'ResponseTimeByPage', slots: 2 },
-                        { id: 'StatusCodes', slots: 2 });
-                }
-            },
-            'Traffic': {
-                getGraphs: function () {
-                    return getGraphsFor('TrafficByPage',
-                        { id: 'TrafficByType', slots: 2 },
-                        { id: 'TrafficByChannel', slots: 2 });
-                }
-            },
-            'Errors': {
-                getGraphs: function () {
-                    return getGraphsFor({
-                        id: 'AllErrors',
-                        chartOptions: {
-                            dimensions: {
-                                margin: { right: 20 }
-                            }
-                        }
-                    },
-                        { id: 'UserJourneyErrors', slots: 2 },
-                        { id: 'BookingErrors', slots: 2 });
-                }
-            },
-            'IPG': {
-                defaultTimePeriod: '4hours',
-                getGraphs: function () {
-                    return getGraphsFor('IPGErrors', 'IPGResponseTime');
-                }
-            }
-        };
+        var metric = configuration.metric;
+        var name = configuration.name || configuration.metric;
+        var subMetrics = configuration.subMetrics;
 
         return {
             toString: function () {
-                return 'Overview';
-            },
-            appendViews: function (allViews) {
-                return $.extend(allViews, {
-                    'Overview': {}
-                });
+                return metric;
             },
             appendViewModel: function (viewModel) {
                 viewModel.dashboardViews[viewModel.dashboardViews.length] = {
-                    name: 'Overview',
-                    metric: 'Overview',
+                    name: name,
+                    metric: metric,
                     isSelected: isSelected
                 };
 
                 if (isSelected) {
                     viewModel.timePeriod = currentTimePeriod;
-                    viewModel.pageName = 'Overview';
+                    viewModel.pageName = name;
 
                     for (var subMetric in subMetrics) {
                         if (!subMetrics.hasOwnProperty(subMetric)) {
@@ -132,7 +31,7 @@
 
                         viewModel.subMetrics[viewModel.subMetrics.length] = {
                             name: subMetric,
-                            metric: 'Overview',
+                            metric: metric,
                             subMetric: subMetric,
                             isSelected: currentSubMetric === subMetric
                         };
@@ -140,7 +39,7 @@
                 }
             },
             supportsView: function (view) {
-                return view === 'Overview';
+                return view === metric;
             },
             setView: function (view, subMetric) {
                 isSelected = true;
@@ -157,10 +56,71 @@
                 currentTimePeriod = timePeriod;
             },
             getGraphs: function () {
-                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
-
-                return subMetrics[currentSubMetric].getGraphs(currentTimitSelectDataString);
+                return subMetrics[currentSubMetric].getGraphs(currentTimePeriod);
             }
         };
+    };
+
+    TLRGRP.BADGER.Dashboard.Factory = (function () {
+        return {
+            build: function (config) {
+                return new TLRGRP.BADGER.Dashboard.GraphSet(config);
+            }
+        };
+    })();
+
+    TLRGRP.BADGER.Dashboard.Overview = function () {
+        return new TLRGRP.BADGER.Dashboard.GraphSet({
+            metric: 'Overview',
+            subMetrics: {
+                'Summary': {
+                    getGraphs: function(currentTimePeriod) {
+                        var graphFactory = TLRGRP.BADGER.Dashboard.GraphFactory(currentTimePeriod);
+                        return graphFactory.getGraphsFor({ id: 'TrafficByType', slots: 2 },
+                            {
+                                id: 'AllErrors',
+                                slots: 2,
+                                chartOptions: {
+                                    dimensions: {
+                                        margin: { right: 20 }
+                                    }
+                                }
+                            },
+                            { id: 'ResponseTimeByPage', slots: 2 },
+                            { id: 'StatusCodes', slots: 2 });
+                    }
+                },
+                'Traffic': {
+                    getGraphs: function(currentTimePeriod) {
+                        var graphFactory = TLRGRP.BADGER.Dashboard.GraphFactory(currentTimePeriod);
+                        return graphFactory.getGraphsFor('TrafficByPage',
+                            { id: 'TrafficByType', slots: 2 },
+                            { id: 'TrafficByChannel', slots: 2 });
+                    }
+                },
+                'Errors': {
+                    getGraphs: function(currentTimePeriod) {
+                        var graphFactory = TLRGRP.BADGER.Dashboard.GraphFactory(currentTimePeriod);
+                        return graphFactory.getGraphsFor({
+                            id: 'AllErrors',
+                            chartOptions: {
+                                dimensions: {
+                                    margin: { right: 20 }
+                                }
+                            }
+                        },
+                            { id: 'UserJourneyErrors', slots: 2 },
+                            { id: 'BookingErrors', slots: 2 });
+                    }
+                },
+                'IPG': {
+                    defaultTimePeriod: '4hours',
+                    getGraphs: function(currentTimePeriod) {
+                        var graphFactory = TLRGRP.BADGER.Dashboard.GraphFactory(currentTimePeriod);
+                        return graphFactory.getGraphsFor('IPGErrors', 'IPGResponseTime');
+                    }
+                }
+            }
+        });
     };
 })();

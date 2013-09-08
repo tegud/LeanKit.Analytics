@@ -4,70 +4,7 @@
     TLRGRP.BADGER.Dashboard.ByPage = function () {
         var isSelected;
         var currentTimePeriod = '1hour';
-        var chartOptions = {
-            lockToZero: true
-        };
         var currentSubMetric;
-
-        function getGraphsFor() {
-            function getGraphFor(graph) {
-                var graphClass;
-                var instanceChartOptions = graph.chartOptions;
-                var expressionFilter = graph.expressions;
-                var additionalExpressionFilters = graph.additionalExpressionFilters;
-                var graphTitle = graph.title;
-
-                if (typeof graph === 'object') {
-                    if (graph.slots === 2) {
-                        graphClass = 'half';
-                    }
-                    graph = graph.id;
-                }
-
-                var selectedGraph = TLRGRP.BADGER.Dashboard.Graphs.get(graph);
-                var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
-                var selectedExpressions = selectedGraph.expressions;
-
-                if (expressionFilter && expressionFilter) {
-                    selectedExpressions = _(selectedExpressions).filter(function (graphExpression) {
-                        if (_(expressionFilter).contains(graphExpression.id)) {
-                            return graphExpression;
-                        }
-                    });
-                }
-
-                delete selectedGraph.expressions;
-
-                return $.extend(true, {}, selectedGraph, {
-                    'class': graphClass,
-                    title: graphTitle,
-                    expressions: _.map(selectedExpressions, function (expression) {
-                        var currentExpression = expression.expression;
-                        currentExpression = currentExpression.setTimePeriod(currentTimitSelectDataString);
-
-                        if (additionalExpressionFilters) {
-                            _(additionalExpressionFilters).each(function (expressionFilter) {
-                                currentExpression = currentExpression[expressionFilter.filter](expressionFilter.key, expressionFilter.value);
-                            });
-                        }
-
-                        expression.expression = currentExpression.build();
-
-                        if (!expression.id) {
-                            var autoTitle = (selectedGraph.title ? selectedGraph.title + '-' : '') + expression.title;
-                            expression.id = autoTitle.toLowerCase().replace(/\s/g, '-').replace(/[()]/g, '');
-                        }
-
-                        return expression;
-                    }),
-                    chartOptions: $.extend({}, chartOptions, selectedGraph.chartOptions, instanceChartOptions)
-                });
-            }
-
-            return _.map(arguments, function (graphItem) {
-                return getGraphFor(graphItem);
-            });
-        }
 
         function getTrafficByGraph() {
             var trafficTypeGraph = {
@@ -90,7 +27,9 @@
                 name: 'Home Page',
                 pageType: 'home-page',
                 getGraphs: function () {
-                    return getGraphsFor(getTrafficByGraph(),
+                    var graphFactory = TLRGRP.BADGER.Dashboard.GraphFactory(currentTimePeriod);
+
+                    return graphFactory.getGraphsFor(getTrafficByGraph(),
                         {
                             id: 'ResponseTimeByPage',
                             title: 'Response Time',
@@ -105,7 +44,8 @@
             'Search': {
                 pageType: 'search',
                 getGraphs: function () {
-                    return getGraphsFor(getTrafficByGraph(),
+                    var graphFactory = TLRGRP.BADGER.Dashboard.GraphFactory(currentTimePeriod);
+                    return graphFactory.getGraphsFor(getTrafficByGraph(),
                         {
                             id: 'ResponseTimeByPage',
                             title: 'Response Time',
@@ -134,7 +74,8 @@
                 name: 'Hotel Details',
                 pageType: 'hotel-details',
                 getGraphs: function () {
-                    return getGraphsFor(getTrafficByGraph(),
+                    var graphFactory = TLRGRP.BADGER.Dashboard.GraphFactory(currentTimePeriod);
+                    return graphFactory.getGraphsFor(getTrafficByGraph(),
                         {
                             id: 'ResponseTimeByPage',
                             title: 'Response Time',
@@ -163,7 +104,8 @@
                 name: 'Booking Form',
                 pageType: 'booking-form',
                 getGraphs: function () {
-                    return getGraphsFor(getTrafficByGraph(),
+                    var graphFactory = TLRGRP.BADGER.Dashboard.GraphFactory(currentTimePeriod);
+                    return graphFactory.getGraphsFor(getTrafficByGraph(),
                         {
                             id: 'ResponseTimeByPage',
                             title: 'Response Time',

@@ -304,6 +304,7 @@
     <Content Include="Assets\js\status\UI\TLRGRP.BADGER.DashboardList.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.DashboardCollection.js" />
     <Content Include="Assets\js\status\TLRGRP.BADGER.StopStart.js" />
+    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.GraphFactory.js" />
     <Content Include="Assets\js\status\UI\TLRGRP.BADGER.TimeSelect.js" />
     <Content Include="Assets\js\status\Dashboards\TLRGRP.BADGER.Dashboard.OverView.js" />
     <Content Include="Assets\js\status\Dashboards\TLRGRP.BADGER.Dashboard.WebHosts.js" />
