@@ -13,6 +13,7 @@
                 var expressionFilter = graph.expressions;
                 var additionalExpressionFilters = graph.additionalExpressionFilters;
                 var graphTitle = graph.title;
+                var graphType = graph.graphType;
 
                 if (typeof graph === 'object') {
                     if (graph.slots === 2) {
@@ -54,6 +55,8 @@
                             var autoTitle = (selectedGraph.title ? selectedGraph.title + '-' : '') + expression.title;
                             expression.id = autoTitle.toLowerCase().replace(/\s/g, '-').replace(/[()]/g, '');
                         }
+                        
+                        expression.graphType = expression.graphType || selectedGraph.graphType || graphType;
 
                         return expression;
                     }),

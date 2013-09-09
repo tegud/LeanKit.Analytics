@@ -24,12 +24,18 @@
             return match;
         }
 
+        function normalisePage(page) {
+            page.name = page.id;
+
+            return page;
+        }
+
         function registerPageWithArea(area, page) {
             if (!areas[area]) {
                 areas[area] = {};
             }
 
-            areas[area][page.id] = page;
+            areas[area][page.id] = normalisePage(page);
         }
 
         return {

@@ -21,9 +21,11 @@
                     id: expressionKey.id,
                     title: expression.title,
                     expression: expression.expression,
+                    graphType: expression.graphType,
                     color: colors.getColorByKey(expressionKey, i)
                 };
             }),
+            graphType: options.graphType,
             chartOptions: $.extend(baseChartOptions, options.chartOptions)
         };
     }

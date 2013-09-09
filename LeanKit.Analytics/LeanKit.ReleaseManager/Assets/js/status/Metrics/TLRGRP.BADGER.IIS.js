@@ -13,15 +13,15 @@
         var statuses = [{
             id: 'NotFound',
             status: 404,
-            title: '404 (Not Found)'
+            name: '404 (Not Found)'
         }, {
             id: 'Error',
             status: 500,
-            title: '500 (Error)'
+            name: '500 (Error)'
         }, {
             id: 'Redirect',
             status: [301, 302],
-            title: '30x (Redirect)'
+            name: '30x (Redirect)'
         }];
 
         var channels = [{
@@ -63,7 +63,21 @@
                 chartOptions: {
                     yAxisLabel: 'duration (ms)'
                 }
-            }
+            },
+            'MobileOnMobile': {
+                title: 'On Mobile',
+                expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true).equalTo('pagechannel', 'mobile'),
+                chartOptions: {
+                    yAxisLabel: 'requests'
+                }
+            },
+            'MobileOnDesktop': {
+                title: 'On Desktop',
+                expression: iis().sum().equalTo('isbot', false).equalTo('ismobile', true).notEqualTo('pagechannel', 'mobile'),
+                chartOptions: {
+                    yAxisLabel: 'requests'
+                }
+            },
         };
 
         function addRequestsMetrics() {
@@ -78,10 +92,15 @@
                 _(metricCollection).each(function (metric) {
                     var metricId = options.titleFormatString.replace('{MetricId}', (metric.id || stripSpaces(metric.title)));
                     var reducer = typeof metric[property] === "object" && metric[property].join ? 'in' : 'equalTo';
+                    var expression = iis()[options.aggregate](options.aggregateField)[reducer](property, metric[property]);
+                    
+                    if (options.customFilter && $.isFunction(options.customFilter)) {
+                        expression = options.customFilter(expression);
+                    }
 
                     metrics[metricId] = {
-                        title: metric.title,
-                        expression: iis()[options.aggregate](options.aggregateField)[reducer](property, metric[property]),
+                        title: metric.name,
+                        expression: expression,
                         chartOptions: {
                             yAxisLabel: options.yAxisLabel
                         }
@@ -115,6 +134,34 @@
                     aggregate: 'median',
                     aggregateField: 'duration',
                     titleFormatString: '{MetricId}ServerResponseTime',
+                    yAxisLabel: 'request time (ms)'
+                }),
+                metricExpander(pageTypes, {
+                    property: 'pagetype',
+                    aggregate: 'sum',
+                    titleFormatString: 'Mobile{MetricId}Requests',
+                    customFilter: function (expression) {
+                        return expression.equalTo('isbot', false).equalTo('pagechannel', 'mobile');
+                    },
+                    yAxisLabel: 'requests'
+                }),
+                metricExpander(pageTypes, {
+                    property: 'pagetype',
+                    aggregate: 'sum',
+                    titleFormatString: 'MobileOnDesktop{MetricId}Requests',
+                    customFilter: function (expression) {
+                        return expression.equalTo('isbot', false).equalTo('ismobile', true).notEqualTo('pagechannel', 'mobile');
+                    },
+                    yAxisLabel: 'requests'
+                }),
+                metricExpander(pageTypes, {
+                    property: 'pagetype',
+                    aggregate: 'median',
+                    aggregateField: 'duration',
+                    titleFormatString: 'Mobile{MetricId}ServerResponseTime',
+                    customFilter: function (expression) {
+                        return expression.equalTo('isbot', false).equalTo('pagechannel', 'mobile');
+                    },
                     yAxisLabel: 'request time (ms)'
                 }));
         };
