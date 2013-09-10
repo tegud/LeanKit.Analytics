@@ -60,7 +60,7 @@
             setTimePeriod: function (timePeriod) {
                 currentTimePeriod = timePeriod;
             },
-            getGraphs: function () {
+            getComponents: function () {
                 var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
                 var chartOptions = {
                     lockToZero: true,

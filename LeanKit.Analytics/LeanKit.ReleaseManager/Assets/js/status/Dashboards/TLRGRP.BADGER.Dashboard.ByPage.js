@@ -183,7 +183,7 @@
             setTimePeriod: function (timePeriod) {
                 currentTimePeriod = timePeriod;
             },
-            getGraphs: function () {
+            getComponents: function () {
                 var currentTimitSelectDataString = TLRGRP.BADGER.Cube.convertTimePeriod(currentTimePeriod);
 
                 return subMetrics[currentSubMetric].getGraphs(currentTimitSelectDataString);

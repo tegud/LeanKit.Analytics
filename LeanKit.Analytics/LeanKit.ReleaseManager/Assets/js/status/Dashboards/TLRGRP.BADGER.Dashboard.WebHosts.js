@@ -101,7 +101,7 @@
             setTimePeriod: function (timePeriod) {
                 currentTimePeriod = timePeriod;
             },
-            getGraphs: function () {
+            getComponents: function () {
                 var maxPerGroup = 5;
                 var metricGroups = [];
                 var currentMetricGroup = -1;

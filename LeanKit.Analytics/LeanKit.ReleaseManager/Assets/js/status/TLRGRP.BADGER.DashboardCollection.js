@@ -70,9 +70,7 @@
             getDashboardByView: getDashboardByView,
             setUpUi: function () {
                 var viewModel = buildViewModel();
-                var graphs = currentDashboard.getGraphs();
-                var x = 0;
-                var graphsLength = graphs.length;
+                var components = currentDashboard.getComponents();
                 
                 new TLRGRP.BADGER.DashboardList(viewModel);
 
@@ -83,12 +81,12 @@
                 $('#metric-title').text(viewModel.pageName);
 
                 if (request.timePeriod().start) {
-                    for (; x < graphsLength; x++) {
-                        graphs[x].chartOptions.refreshRate = 0;
-                    }
+                    _(components).each(function (component) {
+                        component.chartOptions.refreshRate = 0;
+                    });
                 }
 
-                new TLRGRP.dashboards.Builder($('#graphs'), graphs);
+                new TLRGRP.BADGER.Dashboard.Builder($('#graphs'), components);
             }
         };
     };

@@ -55,7 +55,7 @@
             setTimePeriod: function (timePeriod) {
                 currentTimePeriod = timePeriod;
             },
-            getGraphs: function () {
+            getComponents: function () {
                 var subMetricConfiguration = subMetrics[currentSubMetric];
                 var graphFactory = TLRGRP.BADGER.Dashboard.GraphFactory(currentTimePeriod);
 

@@ -293,6 +293,7 @@
     <Content Include="Assets\js\status\Graphs\TLRGRP.BADGER.Dashboard.Graphs.js" />
     <Content Include="Assets\js\status\LateRooms\TLRGRP.BADGER.LateRooms.Pages.js" />
     <Content Include="Assets\js\status\LateRooms\TLRGRP.BADGER.LateRooms.Machines.js" />
+    <Content Include="Assets\js\status\TLRGRP.BADGER.Dashboard.Builder.js" />
     <Content Include="Assets\js\status\UI\TLRGRP.BADGER.ColorPalette.js" />
     <Content Include="Assets\js\status\Metrics\TLRGRP.BADGER.Errors.js" />
     <Content Include="Assets\js\status\Metrics\TLRGRP.BADGER.IIS.js" />
