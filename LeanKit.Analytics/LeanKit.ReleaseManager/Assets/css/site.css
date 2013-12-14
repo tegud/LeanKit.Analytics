@@ -264,6 +264,7 @@ td.ticket-cycle-time { width: 90px;}
 
 .view-options li.summary { background-image: url('../images/glyphicons_119_table.png'); }
 .view-options li.graphs { background-image: url('../images/glyphicons_040_stats.png'); }
+.view-options li.forecast { background-image: url('../images/forecast.png'); }
 
 .graph-options { width: 250px;height: 700px;float: left;vertical-align: middle;list-style: none;margin: 0;padding: 0; }
 
@@ -346,6 +347,8 @@ td.ticket-cycle-time { width: 90px;}
 .all-dashboards-list .dashboard-item a { display: block;text-align: center;width:170px;height: 25px;padding: 145px 0 0 0;background-repeat: no-repeat; background-position: center 10px }
 
 .all-dashboards-list .dashboard-item.product-owner a { background-image: url('../images/product-owner.png'); }
+
+.all-dashboards-list .dashboard-item.project-goals a { background-image: url('../images/target.png'); }
 
 .all-dashboards-list .dashboard-item.release a { background-image: url('../images/box.png'); }
 

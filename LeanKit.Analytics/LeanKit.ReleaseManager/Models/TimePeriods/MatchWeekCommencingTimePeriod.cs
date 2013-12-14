@@ -23,10 +23,7 @@ namespace LeanKit.ReleaseManager.Models.TimePeriods
                 return TimePeriodMatch.NotMatched;
             }
 
-            var currentDate = _dateTimeWrapper.Now().Date;
-
-            var dayOfWeekOffset = -(int)currentDate.DayOfWeek;
-            var start = currentDate.AddDays(dayOfWeekOffset);
+            var start = _dateTimeWrapper.Now().Date.GetStartOfWeek();
 
             var week = int.Parse(match.Groups["week"].Value);
             start = start.AddDays(-week * 7);

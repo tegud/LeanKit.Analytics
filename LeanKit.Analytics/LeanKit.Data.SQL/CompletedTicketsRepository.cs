@@ -32,7 +32,7 @@ namespace LeanKit.Data.SQL
                                 LEFT OUTER JOIN LeanKitUser U ON CA.AssignedUserID = U.ID
                                 LEFT OUTER JOIN ReleaseCard RC ON C.ID = RC.CardID
                                 LEFT OUTER JOIN Release R ON RC.ReleaseID = R.ID
-                            WHERE C.Finished IS NOT NULL
+                            WHERE C.Finished IS NOT NULL AND C.Finished < '1 jan 2050'
                             AND (@Started IS NULL OR C.Finished >= @Started)
                             AND (@Finished IS NULL OR C.Finished <= @Finished)
                             ORDER BY C.Finished DESC",

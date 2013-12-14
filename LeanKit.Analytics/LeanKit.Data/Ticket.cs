@@ -28,5 +28,12 @@ namespace LeanKit.Data
         public IEnumerable<TicketAssignedUser> AssignedUsers { get; set; }
 
         public IEnumerable<TicketBlockage> Blockages { get; set; }
+
+        public IEnumerable<TicketProject> Projects { get; set; }
+    }
+
+    public class TicketProject
+    {
+        public string ID { get; set; }
     }
 }

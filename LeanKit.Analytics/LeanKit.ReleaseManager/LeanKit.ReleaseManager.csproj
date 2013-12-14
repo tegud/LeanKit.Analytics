@@ -142,6 +142,7 @@
     <Compile Include="Controllers\EditRelease.cs" />
     <Compile Include="Controllers\EstimatesController.cs" />
     <Compile Include="Controllers\ProductOwnerDashboardController.cs" />
+    <Compile Include="Controllers\ProjectsAndGoalsController.cs" />
     <Compile Include="Controllers\ReleaseDashboardController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\TicketController.cs" />
@@ -244,6 +245,7 @@
     <Content Include="Assets\css\site.css" />
     <Content Include="Assets\graph.html" />
     <Content Include="Assets\images\box.png" />
+    <Content Include="Assets\images\forecast.png" />
     <Content Include="Assets\images\glyphicons_040_stats.png" />
     <Content Include="Assets\images\glyphicons_119_table.png" />
     <Content Include="Assets\images\glyphicons_367_expand.png" />
@@ -257,6 +259,7 @@
     <Content Include="Assets\images\release_toolbar.png" />
     <Content Include="Assets\images\reschedule.png" />
     <Content Include="Assets\images\rolledback.png" />
+    <Content Include="Assets\images\target.png" />
     <Content Include="Assets\images\togglemenu.png" />
     <Content Include="Assets\js\charts\TLRGRP.dashboards.Builder.js" />
     <Content Include="Assets\js\charts\TLRGRP.dashboards.graphs.ChartCanvas.js" />
@@ -392,6 +395,8 @@
     <None Include="Properties\PublishProfiles\QA.pubxml" />
     <Content Include="Views\ReleaseDashboard\Index.cshtml" />
     <Content Include="Views\Status\Index.cshtml" />
+    <Content Include="Views\ProductOwnerDashboard\Forecast.cshtml" />
+    <Content Include="Views\ProjectsAndGoals\Index.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -409,9 +414,9 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>53054</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:57469/</IISUrl>
+          <IISUrl>http://localhost:57470/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

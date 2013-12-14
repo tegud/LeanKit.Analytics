@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Layouts/_Layout.cshtml";
+}
+@model LeanKit.ReleaseManager.Controllers.ProductOwnerForecastViewModel
+
+<h2>Product Owner Forecasts Dashboard</h2>
+
+<ul class="view-options">
+    <li class="view-option summary"><a href="/ProductOwnerDashboard/">Completed</a></li>
+    <li class="view-option forecast selected">Forecast</li>
+    <li class="view-option graphs"><a href="/ProductOwnerDashboard/Graphs">Graphs</a></li>
+</ul>
+
+@Html.Partial("TimePeriodList", Model.TimePeriods)
+
+
+<div>
+    <div class="dashboard-item">
+        <h3>Releases</h3>
+        <div class="dashboard-bigtext-container">
+            <span class="dashboard-bigtext">@Model.PredictedReleaseCount</span>
+        </div>
+    </div>
+    <div class="dashboard-item">
+        <h3>Tickets</h3>
+        <div class="dashboard-bigtext-container">
+            <span class="dashboard-bigtext"></span>
+        </div>
+    </div>
+    <div class="dashboard-item">
+        <h3>Complexity Points</h3>
+        <div class="dashboard-bigtext-container">
+            <span class="dashboard-bigtext"></span>
+        </div>
+    </div>
+    <div class="dashboard-item">
+        <h3>Cycle Time</h3>
+        <div class="dashboard-bigtext-container">
+            <span class="dashboard-bigtext"></span><span class="dashboard-bigtext-units"> days</span>
+        </div>
+    </div>
+</div>
+
+<table id="ticket-cycle-time">
+    <tr>
+        <th class="ticket-title">Ticket</th>
+        <th class="ticket-started">Started</th>
+        <th class="ticket-released">Finished</th>
+        <th class="ticket-release">Release</th>
+        <th class="ticket-estimate">Size</th>
+        <th class="ticket-cycle-time">Cycle Time</th>
+    </tr>
+</table>

@@ -7,10 +7,35 @@ using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
+using LeanKit.Utilities.DateAndTime;
 using Newtonsoft.Json;
+using LeanKit.Utilities;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
+    public class JsonNetResult : JsonResult
+    {
+        public override void ExecuteResult(ControllerContext context)
+        {
+            if (context == null)
+                throw new ArgumentNullException("context");
+
+            var response = context.HttpContext.Response;
+
+            response.ContentType = !String.IsNullOrEmpty(ContentType) ? ContentType : "application/json";
+
+            if (ContentEncoding != null)
+                response.ContentEncoding = ContentEncoding;
+
+            if (Data == null)
+                return;
+
+            // If you need special handling, you can call another form of SerializeObject below
+            var serializedObject = JsonConvert.SerializeObject(Data, Formatting.Indented);
+            response.Write(serializedObject);
+        }
+    }
+
     public class ProductOwnerDashboardController : Controller
     {
         private readonly IBuildListOfCycleTimeItems _listOfCycleTimeItemsFactory;
@@ -20,9 +45,9 @@ namespace LeanKit.ReleaseManager.Controllers
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
         private readonly IGetBlockagesFromTheDatabase _blockageRepository;
 
-        public ProductOwnerDashboardController(IBuildListOfCycleTimeItems listOfCycleTimeItemsFactory, 
+        public ProductOwnerDashboardController(IBuildListOfCycleTimeItems listOfCycleTimeItemsFactory,
             IGetReleasedTicketsFromTheDatabase ticketRepository,
-            IMakeCycleTimeQueries queryFactory, 
+            IMakeCycleTimeQueries queryFactory,
             IMakeTimePeriodViewModels timePeriodViewModelFactory,
             IGetReleasesFromTheDatabase releaseRepository,
             IGetBlockagesFromTheDatabase blockageRepository)
@@ -33,6 +58,13 @@ namespace LeanKit.ReleaseManager.Controllers
             _timePeriodViewModelFactory = timePeriodViewModelFactory;
             _releaseRepository = releaseRepository;
             _blockageRepository = blockageRepository;
+        }
+
+        public JsonNetResult ReleaseInformation(DateTime start, DateTime end)
+        {
+
+
+            return new JsonNetResult { Data = null };
         }
 
         public ActionResult Index(string timePeriod)
@@ -65,6 +97,56 @@ namespace LeanKit.ReleaseManager.Controllers
                 });
         }
 
+        public ActionResult Forecast(string timePeriod)
+        {
+            var cycleTimePeriods = GetForecastCycleTimePeriods(timePeriod);
+            var startOfCurrentWeek = DateTime.Now.Date.GetStartOfWeek();
+
+            var currentWeekStart = startOfCurrentWeek.AddDays(-7 * 4);
+            var weeks = new List<Tuple<DateTime, DateTime>>();
+
+            for (var x = 0; x < 4; x++)
+            {
+                weeks.Add(new Tuple<DateTime, DateTime>(currentWeekStart, currentWeekStart.AddDays(6)));
+
+                currentWeekStart = currentWeekStart.AddDays(7);
+            }
+
+            var start = weeks.Min(d => d.Item1);
+            var end = weeks.Max(d => d.Item2);
+
+            var allReleases = _releaseRepository.GetAllReleases(new CycleTimeQuery
+                {
+                    Start = start,
+                    End = end
+                }).ToList();
+
+            var releasesByWeek = weeks.Select(w => allReleases.Where(r => r.StartedAt >= w.Item1 && r.CompletedAt <= w.Item2).Select(x => new Tuple<DateTime, ReleaseRecord>
+                (w.Item1, x)).ToList()).ToList();
+            var forecastReleases = (int)Math.Round((double)releasesByWeek.Sum(r => r.Count())/releasesByWeek.Count());
+
+            return View(new ProductOwnerForecastViewModel
+                {
+                    TimePeriods = new CycleTimePeriodViewModel(cycleTimePeriods),
+                    PredictedReleaseCount = forecastReleases
+                });
+        }
+
+        private static IEnumerable<CycleTimePeriod> GetForecastCycleTimePeriods(string timePeriod)
+        {
+            return new List<CycleTimePeriod>
+                {
+                    GetCycleTimePeriod("This Week", "ThisWeek", timePeriod == "ThisWeek" || string.IsNullOrWhiteSpace(timePeriod)), 
+                    GetCycleTimePeriod("Next Week", "NextWeek", timePeriod == "NextWeek")
+                };
+        }
+
+        private static CycleTimePeriod GetCycleTimePeriod(string label, string value, bool isSelected)
+        {
+            return new CycleTimePeriod { Label = label, Value = value, Selected = isSelected };
+        }
+
+
         public ActionResult Graphs()
         {
             var currentDate = DateTime.Now.Date;
@@ -76,7 +158,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
             for (var x = 0; x < 7; x++)
             {
-                var periodStart = start.AddDays(-x*7);
+                var periodStart = start.AddDays(-x * 7);
                 var periodEnd = periodStart.AddDays(6);
 
                 weeks.Push(new Tuple<DateTime, DateTime>(periodStart, periodEnd));
@@ -95,8 +177,8 @@ namespace LeanKit.ReleaseManager.Controllers
                 cycleTimeGraphWeeks.SelectMany(
                     w => w.Items.Select(i => new CycleTimeGraphRow
                         {
-                            Week = w.WeekIndex, 
-                            TicketNumber = i.Index, 
+                            Week = w.WeekIndex,
+                            TicketNumber = i.Index,
                             CycleTime = i.CycleTime,
                             Label = w.Label
                         })).ToArray();
@@ -106,7 +188,7 @@ namespace LeanKit.ReleaseManager.Controllers
 
                     return new LineGraphWeek
                         {
-                            AverageCycleTime = (int) Math.Round(matchingTickets.Average(t => t.CycleTime.Days)),
+                            AverageCycleTime = (int)Math.Round(matchingTickets.Average(t => t.CycleTime.Days)),
                             MaxCycleTime = matchingTickets.Max(t => t.CycleTime.Days),
                             WeekStarts = w.Item1
                         };
@@ -224,6 +306,13 @@ namespace LeanKit.ReleaseManager.Controllers
         public int Index { get; set; }
 
         public int CycleTime { get; set; }
+    }
+
+    public class ProductOwnerForecastViewModel
+    {
+        public CycleTimePeriodViewModel TimePeriods { get; set; }
+
+        public int PredictedReleaseCount { get; set; }
     }
 
     public class ProductOwnerDashboardViewModel

@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using LeanKit.APIClient.API;
 
@@ -35,7 +38,11 @@ namespace LeanKit.Data.API
 
             var allUsersForTicket = ticketActivities.Where(a => a.AssignedUser != TicketAssignedUser.UnAssigned).Select(a => a.AssignedUser);
 
-            var ticketAssignedUsers = card.AssignedUsers.Select(user => allUsersForTicket.First(u => u.Id == user.AssignedUserId));
+            var ticketAssignedUsers = card.AssignedUsers.Select(user => allUsersForTicket.FirstOrDefault(u => u.Id == user.AssignedUserId));
+
+            var tags = card.Tags.Split(new [] {","}, StringSplitOptions.RemoveEmptyEntries);
+
+            var projectTags = tags.Where(t => t.StartsWith("a", true, CultureInfo.InvariantCulture));
 
             return new Ticket
                 {
@@ -48,7 +55,8 @@ namespace LeanKit.Data.API
                     CycleTime = duration,
                     Size = card.Size,
                     AssignedUsers = ticketAssignedUsers,
-                    Blockages = ticketBlockages
+                    Blockages = ticketBlockages,
+                    Projects = projectTags.Select(t => new TicketProject() { ID = t })
                 };
         }
     }

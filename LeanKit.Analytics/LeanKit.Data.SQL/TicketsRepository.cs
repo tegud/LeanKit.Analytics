@@ -160,7 +160,7 @@ namespace LeanKit.Data.SQL
                                         });
                 }
 
-                foreach (var userId in ticket.AssignedUsers.Select(u => u.Id).Distinct())
+                foreach (var userId in ticket.AssignedUsers.Where(u => u != null).Select(u => u.Id).Distinct())
                 {
                     sqlConnection.Execute(@"INSERT INTO CardAssignedUsers(CardID, LeanKitUserID)
                                             VALUES (@CardID, @UserID)",
@@ -169,7 +169,23 @@ namespace LeanKit.Data.SQL
                                                   CardId = ticket.Id,
                                                   UserID = userId
                                               });
+                }
 
+                foreach (var project in ticket.Projects)
+                {
+                    sqlConnection.Execute(@"IF NOT EXISTS(SELECT * FROM Project WHERE ID = @ProjectID)
+                                            BEGIN
+                                                INSERT INTO Project (ID)
+                                                SELECT @ProjectID
+                                            END
+                                            
+                                            INSERT INTO ProjectCard(ProjectID, CardID)
+                                            VALUES (@ProjectID, @CardID)",
+                                          new
+                                              {
+                                                  CardId = ticket.Id,
+                                                  ProjectID = project.ID
+                                              });
                 }
             }
         }
