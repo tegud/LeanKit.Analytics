@@ -56,6 +56,7 @@
     <Compile Include="DateAndTime\DateFriendTextExtensions.cs" />
     <Compile Include="DateAndTime\DateTimeWrapper.cs" />
     <Compile Include="DateAndTime\IKnowTheCurrentDateAndTime.cs" />
+    <Compile Include="DateAndTime\StartOfWeek.cs" />
     <Compile Include="UtilitiesRegistry.cs" />
   </ItemGroup>
   <ItemGroup>
