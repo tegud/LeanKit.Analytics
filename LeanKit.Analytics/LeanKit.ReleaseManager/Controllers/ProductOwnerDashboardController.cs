@@ -7,7 +7,7 @@ using LeanKit.Data;
 using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
-using LeanKit.Utilities.DateAndTime;
+using LeanKit.ReleaseManager.Models.Forecasting;
 using Newtonsoft.Json;
 using LeanKit.Utilities;
 
@@ -100,35 +100,12 @@ namespace LeanKit.ReleaseManager.Controllers
         public ActionResult Forecast(string timePeriod)
         {
             var cycleTimePeriods = GetForecastCycleTimePeriods(timePeriod);
-            var startOfCurrentWeek = DateTime.Now.Date.GetStartOfWeek();
-
-            var currentWeekStart = startOfCurrentWeek.AddDays(-7 * 4);
-            var weeks = new List<Tuple<DateTime, DateTime>>();
-
-            for (var x = 0; x < 4; x++)
-            {
-                weeks.Add(new Tuple<DateTime, DateTime>(currentWeekStart, currentWeekStart.AddDays(6)));
-
-                currentWeekStart = currentWeekStart.AddDays(7);
-            }
-
-            var start = weeks.Min(d => d.Item1);
-            var end = weeks.Max(d => d.Item2);
-
-            var allReleases = _releaseRepository.GetAllReleases(new CycleTimeQuery
-                {
-                    Start = start,
-                    End = end
-                }).ToList();
-
-            var releasesByWeek = weeks.Select(w => allReleases.Where(r => r.StartedAt >= w.Item1 && r.CompletedAt <= w.Item2).Select(x => new Tuple<DateTime, ReleaseRecord>
-                (w.Item1, x)).ToList()).ToList();
-            var forecastReleases = (int)Math.Round((double)releasesByWeek.Sum(r => r.Count())/releasesByWeek.Count());
+            var forecast = new AverageForecast(_releaseRepository, 4).Forecast();
 
             return View(new ProductOwnerForecastViewModel
                 {
                     TimePeriods = new CycleTimePeriodViewModel(cycleTimePeriods),
-                    PredictedReleaseCount = forecastReleases
+                    Forecast = forecast
                 });
         }
 
@@ -312,7 +289,7 @@ namespace LeanKit.ReleaseManager.Controllers
     {
         public CycleTimePeriodViewModel TimePeriods { get; set; }
 
-        public int PredictedReleaseCount { get; set; }
+        public PredictedThroughput Forecast { get; set; }
     }
 
     public class ProductOwnerDashboardViewModel
