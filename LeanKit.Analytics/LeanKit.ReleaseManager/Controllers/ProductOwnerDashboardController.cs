@@ -8,8 +8,10 @@ using LeanKit.Data.SQL;
 using LeanKit.ReleaseManager.Models;
 using LeanKit.ReleaseManager.Models.CycleTime;
 using LeanKit.ReleaseManager.Models.Forecasting;
+using LeanKit.Utilities.DateAndTime;
 using Newtonsoft.Json;
 using LeanKit.Utilities;
+using Newtonsoft.Json.Converters;
 
 namespace LeanKit.ReleaseManager.Controllers
 {
@@ -100,7 +102,7 @@ namespace LeanKit.ReleaseManager.Controllers
         public ActionResult Forecast(string timePeriod)
         {
             var cycleTimePeriods = GetForecastCycleTimePeriods(timePeriod);
-            var forecast = new AverageForecast(_releaseRepository, 4).Forecast();
+            var forecast = new AverageForecast(_releaseRepository, _ticketRepository, 4).Forecast();
 
             return View(new ProductOwnerForecastViewModel
                 {
@@ -123,59 +125,64 @@ namespace LeanKit.ReleaseManager.Controllers
             return new CycleTimePeriod { Label = label, Value = value, Selected = isSelected };
         }
 
-
         public ActionResult Graphs()
         {
-            var currentDate = DateTime.Now.Date;
+            var weeks = new ListOfWeeks(DateTime.Now.Date.GetStartOfWeek().AddDays(-7 * 20), 20);
 
-            var weeks = new Stack<Tuple<DateTime, DateTime>>();
-
-            var dayOfWeekOffset = -(int)currentDate.DayOfWeek;
-            var start = currentDate.AddDays(dayOfWeekOffset);
-
-            for (var x = 0; x < 7; x++)
+            var cycleTimeQuery = new CycleTimeQuery
             {
-                var periodStart = start.AddDays(-x * 7);
-                var periodEnd = periodStart.AddDays(6);
+                Start = weeks.StartOfPeriod,
+                End = weeks.EndOfPeriod
+            };
 
-                weeks.Push(new Tuple<DateTime, DateTime>(periodStart, periodEnd));
-            }
+            var tickets = _ticketRepository.Get(cycleTimeQuery).ToList();
+            var allReleases = _releaseRepository.GetAllReleases(cycleTimeQuery).ToList();
+            var totalTickets = 0;
+            var totalComplexity = 0;
+            var totalReleases = 0;
 
-            var cycleTimeQuery = new CycleTimeQuery()
+            var weekData = weeks.Select(w =>
                 {
-                    Start = weeks.Min(w => w.Item1),
-                    End = weeks.Max(w => w.Item2)
-                };
+                    var ticketsInWeek = tickets.Where(t => t.Finished >= w.Start && t.Finished <= w.End).ToList();
+                    var releasesInWeek = allReleases.Where(r => r.CompletedAt >= w.Start && r.CompletedAt <= w.End);
+                    var complexity = ticketsInWeek.Sum(t => t.Size > 0 ? t.Size : 1);
 
-            var tickets = _ticketRepository.Get(cycleTimeQuery).ToArray();
-
-            var cycleTimeGraphWeeks = weeks.Select((w, i) => new CycleTimeGraphWeek(w.Item1.ToString("dd/MM"), i, tickets.Where(t => t.Finished >= w.Item1 && t.Finished <= w.Item2)));
-            var data =
-                cycleTimeGraphWeeks.SelectMany(
-                    w => w.Items.Select(i => new CycleTimeGraphRow
+                    return new
                         {
-                            Week = w.WeekIndex,
-                            TicketNumber = i.Index,
-                            CycleTime = i.CycleTime,
-                            Label = w.Label
-                        })).ToArray();
-            var lineGraphWeeks = weeks.Select(w =>
-                {
-                    var matchingTickets = tickets.Where(t => t.Finished >= w.Item1 && t.Finished <= w.Item2);
-
-                    return new LineGraphWeek
-                        {
-                            AverageCycleTime = (int)Math.Round(matchingTickets.Average(t => t.CycleTime.Days)),
-                            MaxCycleTime = matchingTickets.Max(t => t.CycleTime.Days),
-                            WeekStarts = w.Item1
+                            Start = w.Start,
+                            End = w.End,
+                            Tickets = totalTickets = totalTickets + ticketsInWeek.Count(),
+                            Complexity = totalComplexity = totalComplexity + complexity,
+                            Releases = totalReleases = totalReleases + releasesInWeek.Count()
                         };
-                });
+                }).ToList();
+
+            var graphData = JsonConvert.SerializeObject(new
+            {
+                Tickets = weekData.Select(t => new GraphEntry(t.Start, t.Tickets)),
+                Complexity = weekData.Select(t => new GraphEntry(t.Start, t.Complexity)),
+                Releases = weekData.Select(t => new GraphEntry(t.Start, t.Releases))
+            }, new JavaScriptDateTimeConverter());
 
             return View("Graphs", new GraphViewModel
                 {
-                    BoxChartItems = data,
-                    LineGraphItems = lineGraphWeeks
+                    GraphData = graphData
                 });
+        }
+
+        private class GraphEntry
+        {
+            [JsonProperty(PropertyName = "time")]
+            public object Date { get; private set; }
+
+            [JsonProperty(PropertyName = "value")]
+            public int Value { get; private set; }
+
+            public GraphEntry(DateTime date, int value)
+            {
+                Value = value;
+                Date = date;
+            }
         }
 
         private static IEnumerable<ProductOwnerDashboardBlockagesViewModel> BuildBlockageViewModels(IEnumerable<TicketBlockage> blockages)
@@ -256,6 +263,8 @@ namespace LeanKit.ReleaseManager.Controllers
         public IEnumerable<CycleTimeGraphRow> BoxChartItems { get; set; }
 
         public IEnumerable<LineGraphWeek> LineGraphItems { get; set; }
+
+        public string GraphData { get; set; }
     }
 
     public class CycleTimeGraphWeek

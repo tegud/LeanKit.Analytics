@@ -64,7 +64,7 @@ namespace LeanKit.SyncToDatabase
             var ticketRepository = new TicketsRepository(connectionString, sqlTicketFactory);
             var activityRepository = new ActivityRepository(connectionString);
 
-            var board = new AllBoardTicketsFromApi(apiCaller, apiTicketFactory, validArchiveCardSpecification).Get();
+            var board = new AllBoardTicketsFromApi(apiCaller, apiTicketFactory).Get();
             var allTickets = board.Tickets;
 
             activityRepository.SaveActivities(board.Lanes);

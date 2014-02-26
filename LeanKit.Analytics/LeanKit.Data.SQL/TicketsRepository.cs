@@ -33,6 +33,7 @@ namespace LeanKit.Data.SQL
                                 LEFT OUTER JOIN CardAssignedUsers CAU ON C.ID = CAU.CardID
                                 LEFT OUTER JOIN LeanKitUser AU ON CAU.LeanKitUserID = AU.ID
                                 LEFT OUTER JOIN CardBlockage B ON B.CardID = C.ID
+                            WHERE C.IsDeleted < 1
                             ORDER BY C.ID, CA.ID",
                                                  (ticket, activity, assignedUser, blockage) =>
                                                  {

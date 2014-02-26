@@ -9,15 +9,12 @@ namespace LeanKit.Data.API
     {
         private readonly IApiCaller _apiCaller;
         private readonly ICreateTickets _ticketFactory;
-        private readonly IValidateLeankitCards _validArchiveCardSpecification;
 
         public AllBoardTicketsFromApi(IApiCaller apiCaller,
-            ICreateTickets ticketFactory, 
-            IValidateLeankitCards validArchiveCardSpecification)
+            ICreateTickets ticketFactory)
         {
             _apiCaller = apiCaller;
             _ticketFactory = ticketFactory;
-            _validArchiveCardSpecification = validArchiveCardSpecification;
         }
 
         public AllTicketsForBoard Get()
@@ -25,10 +22,6 @@ namespace LeanKit.Data.API
             var board = _apiCaller.GetBoard();
 
             var allTicketsFromBoard = board.Lanes.SelectMany(c => c.Cards).ToList();
-
-            var allArchiveCards = GetArchiveCards().Where(_validArchiveCardSpecification.IsSatisfiedBy);
-
-            allTicketsFromBoard.AddRange(allArchiveCards);
 
             return new AllTicketsForBoard
                 {

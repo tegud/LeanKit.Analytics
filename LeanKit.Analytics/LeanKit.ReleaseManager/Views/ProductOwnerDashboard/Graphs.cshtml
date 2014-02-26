@@ -7,25 +7,12 @@
 <h2>Product Owner Dashboard</h2>
 
 <ul class="view-options">
-    <li class="view-option summary"><a href="/ProductOwnerDashboard">Summary</a></li>
+    <li class="view-option summary"><a href="/ProductOwnerDashboard/">Completed</a></li>
+    <li class="view-option forecast"><a href="/ProductOwnerDashboard/Forecast">Forecast</a></li>
     <li class="view-option graphs selected">Graphs</li>
 </ul>
 
-<div>
-    <ul class="graph-options" id="graph-selection">
-        <li class="graph-option selected graph-selector" data-graph-type="cycleTime" data-graph-view="line">
-            Cycle Time
-            <ul class="view-options graph-type-options">
-                <li class="view-option graph-selector" data-graph-type="cycleTime" data-graph-view="line">Line</li>
-                <li class="view-option graph-selector" data-graph-type="cycleTime" data-graph-view="box">Box</li>
-            </ul>
-        </li>
-        <li class="graph-option graph-selector">Throughput</li>
-        <li class="graph-option graph-selector">Efficiency</li>
-    </ul>
-    <div class="graph-container">
-        <div class="graph-container-inner" id="the-graph"></div>
-    </div>
+<div id="thegraph">
 </div>
 
 @section Javascript
@@ -40,79 +27,10 @@
     <script src="~/Assets/js/charts/TLRGRP.dashboards.graphs.DashboardChart.js"></script>
     <script src="~/Assets/js/charts/TLRGRP.dashboards.graphs.DashboardChartStore.js"></script>
     <script src="~/Assets/js/charts/TLRGRP.dashboards.graphs.Legend.js"></script>
+
     <script type="text/javascript">
-        var renderBoxChart = function() {
-            var margin = { top: 30, right: 50, bottom: 60, left: 50 },
-                width = 120 - margin.left - margin.right,
-                height = 700 - margin.top - margin.bottom;
-
-            var chart = d3.box()
-                .whiskers(iqr(1.5))
-                .width(width)
-                .height(height);
-
-            function iqr(k) {
-                return function(d, i) {
-                    var q1 = d.quartiles[0],
-                        q3 = d.quartiles[2],
-                        iqr = (q3 - q1) * k,
-                        i = -1,
-                        j = d.length;
-                    while (d[++i] < q1 - iqr) ;
-                    while (d[--j] > q3 + iqr) ;
-                    return [i, j];
-                };
-            }
-
-            (function(csv) {
-                var data = [],
-                    min = 0,
-                    max = 0;
-
-                csv.forEach(function(x) {
-                    var e = Math.floor(x.Week - 1),
-                        s = Math.floor(x.CycleTime),
-                        d = data[e],
-                        item = {
-                            CycleTime: x.CycleTime,
-                            Label: x.Label
-                        };
-
-                    if (!d) {
-                        data[e] = [item];
-                    } else {
-                        d.push(item);
-                    }
-
-                    if (s > max) {
-                        max = s;
-                    }
-
-                    if (s < min) {
-                        min = s;
-                    }
-                });
-
-                chart.domain([min, max]);
-
-                d3.select("#the-graph").selectAll("svg")
-                    .data(data)
-                    .enter().append("svg")
-                    .attr("class", "box")
-                    .attr("width", width + margin.left + margin.right)
-                    .attr("height", height + margin.bottom + margin.top)
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                    .call(chart);
-
-            })([
-                @foreach (var row in Model.BoxChartItems)
-                    {
-                        <text>{ @Html.Raw(string.Format("Week: {0}, Ticket: {1}, CycleTime: {2}, Label: '{3}' ", row.Week, row.TicketNumber, row.CycleTime, row.Label)) },</text>
-                    }
-            ]);
-        },
-            renderLineChart = function() {
+        (function() {
+            var renderLineChart = function() {
                 var options = {
                     dimensions: {
                         width: 840,
@@ -122,81 +40,46 @@
                     axisExtents: {
                         y: [0]
                     },
-                    elementSelector: '#the-graph',
+                    elementSelector: '#thegraph',
                     series: [{
-                        id: 'average',
-                        title: 'Average Cycle Time',
+                        id: 'Tickets',
+                        title: 'Tickets',
                         color: 'green'
-                    },{
-                    id: 'max',
-                    title: 'Max Cycle Time',
-                    color: 'red'
-                }]
+                    }, {
+                        id: 'Releases',
+                        title: 'Releases',
+                        color: 'red'
+                    }, {
+                        id: 'Complexity',
+                        title: 'Complexity',
+                        color: 'blue'
+                    }]
                 },
-                    chart = new TLRGRP.dashboards.graphs.DashboardChart(options);
-                
-                chart.drawChart({
-                    'average': [
-                        @foreach(var row in Model.LineGraphItems)
-                        {
-                            <text>
-                                { @Html.Raw(string.Format("time: new Date({0}, {1}, {2}), value: {3}", 
-                                                                row.WeekStarts.ToString("yyyy"), 
-                                                                row.WeekStarts.ToString("MM"),
-                                                                row.WeekStarts.ToString("dd"), 
-                                                                row.AverageCycleTime)) },
-                        
-                            </text>
-                        }
-                    ],
-                    'max': [
-                    @foreach(var row in Model.LineGraphItems)
-                        {
-                            <text>
-                                { @Html.Raw(string.Format("time: new Date({0}, {1}, {2}), value: {3}", 
-                                                                row.WeekStarts.ToString("yyyy"), 
-                                                                row.WeekStarts.ToString("MM"),
-                                                                row.WeekStarts.ToString("dd"), 
-                                                                row.MaxCycleTime)) },
-                        
-                            </text>
-                        }
-                    ]
-                });
+                chart = new TLRGRP.dashboards.graphs.DashboardChart(options);
+	                
+                chart.drawChart(@Html.Raw(Model.GraphData));
             };
-
-        var graphs = {
+	
+            var graphs = {
                 cycleTime: {
-                    box: renderBoxChart,
                     line: renderLineChart
                 }
             },
-            currentGraph,
-            showGraph = function (type, view) {
-                var graphKey = type + view;
-                
-                if (currentGraph === graphKey) {
-                    return;
-                }
-                
-                $('#the-graph').html('');
-                
-                currentGraph = graphKey;
-                graphs[type][view]();
-            };
-        showGraph('cycleTime', 'line');
+	            currentGraph,
+	            showGraph = function (type, view) {
+	                var graphKey = type + view;
+	                    
+	                if (currentGraph === graphKey) {
+	                    return;
+	                }
+	                    
+	                $('#thegraph').html('');
+	                    
+	                currentGraph = graphKey;
+	                graphs[type][view]();
+	            };
+            showGraph('cycleTime', 'line');
 
-        $('#graph-selection').on('click', '.graph-selector', function (e) {
-            var type = $(this).data('graphType'),
-                view = $(this).data('graphView');
-            
-            e.stopPropagation();
-            
-            if (!type || !view || !graphs[type] || !graphs[type][view] || !$.isFunction(graphs[type][view])) {
-                return;
-            }
-
-            showGraph(type, view);
-        });
+        })();
     </script>
 }

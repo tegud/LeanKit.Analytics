@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -35,6 +36,12 @@ namespace LeanKit.Data.SQL
 
             var started = _ticketStartDateFactory.CalculateMilestone(activities);
             var finished = _ticketFinishDateFactory.CalculateMilestone(activities);
+
+            if (started == DateTime.MinValue && finished > DateTime.MinValue)
+            {
+                started = finished;
+            }
+
             var duration = _ticketCycleTimeDurationFactory.CalculateDuration(started, finished);
             var currentActivity = _ticketCurrentActivityFactory.Build(activities);
             

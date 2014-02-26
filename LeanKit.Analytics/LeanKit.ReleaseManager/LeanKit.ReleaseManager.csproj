@@ -176,7 +176,9 @@
     <Compile Include="Models\DateOptionsFactory.cs" />
     <Compile Include="Models\Forecasting\AverageForecast.cs" />
     <Compile Include="Models\Forecasting\IPredictThroughput.cs" />
+    <Compile Include="Models\Forecasting\ListOfWeeks.cs" />
     <Compile Include="Models\Forecasting\PredictedThroughput.cs" />
+    <Compile Include="Models\Forecasting\Week.cs" />
     <Compile Include="Models\Graphs\ActivityBreakdown.cs" />
     <Compile Include="Models\Graphs\ActivityBreakDownFactory.cs" />
     <Compile Include="Models\Graphs\ActivityBreakdownItem.cs" />

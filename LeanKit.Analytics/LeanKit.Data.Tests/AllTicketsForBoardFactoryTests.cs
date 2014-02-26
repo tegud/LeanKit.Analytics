@@ -25,7 +25,7 @@ namespace LeanKit.Data.Tests
             _expectedArchiveLeankitBoardCard = null;
             _expectedLeankitBoardCard = new LeankitBoardCard();
 
-            new AllBoardTicketsFromApi(apiCaller, ticketFactory, validArchiveCardSpecification).Get().Tickets.ToArray();
+            new AllBoardTicketsFromApi(apiCaller, ticketFactory).Get().Tickets.ToArray();
 
             Assert.That(_actualLeankitBoardCard, Is.EqualTo(_expectedLeankitBoardCard));
         }
@@ -40,7 +40,7 @@ namespace LeanKit.Data.Tests
             _meetsSpecification = true;
             _expectedArchiveLeankitBoardCard = new LeankitBoardCard();
 
-            new AllBoardTicketsFromApi(apiCaller, ticketFactory, validArchiveCardSpecification).Get().Tickets.ToArray();
+            new AllBoardTicketsFromApi(apiCaller, ticketFactory).Get().Tickets.ToArray();
 
             Assert.That(_actualLeankitBoardCard, Is.EqualTo(_expectedArchiveLeankitBoardCard));
         }
@@ -57,7 +57,7 @@ namespace LeanKit.Data.Tests
             _expectedLeankitBoardCard = null;
             _expectedArchiveLeankitBoardCard = new LeankitBoardCard();
 
-            new AllBoardTicketsFromApi(apiCaller, ticketFactory, validArchiveCardSpecification).Get().Tickets.ToArray();
+            new AllBoardTicketsFromApi(apiCaller, ticketFactory).Get().Tickets.ToArray();
 
             Assert.That(_actualLeankitBoardCard, Is.Null);
         }
@@ -74,7 +74,7 @@ namespace LeanKit.Data.Tests
             _expectedLeankitBoardCard = null;
             _expectedArchiveLeankitBoardCard = new LeankitBoardCard();
 
-            var lanes = new AllBoardTicketsFromApi(apiCaller, ticketFactory, validArchiveCardSpecification).Get().Lanes.ToArray();
+            var lanes = new AllBoardTicketsFromApi(apiCaller, ticketFactory).Get().Lanes.ToArray();
 
             Assert.That(lanes.First().Title, Is.EqualTo("Dev WIP"));
         }
@@ -91,7 +91,7 @@ namespace LeanKit.Data.Tests
             _expectedLeankitBoardCard = null;
             _expectedArchiveLeankitBoardCard = new LeankitBoardCard();
 
-            var lanes = new AllBoardTicketsFromApi(apiCaller, ticketFactory, validArchiveCardSpecification).Get().Lanes.ToArray();
+            var lanes = new AllBoardTicketsFromApi(apiCaller, ticketFactory).Get().Lanes.ToArray();
 
             Assert.That(lanes.First().Id, Is.EqualTo(1234));
         }
@@ -109,7 +109,7 @@ namespace LeanKit.Data.Tests
             _expectedLeankitBoardCard = null;
             _expectedArchiveLeankitBoardCard = new LeankitBoardCard();
 
-            var lanes = new AllBoardTicketsFromApi(apiCaller, ticketFactory, validArchiveCardSpecification).Get().Lanes.ToArray();
+            var lanes = new AllBoardTicketsFromApi(apiCaller, ticketFactory).Get().Lanes.ToArray();
 
             Assert.That(lanes.ElementAt(index).Index, Is.EqualTo(index));
         }

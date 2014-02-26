@@ -10,48 +10,51 @@ namespace LeanKit.ReleaseManager.Models.Forecasting
     public class AverageForecast : IPredictThroughput
     {
         private readonly IGetReleasesFromTheDatabase _releaseRepository;
+        private readonly IGetReleasedTicketsFromTheDatabase _ticketRepository;
         private readonly int _weeksToForecast;
 
-        public AverageForecast(IGetReleasesFromTheDatabase releaseRepository, int weeksToForecast)
+        public AverageForecast(IGetReleasesFromTheDatabase releaseRepository,
+            IGetReleasedTicketsFromTheDatabase ticketRepository,
+            int weeksToForecast)
         {
             _releaseRepository = releaseRepository;
+            _ticketRepository = ticketRepository;
             _weeksToForecast = weeksToForecast;
         }
 
         public PredictedThroughput Forecast()
         {
-            var startOfCurrentWeek = DateTime.Now.Date.GetStartOfWeek();
+            var weeks = new ListOfWeeks(DateTime.Now.Date.GetStartOfWeek().AddDays(-7*_weeksToForecast), _weeksToForecast);
 
-            var currentWeekStart = startOfCurrentWeek.AddDays(-7 * _weeksToForecast);
-            var weeks = new List<Tuple<DateTime, DateTime>>();
-
-            for (var x = 0; x < _weeksToForecast; x++)
-            {
-                weeks.Add(new Tuple<DateTime, DateTime>(currentWeekStart, currentWeekStart.AddDays(6)));
-
-                currentWeekStart = currentWeekStart.AddDays(7);
-            }
-
-            var start = weeks.Min(d => d.Item1);
-            var end = weeks.Max(d => d.Item2);
-
-            var allReleases = _releaseRepository.GetAllReleases(new CycleTimeQuery
+            var cycleTimeQuery = new CycleTimeQuery
                 {
-                    Start = start,
-                    End = end
-                }).ToList();
+                    Start = weeks.StartOfPeriod,
+                    End = weeks.EndOfPeriod
+                };
 
-            var releasesByWeek =
-                weeks.Select(
-                    w =>
-                    allReleases.Where(r => r.StartedAt >= w.Item1 && r.CompletedAt <= w.Item2)
-                               .Select(x => x)).ToList();
+            var tickets = _ticketRepository.Get(cycleTimeQuery).ToList();
+            var allReleases = _releaseRepository.GetAllReleases(cycleTimeQuery).ToList();
 
-            var forecastReleases = (int)Math.Round((double)releasesByWeek.Sum(r => r.Count()) / releasesByWeek.Count());
-            var forecastTickets = (int)Math.Round((double)releasesByWeek.Sum(r => r.Sum(x => x.IncludedTickets.Count())) / releasesByWeek.Count());
-            var forecastComplexity = (int)Math.Round((double)releasesByWeek.Sum(r => r.Sum(x => x.IncludedTickets.Where(t => t.Size > 0).Sum(t => t.Size))) / releasesByWeek.Count());
+            var releasesByWeek = allReleases.GroupByWeek(weeks, (r, weekStart, weekEnd) => r.StartedAt >= weekStart && r.CompletedAt <= weekEnd).ToList();
+            var ticketsByWeek = tickets.GroupByWeek(weeks, (r, weekStart, weekEnd) => r.Finished >= weekStart && r.Finished <= weekEnd).ToList();
+
+            var forecastReleases = (int)Math.Round((double)releasesByWeek.Sum(r => r.Count()) / weeks.Count());
+
+            var forecastTickets = (int)Math.Round((double)ticketsByWeek.Sum(w => w.Count()) / weeks.Count());
+
+            var totalComplexityForPeriod = (double)ticketsByWeek.Sum(w => w.Where(t => t.Size > 0).Sum(t => t.Size));
+            var forecastComplexity = (int)Math.Round(totalComplexityForPeriod / weeks.Count());
 
             return new PredictedThroughput(forecastReleases, forecastTickets, forecastComplexity);
+        }
+    }
+
+    internal static class ForecastEnumberableExtensions
+    {
+        public static IEnumerable<IEnumerable<T>> GroupByWeek<T>(this IEnumerable<T> collection, IEnumerable<Week> weeks,
+                                                 Func<T, DateTime, DateTime, bool> grouping)
+        {
+            return weeks.Select(w => collection.Where(x => grouping(x, w.Start, w.End)));
         }
     }
 }
